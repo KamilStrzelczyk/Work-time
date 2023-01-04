@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.example.workinghours.presentation.Screen
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
 
@@ -191,7 +192,10 @@ fun AddWorkTimeScreen(
         Box(modifier = Modifier
             .padding(20.dp))
         {
-            Button(onClick = { viewModel.onButtonClicked() }) {
+            Button(
+                modifier = Modifier
+                .fillMaxWidth(),
+                onClick = { viewModel.onButtonClicked() }) {
                 Text(text = "Zapisz", color = Color.White)
                 SaveTimeDialog(viewModel = viewModel, state = state, navController = navController)
             }
@@ -200,7 +204,6 @@ fun AddWorkTimeScreen(
 }
 
 @Composable
-
 fun StartClockBoxHour(state: AddWorkTimeViewModel.ViewModelState, viewModel: AddWorkTimeViewModel) {
     if (state.showStartClockHour) {
         DropdownMenu(expanded = true, onDismissRequest = { state.startHour }) {
@@ -209,7 +212,6 @@ fun StartClockBoxHour(state: AddWorkTimeViewModel.ViewModelState, viewModel: Add
                     Text(text = it)
                 }
             }
-
         }
     }
 }
@@ -226,13 +228,11 @@ fun StartClockBoxMinute(
                     Text(text = it)
                 }
             }
-
         }
     }
 }
 
 @Composable
-
 fun EndClockBoxHour(state: AddWorkTimeViewModel.ViewModelState, viewModel: AddWorkTimeViewModel) {
     if (state.showEndClockHour) {
         DropdownMenu(expanded = true, onDismissRequest = { state.endHour }) {
@@ -241,13 +241,11 @@ fun EndClockBoxHour(state: AddWorkTimeViewModel.ViewModelState, viewModel: AddWo
                     Text(text = it)
                 }
             }
-
         }
     }
 }
 
 @Composable
-
 fun EndClockBoxMinute(state: AddWorkTimeViewModel.ViewModelState, viewModel: AddWorkTimeViewModel) {
     if (state.showEndClockMinute) {
         DropdownMenu(expanded = true, onDismissRequest = { state.endMinute }) {
@@ -256,13 +254,11 @@ fun EndClockBoxMinute(state: AddWorkTimeViewModel.ViewModelState, viewModel: Add
                     Text(text = it)
                 }
             }
-
         }
     }
 }
 
 @Composable
-
 fun SecondClockBoxHour(
     state: AddWorkTimeViewModel.ViewModelState,
     viewModel: AddWorkTimeViewModel,
@@ -274,13 +270,11 @@ fun SecondClockBoxHour(
                     Text(text = it)
                 }
             }
-
         }
     }
 }
 
 @Composable
-
 fun SecondClockBoxMinute(
     state: AddWorkTimeViewModel.ViewModelState,
     viewModel: AddWorkTimeViewModel,
@@ -292,13 +286,11 @@ fun SecondClockBoxMinute(
                     Text(text = it)
                 }
             }
-
         }
     }
 }
 
 @Composable
-
 fun SaveTimeDialog(
     viewModel: AddWorkTimeViewModel,
     state: AddWorkTimeViewModel.ViewModelState,
@@ -309,11 +301,12 @@ fun SaveTimeDialog(
             Surface(modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))) {
                 Box(modifier = Modifier
+                    .fillMaxWidth()
                     .padding(20.dp),
                     contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Twoj czas pracy")
-                        Text(state.workTime.toString())
+                        Text("${state.workTime.hours.toString()} : ${state.workTime.minutes}")
                         Button(onClick = { navController.navigate(Screen.ListOfUsersScreen.route) }) {
                             Text(text = "OK")
                         }

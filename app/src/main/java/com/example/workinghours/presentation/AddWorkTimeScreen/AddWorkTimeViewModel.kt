@@ -4,6 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.workinghours.domain.usecase.AddWorkTimeScreenUseCase.CalculateAmountOfHours
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.joda.time.DateTime
+import org.joda.time.LocalDateTime
+import org.joda.time.Period
 import java.sql.Time
 import javax.inject.Inject
 
@@ -133,7 +136,7 @@ class AddWorkTimeViewModel @Inject constructor(
         val endHour: Int = 0,
         val endMinute: Int = 0,
         val extraTime: Int = 0,
-        val workTime: Time = Time(0, 0, 0),
+        val workTime: Period = (Period.ZERO),
         val clockHour: List<String> = listOf<String>("00",
             "01",
             "02",
@@ -164,16 +167,16 @@ class AddWorkTimeViewModel @Inject constructor(
             "30",
             "45"),
         val secondClockHour: List<String> = listOf<String>(
-            "00",
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
             "10"),
         val secondClockMinute: List<String> = listOf<String>(
             "00",
