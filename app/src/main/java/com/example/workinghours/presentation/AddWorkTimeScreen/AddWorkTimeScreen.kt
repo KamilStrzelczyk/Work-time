@@ -16,6 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.workinghours.presentation.Screen
+import org.joda.time.DateTime
+import org.joda.time.LocalDate
+import org.joda.time.LocalTime
+import org.joda.time.format.DateTimeFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.time.Duration.Companion.minutes
@@ -26,16 +30,17 @@ fun AddWorkTimeScreen(
     viewModel: AddWorkTimeViewModel,
     navController: NavController,
 ) {
+    val dataTime = LocalDate.now()
+    val datatimetiem = LocalTime.now()
     val state = viewModel.state.value
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:MM")
-    val current = LocalDateTime.now().format(formatter)
+
     Column(modifier = Modifier
         .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Box(modifier = Modifier.padding(20.dp)) {
-            Text(text = current)
+            Text("${ dataTime.toString() }  ${datatimetiem.hourOfDay} : ${datatimetiem.minuteOfHour}")
         }
 
         Divider()
@@ -194,7 +199,7 @@ fun AddWorkTimeScreen(
         {
             Button(
                 modifier = Modifier
-                .fillMaxWidth(),
+                    .fillMaxWidth(),
                 onClick = { viewModel.onButtonClicked() }) {
                 Text(text = "Zapisz", color = Color.White)
                 SaveTimeDialog(viewModel = viewModel, state = state, navController = navController)
@@ -306,7 +311,7 @@ fun SaveTimeDialog(
                     contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Twoj czas pracy")
-                        Text("${state.workTime.hours.toString()} : ${state.workTime.minutes}")
+                        Text("${state.workTime?.hourOfDay} : GODZIN ${state.workTime?.minuteOfHour} : MINUT")
                         Button(onClick = { navController.navigate(Screen.ListOfUsersScreen.route) }) {
                             Text(text = "OK")
                         }

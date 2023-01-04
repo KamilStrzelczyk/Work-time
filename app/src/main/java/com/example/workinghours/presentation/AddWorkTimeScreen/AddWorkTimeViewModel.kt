@@ -136,7 +136,7 @@ class AddWorkTimeViewModel @Inject constructor(
         val endHour: Int = 0,
         val endMinute: Int = 0,
         val extraTime: Int = 0,
-        val workTime: Period = (Period.ZERO),
+        val workTime: DateTime? = null,
         val clockHour: List<String> = listOf<String>("00",
             "01",
             "02",
