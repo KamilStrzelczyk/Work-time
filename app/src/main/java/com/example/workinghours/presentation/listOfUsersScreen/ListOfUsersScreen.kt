@@ -1,4 +1,4 @@
-package com.example.workinghours.presentation.ListOfUsersScreen
+package com.example.workinghours.presentation.listOfUsersScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,7 +21,6 @@ import com.example.workinghours.R
 import com.example.workinghours.presentation.Screen
 
 @Composable
-
 fun ListOfUsersScreen(
     viewModel: ListOfUsersViewModel,
     navController: NavController,
@@ -45,7 +44,7 @@ fun ListOfUsersScreen(
                     ) {
                         Icon(Icons.Filled.MoreVert, contentDescription = null)
                     }
-                    MoreAction(state = state, viewModel = viewModel)
+                    MoreAction(state = state, viewModel = viewModel, navController = navController)
                 }
             )
         }
@@ -69,12 +68,11 @@ fun ListOfUsersScreen(
             }
         }
     }
-    UserActionsDialog(state = state, viewModel, navController)
 
+    UserActionsDialog(state = state, viewModel, navController)
 }
 
 @Composable
-
 fun UserNameBox(
     userName: String,
     onClick: (Boolean) -> Unit,
@@ -102,7 +100,6 @@ fun UserNameBox(
 }
 
 @Composable
-
 fun UserActionsDialog(
     state: ListOfUsersViewModel.ViewModelState,
     viewModel: ListOfUsersViewModel,
@@ -139,14 +136,14 @@ fun UserActionsDialog(
                                     Image(painter = painterResource(id = R.drawable.calendarimage),
                                         contentDescription = null)
                                 }
-
                             }
                         }
 
                         Spacer(modifier = Modifier.weight(0.1f))
 
                         Surface(elevation = 4.dp, shape = RoundedCornerShape(16.dp)) {
-                            Box(modifier = Modifier
+                            Box(
+                                modifier = Modifier
                                 .weight(1f)
                                 .height(112.dp)
                                 .clickable { navController.navigate(Screen.AddWorkTimeScreen.route) })
@@ -160,8 +157,6 @@ fun UserActionsDialog(
                                     Image(painter = painterResource(id = R.drawable.calendaraddimage),
                                         contentDescription = null)
                                 }
-
-
                             }
                         }
                     }
@@ -174,6 +169,7 @@ fun UserActionsDialog(
 fun MoreAction(
     state: ListOfUsersViewModel.ViewModelState,
     viewModel: ListOfUsersViewModel,
+    navController: NavController,
 ) {
     if (state.showTopAppBarMoreAction)
         DropdownMenu(
@@ -181,12 +177,12 @@ fun MoreAction(
             onDismissRequest = { viewModel.onDismissTopAppBarMoreAction() }
         ) {
             DropdownMenuItem(
-                onClick = { }
+                onClick = { navController.navigate(Screen.AdminScreen.route) }
             ) {
                 Image(painter = painterResource(id = R.drawable.accounticon),
                     contentDescription = null)
                 Spacer(modifier = Modifier.width(5.dp))
-                Text(text = "Użytkownik")
+                Text(text = "Admin")
             }
         }
 }

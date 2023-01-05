@@ -11,12 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.workinghours.presentation.AddWorkTimeScreen.AddWorkTimeScreen
-import com.example.workinghours.presentation.AddWorkTimeScreen.AddWorkTimeViewModel
-import com.example.workinghours.presentation.ListOfUsersScreen.ListOfUsersScreen
-import com.example.workinghours.presentation.ListOfUsersScreen.ListOfUsersViewModel
-import com.example.workinghours.presentation.PreviousDaysScreen.PreviousDaysScreen
-import com.example.workinghours.presentation.PreviousDaysScreen.PreviousDaysViewModel
+import com.example.workinghours.presentation.addWorkTimeScreen.AddWorkTimeScreen
+import com.example.workinghours.presentation.addWorkTimeScreen.AddWorkTimeViewModel
+import com.example.workinghours.presentation.adminScreen.AdminScreen
+import com.example.workinghours.presentation.adminScreen.AdminViewModel
+import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersScreen
+import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersViewModel
+import com.example.workinghours.presentation.previousDaysScreen.PreviousDaysScreen
+import com.example.workinghours.presentation.previousDaysScreen.PreviousDaysViewModel
 import com.example.workinghours.ui.theme.WorkingHoursTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +27,7 @@ class MainActivity : ComponentActivity() {
     private val listOfUsersScreenViewModel: ListOfUsersViewModel by viewModels()
     private val addWorkTimeViewModel: AddWorkTimeViewModel by viewModels()
     private val previousDaysViewModel: PreviousDaysViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -49,6 +52,11 @@ class MainActivity : ComponentActivity() {
                             route = Screen.PreviousDayScreen.route
                         ) {
                             PreviousDaysScreen(viewModel = previousDaysViewModel)
+                        }
+                        composable(
+                            route = Screen.AdminScreen.route
+                        ) {
+                            AdminScreen(viewModel = adminViewModel)
                         }
 
                     }

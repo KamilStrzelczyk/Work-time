@@ -1,4 +1,4 @@
-package com.example.workinghours.presentation.ListOfUsersScreen
+package com.example.workinghours.presentation.listOfUsersScreen
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.example.workinghours.presentation.PreviousDaysScreen
+package com.example.workinghours.presentation.previousDaysScreen
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

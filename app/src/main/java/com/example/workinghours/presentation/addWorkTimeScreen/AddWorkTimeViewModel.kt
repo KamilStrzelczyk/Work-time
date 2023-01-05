@@ -1,13 +1,10 @@
-package com.example.workinghours.presentation.AddWorkTimeScreen
+package com.example.workinghours.presentation.addWorkTimeScreen
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.workinghours.domain.usecase.AddWorkTimeScreenUseCase.CalculateAmountOfHours
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.joda.time.DateTime
-import org.joda.time.LocalDateTime
-import org.joda.time.Period
-import java.sql.Time
 import javax.inject.Inject
 
 @HiltViewModel

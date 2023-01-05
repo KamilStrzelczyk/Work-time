@@ -1,4 +1,4 @@
-package com.example.workinghours.presentation.AddWorkTimeScreen
+package com.example.workinghours.presentation.addWorkTimeScreen
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,12 +17,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.workinghours.presentation.Screen
 import org.joda.time.DateTime
-import org.joda.time.LocalDate
-import org.joda.time.LocalTime
-import org.joda.time.format.DateTimeFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.time.Duration.Companion.minutes
 
 @Composable
 
@@ -30,8 +24,8 @@ fun AddWorkTimeScreen(
     viewModel: AddWorkTimeViewModel,
     navController: NavController,
 ) {
-    val dataTime = LocalDate.now()
-    val datatimetiem = LocalTime.now()
+    val dataTime = DateTime.now()
+    val pattern = "MM/dd/yyyy HH:mm"
     val state = viewModel.state.value
 
     Column(modifier = Modifier
@@ -40,7 +34,7 @@ fun AddWorkTimeScreen(
     ) {
 
         Box(modifier = Modifier.padding(20.dp)) {
-            Text("${ dataTime.toString() }  ${datatimetiem.hourOfDay} : ${datatimetiem.minuteOfHour}")
+            Text(dataTime.toString(pattern))
         }
 
         Divider()
