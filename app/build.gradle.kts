@@ -58,22 +58,18 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.0")
     debugImplementation("androidx.compose.ui:ui-tooling:1.3.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
 
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-compiler:2.44")
 
-    // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
-
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-
-    // status bar customization
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
+    // Room
+    implementation("androidx.room:room-runtime:2.4.3")
+    kapt("androidx.room:room-compiler:2.4.3")
+    implementation("androidx.room:room-ktx:2.4.3")
 
     //Joda-Time
     implementation ("joda-time:joda-time:2.12.1")

@@ -22,34 +22,31 @@ import com.example.workinghours.ui.AdminGridOption
 
 @Composable
 fun AdminScreen(viewModel: AdminViewModel) {
-    Column(modifier = Modifier
-        .fillMaxSize()
+    Column(modifier = Modifier.fillMaxSize()
 
     ) {
-        Grids(
-            onItemClick = {
-                when(it){
-                    AdminGirdOptionType.SEND_DAILY_REPORT -> {
-                        println("SEND_DAILY_REPORT")
-                    }
-                    AdminGirdOptionType.SEND_MONTH_REPORT -> {
-                        println("SEND_MONTH_REPORT")
-                    }
-                    AdminGirdOptionType.DELETE_USER -> {
-                        println("DELETE_USER")
-                    }
-                    AdminGirdOptionType.ADDUSER -> {
-                        println("ADDUSER")
-                    }
-                    AdminGirdOptionType.USER_PREVIEW ->{
-                        println("USER_PREVIEW")
-                    }
-                    AdminGirdOptionType.CHANGE_PASSWORD -> {
-                        println("CHANGE_PASSWORD")
-                    }
+        Grids(onItemClick = {
+            when (it) {
+                AdminGirdOptionType.SEND_DAILY_REPORT -> {
+                    println("SEND_DAILY_REPORT")
+                }
+                AdminGirdOptionType.SEND_MONTH_REPORT -> {
+                    println("SEND_MONTH_REPORT")
+                }
+                AdminGirdOptionType.DELETE_USER -> {
+                    println("DELETE_USER")
+                }
+                AdminGirdOptionType.ADDUSER -> {
+                    println("ADDUSER")
+                }
+                AdminGirdOptionType.USER_PREVIEW -> {
+                    println("USER_PREVIEW")
+                }
+                AdminGirdOptionType.CHANGE_PASSWORD -> {
+                    println("CHANGE_PASSWORD")
                 }
             }
-        )
+        })
     }
 }
 
@@ -58,16 +55,30 @@ fun Grids(
     onItemClick: (AdminGirdOptionType) -> Unit,
 ) {
     val data = listOf(
-        AdminGridOption("dsas", AdminGirdOptionType.ADDUSER, R.drawable.accounticon),
-        AdminGridOption("qe", AdminGirdOptionType.CHANGE_PASSWORD, R.drawable.calendaraddimage),
-        AdminGridOption("gffvd",
+        AdminGridOption("Dzienny raport ",
+            AdminGirdOptionType.SEND_DAILY_REPORT,
+            R.drawable.calendartodayimage),
+        AdminGridOption("Raport miesięczny",
+            AdminGirdOptionType.SEND_MONTH_REPORT,
+            R.drawable.calendar_image),
+        AdminGridOption("Lista użytkowników",
+            AdminGirdOptionType.USER_PREVIEW,
+            R.drawable.account_icon),
+        AdminGridOption("Zmień hasło",
+            AdminGirdOptionType.CHANGE_PASSWORD,
+            R.drawable.change_password_image),
+        AdminGridOption("Dodaj użytkownika",
+            AdminGirdOptionType.ADDUSER,
+            R.drawable.add_user_image),
+        AdminGridOption("Usuń użytkownika",
             AdminGirdOptionType.DELETE_USER,
-            R.drawable.ic_launcher_background))
+            R.drawable.remove_user_image),
+    )
+
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 162.dp),
         contentPadding = PaddingValues(8.dp)) {
         items(data) { item ->
-            Card(onItemClick = onItemClick,
-                adminGridOption = item)
+            Card(onItemClick = onItemClick, adminGridOption = item)
         }
 
     }
@@ -78,7 +89,9 @@ fun Card(
     onItemClick: (AdminGirdOptionType) -> Unit,
     adminGridOption: AdminGridOption,
 ) {
-    Surface(elevation = 4.dp, shape = RoundedCornerShape(16.dp)) {
+    Surface(modifier = Modifier.padding(10.dp),
+        elevation = 4.dp,
+        shape = RoundedCornerShape(16.dp)) {
         Column(modifier = Modifier
             .height(112.dp)
             .clickable { onItemClick(adminGridOption.type) },

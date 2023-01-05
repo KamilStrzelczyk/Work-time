@@ -124,7 +124,7 @@ fun UserActionsDialog(
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(112.dp)
-                                    .clickable { navController.navigate(Screen.PreviousDayScreen.route) },
+                                    .clickable { navController.navigate(Screen.PreviousDayScreen.route) { viewModel.onDismissUserActionsDialog() } },
                             ) {
                                 Column(modifier = Modifier
                                     .fillMaxHeight(),
@@ -133,7 +133,7 @@ fun UserActionsDialog(
                                 {
 
                                     Text(text = "Poprzednie dni", Modifier.padding(5.dp))
-                                    Image(painter = painterResource(id = R.drawable.calendarimage),
+                                    Image(painter = painterResource(id = R.drawable.calendar_image),
                                         contentDescription = null)
                                 }
                             }
@@ -144,9 +144,9 @@ fun UserActionsDialog(
                         Surface(elevation = 4.dp, shape = RoundedCornerShape(16.dp)) {
                             Box(
                                 modifier = Modifier
-                                .weight(1f)
-                                .height(112.dp)
-                                .clickable { navController.navigate(Screen.AddWorkTimeScreen.route) })
+                                    .weight(1f)
+                                    .height(112.dp)
+                                    .clickable { navController.navigate(Screen.AddWorkTimeScreen.route) { viewModel.onDismissUserActionsDialog() } })
                             {
                                 Column(modifier = Modifier
                                     .fillMaxHeight(),
@@ -154,7 +154,7 @@ fun UserActionsDialog(
                                     verticalArrangement = Arrangement.Center
                                 ) {
                                     Text(text = "Dodaj nowy dzień", Modifier.padding(5.dp))
-                                    Image(painter = painterResource(id = R.drawable.calendaraddimage),
+                                    Image(painter = painterResource(id = R.drawable.calendar_add_image),
                                         contentDescription = null)
                                 }
                             }
@@ -177,9 +177,9 @@ fun MoreAction(
             onDismissRequest = { viewModel.onDismissTopAppBarMoreAction() }
         ) {
             DropdownMenuItem(
-                onClick = { navController.navigate(Screen.AdminScreen.route) }
+                onClick = { navController.navigate(Screen.AdminScreen.route) {viewModel.onDismissTopAppBarMoreAction()} }
             ) {
-                Image(painter = painterResource(id = R.drawable.accounticon),
+                Image(painter = painterResource(id = R.drawable.account_icon),
                     contentDescription = null)
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(text = "Admin")
