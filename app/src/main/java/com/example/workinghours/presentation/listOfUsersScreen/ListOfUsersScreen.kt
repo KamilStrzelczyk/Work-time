@@ -1,5 +1,6 @@
 package com.example.workinghours.presentation.listOfUsersScreen
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,21 +14,59 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.navigation.NavController
 import com.example.workinghours.R
-import com.example.workinghours.presentation.Screen
+import com.example.workinghours.domain.model.User
+import com.example.workinghours.presentation.addWorkTimeScreen.AddWorkTimeActivity
+import com.example.workinghours.presentation.adminScreen.admin.AdminActivity
+import com.example.workinghours.presentation.adminScreen.admin.AdminViewModel
+import com.example.workinghours.presentation.previousDaysScreen.PreviousDayActivity
 
 @Composable
 fun ListOfUsersScreen(
-    viewModel: ListOfUsersViewModel,
-    navController: NavController,
+    listOfUsersViewModel: ListOfUsersViewModel,
+    adminViewModel: AdminViewModel,
 ) {
-    val state = viewModel.state.value
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val listOfUsersState = listOfUsersViewModel.state.value
+    val adminState = adminViewModel.state.value
+    val context = LocalContext.current
+    ListOfUsersScreen(
+        userList = listOfUsersState.userList,
+        showTopAppBarMoreAction = listOfUsersState.showTopAppBarMoreAction,
+        adminOption = adminState.adminOption,
+        showUserActionsDialog = listOfUsersState.showUserActionsDialog,
+        onUsersClicked = { listOfUsersViewModel.onUsersClicked() },
+        onTopAppBarMoreActionClicked = listOfUsersViewModel::onTopAppBarMoreActionClicked,
+        onDismissTopAppBarMoreAction = listOfUsersViewModel::onDismissTopAppBarMoreAction,
+        onDismissUserActionsDialog = listOfUsersViewModel::onDismissUserActionsDialog,
+        navigateToAddWorkTimeScreen = {
+            context.startActivity(Intent(context,
+                AddWorkTimeActivity::class.java))
+        },
+        navigateToPreviousDayScreen = {
+            context.startActivity(Intent(context,
+                PreviousDayActivity::class.java))
+        })
+}
 
+@Composable
+private fun ListOfUsersScreen(
+    userList: List<User>,
+    showTopAppBarMoreAction: Boolean,
+    adminOption: Boolean,
+    showUserActionsDialog: Boolean,
+    onUsersClicked: () -> Unit,
+    onTopAppBarMoreActionClicked: () -> Unit,
+    onDismissTopAppBarMoreAction: () -> Unit,
+    onDismissUserActionsDialog: () -> Unit,
+    navigateToAddWorkTimeScreen: () -> Unit,
+    navigateToPreviousDayScreen: () -> Unit,
+
+    ) {
+    val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -40,11 +79,13 @@ fun ListOfUsersScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { viewModel.onTopAppBarMoreActionClicked() }
+                        onClick = onTopAppBarMoreActionClicked
                     ) {
                         Icon(Icons.Filled.MoreVert, contentDescription = null)
                     }
-                    MoreAction(state = state, viewModel = viewModel, navController = navController)
+                    MoreAction(
+                        showTopAppBarMoreAction = showTopAppBarMoreAction,
+                        onDismissTopAppBarMoreAction = onDismissTopAppBarMoreAction)
                 }
             )
         }
@@ -58,31 +99,36 @@ fun ListOfUsersScreen(
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
             ) {
-                items(state.userList) {
+                items(userList) {
                     UserNameBox(
-                        userName = it,
-                        onClick = { viewModel.onUsersClicked() },
-                        state = state,
+                        userName = it.userName,
+                        showUserActionDialog = onUsersClicked,
+                        showAdminOption = adminOption,
                     )
                 }
             }
         }
     }
 
-    UserActionsDialog(state = state, viewModel, navController)
+    UserActionsDialog(
+        showUserActionsDialog = showUserActionsDialog,
+        onDismissUserActionsDialog = onDismissUserActionsDialog,
+        navigateToAddWorkTimeScreen = navigateToAddWorkTimeScreen,
+        navigateToPreviousDayScreen = navigateToPreviousDayScreen)
+
 }
 
 @Composable
-fun UserNameBox(
+private fun UserNameBox(
     userName: String,
-    onClick: (Boolean) -> Unit,
-    state: ListOfUsersViewModel.ViewModelState,
+    showUserActionDialog: () -> Unit,
+    showAdminOption: Boolean,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 8.dp)
-            .clickable { onClick(state.showUserActionsDialog) }
+            .clickable(onClick = showUserActionDialog)
     ) {
         Card(elevation = 10.dp) {
             Row(
@@ -94,20 +140,25 @@ fun UserNameBox(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = userName)
+                if (showAdminOption) {
+
+                }
             }
         }
     }
 }
 
+
 @Composable
-fun UserActionsDialog(
-    state: ListOfUsersViewModel.ViewModelState,
-    viewModel: ListOfUsersViewModel,
-    navController: NavController,
+private fun UserActionsDialog(
+    showUserActionsDialog: Boolean,
+    onDismissUserActionsDialog: () -> Unit,
+    navigateToPreviousDayScreen: () -> Unit,
+    navigateToAddWorkTimeScreen: () -> Unit,
 ) {
 
-    if (state.showUserActionsDialog)
-        Dialog(onDismissRequest = { viewModel.onDismissUserActionsDialog() }) {
+    if (showUserActionsDialog)
+        Dialog(onDismissRequest = { onDismissUserActionsDialog() }) {
             Surface(modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))) {
                 Box(modifier = Modifier
@@ -124,7 +175,10 @@ fun UserActionsDialog(
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(112.dp)
-                                    .clickable { navController.navigate(Screen.PreviousDayScreen.route) { viewModel.onDismissUserActionsDialog() } },
+                                    .clickable {
+                                        navigateToPreviousDayScreen()
+                                        onDismissUserActionsDialog()
+                                    },
                             ) {
                                 Column(modifier = Modifier
                                     .fillMaxHeight(),
@@ -146,7 +200,10 @@ fun UserActionsDialog(
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(112.dp)
-                                    .clickable { navController.navigate(Screen.AddWorkTimeScreen.route) { viewModel.onDismissUserActionsDialog() } })
+                                    .clickable {
+                                        navigateToAddWorkTimeScreen()
+                                        onDismissUserActionsDialog()
+                                    })
                             {
                                 Column(modifier = Modifier
                                     .fillMaxHeight(),
@@ -166,18 +223,21 @@ fun UserActionsDialog(
 }
 
 @Composable
-fun MoreAction(
-    state: ListOfUsersViewModel.ViewModelState,
-    viewModel: ListOfUsersViewModel,
-    navController: NavController,
+private fun MoreAction(
+    showTopAppBarMoreAction: Boolean,
+    onDismissTopAppBarMoreAction: () -> Unit,
 ) {
-    if (state.showTopAppBarMoreAction)
+    val context = LocalContext.current
+    if (showTopAppBarMoreAction)
         DropdownMenu(
             expanded = true,
-            onDismissRequest = { viewModel.onDismissTopAppBarMoreAction() }
+            onDismissRequest = onDismissTopAppBarMoreAction
         ) {
             DropdownMenuItem(
-                onClick = { navController.navigate(Screen.AdminScreen.route) {viewModel.onDismissTopAppBarMoreAction()} }
+                onClick = {
+                    onDismissTopAppBarMoreAction()
+                    context.startActivity(Intent(context, AdminActivity::class.java))
+                }
             ) {
                 Image(painter = painterResource(id = R.drawable.account_icon),
                     contentDescription = null)
@@ -186,3 +246,18 @@ fun MoreAction(
             }
         }
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//private fun ListOfUsersScreenPreview(
+//) = ListOfUsersScreen(userList = listOf("Dominik"),
+//    showTopAppBarMoreAction = false,
+//    adminOption = true,
+//    showUserActionsDialog = false,
+//    onUsersClicked = { },
+//    onTopAppBarMoreActionClicked = { },
+//    onDismissTopAppBarMoreAction = { },
+//    onDismissUserActionsDialog = { },
+//    navigateToAddWorkTimeScreen = { }) {
+//
+//}

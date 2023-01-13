@@ -14,7 +14,7 @@
         android:theme="@style/Theme.WorkingHours"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.listOfUsersScreen.ListOfUsersActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.WorkingHours">
@@ -28,6 +28,13 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity android:name=".presentation.adminScreen.admin.AdminActivity" />
+        <activity android:name=".presentation.adminScreen.sendDailyReport.SendDailyReportActivity" />
+        <activity android:name=".presentation.adminScreen.sendMonthReport.SendMonthReportActivity" />
+        <activity android:name=".presentation.addWorkTimeScreen.AddWorkTimeActivity" />
+        <activity android:name=".presentation.previousDaysScreen.PreviousDayActivity" />
+        <activity android:name=".presentation.adminScreen.deleteUser.DeleteUserActivity" />
+
     </application>
 
 </manifest>

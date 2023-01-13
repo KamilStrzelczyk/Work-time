@@ -1,116 +1,57 @@
 package com.example.workinghours.presentation.addWorkTimeScreen
 
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.workinghours.domain.usecase.AddWorkTimeScreenUseCase.CalculateAmountOfHours
+import com.example.Utils
+import com.example.workinghours.domain.usecase.CalculateAmountOfHoursUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.joda.time.DateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class AddWorkTimeViewModel @Inject constructor(
-    private val calculateAmountOfHours: CalculateAmountOfHours,
+    private val calculateAmountOfHoursUseCase: CalculateAmountOfHoursUseCase,
 ) : ViewModel() {
     val state = mutableStateOf(ViewModelState())
 
-    fun onSecondHourClicked(secondHour: String) {
-        updateState(state.value.copy(
-            secondHour = secondHour.toInt(),
-            showSecondClockHour = false,
-        ))
-    }
 
-    fun onSecondMinuteClicked(secondMinute: String) {
-        updateState(state.value.copy(
-            secondMinute = secondMinute.toInt(),
-            showSecondClockMinute = false,
-        ))
-    }
-
-    fun onStartHourClicked(startHour: String) {
-        updateState(state.value.copy(
-            startHour = startHour.toInt(),
-            showStartClockHour = false,
-        ))
-    }
-
-    fun onStartMinuteClicked(startMinute: String) {
-        updateState(state.value.copy(
-            startMinute = startMinute.toInt(),
-            showStartClockMinute = false,
-        ))
-    }
-
-    fun onEndHourClicked(endHour: String) {
-        updateState(state.value.copy(
-            endHour = endHour.toInt(),
-            showEndClockHour = false,
-        ))
-    }
-
-    fun onEndMinuteClicked(endMinute: String) {
-        updateState(state.value.copy(
-            endMinute = endMinute.toInt(),
-            showEndClockMinute = false,
-        ))
-
-    }
-
-    fun onDropArrowStartHourClicked() {
-        updateState(state.value.copy(
-            showStartClockHour = true,
-        ))
-    }
-
-    fun onDropArrowSecondHourClicked() {
-        updateState(state.value.copy(
-            showSecondClockHour = true,
-        ))
-
-    }
-
-    fun onDropArrowSecondMinuteClicked() {
-        updateState(state.value.copy(
-            showSecondClockMinute = true,
-        ))
-    }
-
-    fun onDropArrowStartMinuteClicked() {
-        updateState(state.value.copy(
-            showStartClockMinute = true,
-        ))
-    }
-
-    fun onDropArrowEndHourClicked() {
-        updateState(state.value.copy(
-            showEndClockHour = true,
-        ))
-    }
-
-    fun onDropArrowEndMinuteClicked() {
-        updateState(state.value.copy(
-            showEndClockMinute = true,
-        ))
-    }
-
-    fun onDismissSaveDialog (){
+    fun onDismissSaveDialog() {
         updateState(state.value.copy(
             showSaveDialog = false,
         ))
     }
 
     fun onButtonClicked() {
-        val workTime = calculateAmountOfHours(
-            state.value.startHour,
-            state.value.startMinute,
-            state.value.endHour,
-            state.value.endMinute,
-            state.value.secondHour,
-            state.value.secondMinute,
+        val workTime = calculateAmountOfHoursUseCase(
+            startHour = state.value.startWorkClock.setHour,
+            startMinute = state.value.startWorkClock.setMinute,
+            endHour = state.value.endWorkClock.setHour,
+            endMinute = state.value.endWorkClock.setMinute,
+            hygieneHour = state.value.hygieneClock.setHour,
+            hygieneMinute = state.value.hygieneClock.setMinute,
         )
         updateState(state.value.copy(
             workTime = workTime,
             showSaveDialog = true,
+        ))
+    }
+
+    fun updateStartWorkClock(clock: Clock) {
+        updateState(state.value.copy(
+            startWorkClock = clock
+        ))
+    }
+
+    fun updateEndWorkClock(clock: Clock) {
+        updateState(state.value.copy(
+            endWorkClock = clock
+        ))
+    }
+
+    fun updateHygieneWorkClock(clock: Clock) {
+        updateState(state.value.copy(
+            hygieneClock = clock
         ))
     }
 
@@ -119,22 +60,11 @@ class AddWorkTimeViewModel @Inject constructor(
     }
 
     data class ViewModelState(
-        val showStartClockHour: Boolean = false,
-        val showStartClockMinute: Boolean = false,
-        val showEndClockHour: Boolean = false,
-        val showEndClockMinute: Boolean = false,
         val showSaveDialog: Boolean = false,
-        val showSecondClockHour: Boolean = false,
-        val showSecondClockMinute: Boolean = false,
-        val secondHour: Int = 0,
-        val secondMinute: Int = 0,
-        val startHour: Int = 0,
-        val startMinute: Int = 0,
-        val endHour: Int = 0,
-        val endMinute: Int = 0,
-        val extraTime: Int = 0,
+        val extraTime: Int = Utils.EMPTY_INT,
         val workTime: DateTime? = null,
-        val clockHour: List<String> = listOf<String>("00",
+        val clockHour: List<String> = listOf<String>(
+            "00",
             "01",
             "02",
             "03",
@@ -163,7 +93,7 @@ class AddWorkTimeViewModel @Inject constructor(
             "15",
             "30",
             "45"),
-        val secondClockHour: List<String> = listOf<String>(
+        val hygieneClockHour: List<String> = listOf<String>(
             "0",
             "1",
             "2",
@@ -175,7 +105,7 @@ class AddWorkTimeViewModel @Inject constructor(
             "8",
             "9",
             "10"),
-        val secondClockMinute: List<String> = listOf<String>(
+        val hygieneClockMinute: List<String> = listOf<String>(
             "00",
             "10",
             "20",
@@ -183,5 +113,59 @@ class AddWorkTimeViewModel @Inject constructor(
             "40",
             "50",
             "60"),
+        val startWorkClock: Clock = Clock(
+            showMinuteClock = false,
+            showClock = false,
+            timeHourScope = clockHour,
+            timeMinuteScope = clockMinute,
+            setHour = 0,
+            setMinute = 0,
+        ),
+        val endWorkClock: Clock = Clock(
+            showMinuteClock = false,
+            showClock = false,
+            timeHourScope = clockHour,
+            timeMinuteScope = clockMinute,
+            setHour = 0,
+            setMinute = 0,
+        ),
+        val hygieneClock: Clock = Clock(
+            showMinuteClock = false,
+            showClock = false,
+            timeHourScope = hygieneClockHour,
+            timeMinuteScope = hygieneClockMinute,
+            setHour = 0,
+            setMinute = 0,
+        ),
     )
+
+    data class Clock(
+        val showMinuteClock: Boolean,
+        val showClock: Boolean,
+        val timeHourScope: List<String>,
+        val timeMinuteScope: List<String>,
+        val setHour: Int,
+        val setMinute: Int,
+    ) {
+
+        fun onHourSelected(hour: Int): Clock {
+            return copy(showClock = false, setHour = hour)
+        }
+
+        fun onMinuteSelected(minute: Int): Clock {
+            return copy(showMinuteClock = false, setMinute = minute)
+        }
+
+        fun showClockHour(): Clock {
+            return copy(showClock = true)
+        }
+
+        fun showClockMinute(): Clock {
+            return copy(showMinuteClock = true)
+        }
+
+        fun hideClock(): Clock {
+            return copy(showClock = false, showMinuteClock = false)
+        }
+    }
 }

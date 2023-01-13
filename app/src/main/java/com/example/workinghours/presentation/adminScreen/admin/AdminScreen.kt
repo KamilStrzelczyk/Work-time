@@ -1,46 +1,62 @@
-package com.example.workinghours.presentation.adminScreen
+package com.example.workinghours.presentation.adminScreen.admin
 
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import com.example.workinghours.R
+import com.example.workinghours.presentation.adminScreen.deleteUser.DeleteUserActivity
+import com.example.workinghours.presentation.adminScreen.sendDailyReport.SendDailyReportActivity
+import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersActivity
 import com.example.workinghours.ui.AdminGirdOptionType
 import com.example.workinghours.ui.AdminGridOption
 
 @Composable
-fun AdminScreen(viewModel: AdminViewModel) {
+fun AdminScreen(
+    viewModel: AdminViewModel,
+) {
+    val state = viewModel.state.value
     Column(modifier = Modifier.fillMaxSize()
 
     ) {
+        val context = LocalContext.current
         Grids(onItemClick = {
             when (it) {
                 AdminGirdOptionType.SEND_DAILY_REPORT -> {
-                    println("SEND_DAILY_REPORT")
+                    context.startActivity(Intent(context, SendDailyReportActivity::class.java))
                 }
                 AdminGirdOptionType.SEND_MONTH_REPORT -> {
                     println("SEND_MONTH_REPORT")
                 }
                 AdminGirdOptionType.DELETE_USER -> {
-                    println("DELETE_USER")
+                    context.startActivity(Intent(context, DeleteUserActivity::class.java))
                 }
                 AdminGirdOptionType.ADDUSER -> {
-                    println("ADDUSER")
+                    viewModel.showAddUserActionsDialog()
                 }
                 AdminGirdOptionType.USER_PREVIEW -> {
-                    println("USER_PREVIEW")
+                    context.startActivity(Intent(context, ListOfUsersActivity::class.java))
                 }
                 AdminGirdOptionType.CHANGE_PASSWORD -> {
                     println("CHANGE_PASSWORD")
@@ -48,6 +64,14 @@ fun AdminScreen(viewModel: AdminViewModel) {
             }
         })
     }
+    AddUserDialog(
+        showAddUserDialog = viewModel.state.value.showAddUserActionsDialog,
+        state = state,
+        onUserNameChange = { viewModel.onUserNameChange(it) },
+        onUserPasswordChange = { viewModel.onUserPasswordChange(it) },
+        onSaveUserClicked = { viewModel.onSaveUserClicked() },
+        onDismissAddUserActionsDialog = { viewModel.onDismissAddUserActionsDialog() }
+    )
 }
 
 @Composable
@@ -104,6 +128,46 @@ fun Card(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun AdminScreenPreview() = AdminScreen(viewModel = AdminViewModel())
+private fun AddUserDialog(
+    showAddUserDialog: Boolean,
+    state: AdminViewModel.ViewModelState,
+    onUserNameChange: (String) -> Unit,
+    onUserPasswordChange: (String) -> Unit,
+    onSaveUserClicked: () -> Unit,
+    onDismissAddUserActionsDialog: () -> Unit,
+) {
+    if (showAddUserDialog)
+        Dialog(onDismissRequest = { onDismissAddUserActionsDialog() }) {
+            Surface(modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+            ) {
+                Box(
+                    modifier = Modifier.padding(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally)
+                    {
+                        OutlinedTextField(
+                            value = state.userName,
+                            onValueChange = { onUserNameChange(it) },
+                            label = { Text(text = "Nazwa użytkownika") })
+                        OutlinedTextField(
+                            value = state.userPassword,
+                            onValueChange = { onUserPasswordChange(it) },
+                            label = { Text(text = "Nazwa Hasło") })
+                        Button(onClick = { onSaveUserClicked() }) {
+                            Text(text = "Zapisz użytkownika")
+                        }
+                    }
+
+                }
+            }
+        }
+}
+
+//@Preview(showBackground = true)
+//@Composable
+//fun AdminScreenPreview() = AdminScreen(viewModel = AdminViewModel(),
+//    navController = NavController(context = LocalContext.current))
+
