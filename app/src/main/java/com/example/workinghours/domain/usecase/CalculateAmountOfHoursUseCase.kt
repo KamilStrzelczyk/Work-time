@@ -15,7 +15,7 @@ class CalculateAmountOfHoursUseCase @Inject constructor() {
         hygieneHour: Int,
         hygieneMinute: Int,
     ): DateTime {
-
+        val localTime = DateTime.now()
         val time = DateTimeFormat.forPattern("HH:mm")
         val startTime = time.parseDateTime("$startHour:$startMinute")
         val endTime = time.parseDateTime("$endHour:$endMinute")
@@ -23,6 +23,8 @@ class CalculateAmountOfHoursUseCase @Inject constructor() {
         val duration = Interval(startTime, endTime).toDuration()
         val sum = duration.millis - secondTime.millis
         val convertSum = DateTime(sum)
-        return time.parseDateTime("${convertSum.hourOfDay}:${convertSum.minuteOfHour}")
+        return localTime
+            .withHourOfDay(convertSum.hourOfDay)
+            .withMinuteOfHour(convertSum.minuteOfHour)
     }
 }

@@ -42,13 +42,15 @@ fun ListOfUsersScreen(
         onTopAppBarMoreActionClicked = listOfUsersViewModel::onTopAppBarMoreActionClicked,
         onDismissTopAppBarMoreAction = listOfUsersViewModel::onDismissTopAppBarMoreAction,
         onDismissUserActionsDialog = listOfUsersViewModel::onDismissUserActionsDialog,
+        onUserNameBoxClicked = { listOfUsersViewModel.onUserNameBoxClicked(it) },
         navigateToAddWorkTimeScreen = {
-            context.startActivity(Intent(context,
-                AddWorkTimeActivity::class.java))
+            context.startActivity(AddWorkTimeActivity.createStartIntent(context,
+                listOfUsersState.userId))
+
         },
         navigateToPreviousDayScreen = {
-            context.startActivity(Intent(context,
-                PreviousDayActivity::class.java))
+            context.startActivity(PreviousDayActivity.createStartIntent(context,
+                listOfUsersState.userId))
         })
 }
 
@@ -64,8 +66,8 @@ private fun ListOfUsersScreen(
     onDismissUserActionsDialog: () -> Unit,
     navigateToAddWorkTimeScreen: () -> Unit,
     navigateToPreviousDayScreen: () -> Unit,
-
-    ) {
+    onUserNameBoxClicked: (Int) -> Unit,
+) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
@@ -102,8 +104,10 @@ private fun ListOfUsersScreen(
                 items(userList) {
                     UserNameBox(
                         userName = it.userName,
+                        userId = it.id,
                         showUserActionDialog = onUsersClicked,
                         showAdminOption = adminOption,
+                        onUserNameBoxClicked = { onUserNameBoxClicked(it) },
                     )
                 }
             }
@@ -120,15 +124,20 @@ private fun ListOfUsersScreen(
 
 @Composable
 private fun UserNameBox(
+    userId: Int,
     userName: String,
     showUserActionDialog: () -> Unit,
+    onUserNameBoxClicked: (Int) -> Unit,
     showAdminOption: Boolean,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 8.dp)
-            .clickable(onClick = showUserActionDialog)
+            .clickable {
+                showUserActionDialog()
+                onUserNameBoxClicked(userId)
+            }
     ) {
         Card(elevation = 10.dp) {
             Row(

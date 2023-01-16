@@ -3,18 +3,43 @@ package com.example.workinghours.presentation.addWorkTimeScreen
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.Utils
+import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.domain.usecase.CalculateAmountOfHoursUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.workinghours.domain.usecase.SaveUserWorkDataUseCase
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
-import javax.inject.Inject
 
-@HiltViewModel
-class AddWorkTimeViewModel @Inject constructor(
-    private val calculateAmountOfHoursUseCase: CalculateAmountOfHoursUseCase,
+class AddWorkTimeViewModel @AssistedInject constructor(
+    private val calculateAmountOfHours: CalculateAmountOfHoursUseCase,
+    private val saveUserWorkData: SaveUserWorkDataUseCase,
+    @Assisted
+    private val userId: Int,
 ) : ViewModel() {
+
     val state = mutableStateOf(ViewModelState())
 
+    @AssistedFactory
+    interface Factory {
+        fun create(userId: Int): AddWorkTimeViewModel
+    }
+
+    fun onSaveClicked() {
+        viewModelScope.launch {
+            state.value.workTime?.let {
+                WorkData(
+                    userId = userId,
+                    userWorkData = state.value.userWorkData,
+                    userWorkAmount = it,
+                )
+            }?.let { saveUserWorkData(it) }
+        }
+        onDismissSaveDialog()
+    }
 
     fun onDismissSaveDialog() {
         updateState(state.value.copy(
@@ -23,7 +48,7 @@ class AddWorkTimeViewModel @Inject constructor(
     }
 
     fun onButtonClicked() {
-        val workTime = calculateAmountOfHoursUseCase(
+        val workTime = calculateAmountOfHours(
             startHour = state.value.startWorkClock.setHour,
             startMinute = state.value.startWorkClock.setMinute,
             endHour = state.value.endWorkClock.setHour,
@@ -60,6 +85,7 @@ class AddWorkTimeViewModel @Inject constructor(
     }
 
     data class ViewModelState(
+        val userWorkData: Int = 2,
         val showSaveDialog: Boolean = false,
         val extraTime: Int = Utils.EMPTY_INT,
         val workTime: DateTime? = null,

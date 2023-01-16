@@ -4,10 +4,10 @@ import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.domain.repository.WorkDataRepository
 import javax.inject.Inject
 
-class SaveUserWorkDataUseCase @Inject constructor(private val repository: WorkDataRepository) {
+class GetUserDateUseCase @Inject constructor(private val workDataRepository: WorkDataRepository) {
     suspend operator fun invoke(
-        workData: WorkData,
-    ) {
-        repository.saveNewData(workData)
+        userId: Int,
+    ) : List<WorkData> {
+        return workDataRepository.getAllDate(id = userId)
     }
 }

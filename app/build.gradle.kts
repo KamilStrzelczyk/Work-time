@@ -1,4 +1,3 @@
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -29,7 +28,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
+        freeCompilerArgs = listOf("-Xjvm-default=all")
+
     }
     buildFeatures {
         compose = true
@@ -72,6 +73,6 @@ dependencies {
     implementation("androidx.room:room-ktx:2.4.3")
 
     //Joda-Time
-    implementation ("joda-time:joda-time:2.12.1")
+    implementation("joda-time:joda-time:2.12.1")
 
 }

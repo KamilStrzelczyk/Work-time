@@ -2,6 +2,7 @@ package com.example.workinghours.infrastructure.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.workinghours.infrastructure.database.dao.UserDao
 import com.example.workinghours.infrastructure.database.dao.WorkDataDao
 import com.example.workinghours.infrastructure.database.entities.UserEntity
@@ -13,6 +14,9 @@ import com.example.workinghours.infrastructure.database.entities.WorkDataEntity
         WorkDataEntity::class,
     ],
     version = 1,
+)
+@TypeConverters(
+    TypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getUserDao(): UserDao

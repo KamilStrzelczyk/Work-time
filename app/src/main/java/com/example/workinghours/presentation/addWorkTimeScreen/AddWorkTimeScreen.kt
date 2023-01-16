@@ -1,5 +1,6 @@
 package com.example.workinghours.presentation.addWorkTimeScreen
 
+import android.content.Intent
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersActivity
 import org.joda.time.DateTime
 
 @Composable
@@ -153,15 +156,6 @@ fun HourClock(
             },
             onItemSelected = { updateClock(clockData.onHourSelected(it.toInt())) },
             options = clockData.timeHourScope)
-//        DropdownMenu(expanded = true, onDismissRequest = {
-//            updateClock(clockData.hideClock())
-//        }) {
-//            clockData.timeHourScope.forEach {
-//                DropdownMenuItem(onClick = { updateClock(clockData.onHourSelected(it.toInt())) }) {
-//                    Text(text = it)
-//                }
-//            }
-//        }
     }
 }
 
@@ -177,15 +171,6 @@ fun MinuteClock(
             },
             onItemSelected = { updateClock(clockData.onMinuteSelected(it.toInt())) },
             options = clockData.timeMinuteScope)
-//        DropdownMenu(expanded = true, onDismissRequest = {
-//            updateClock(clockData.hideClock())
-//        }) {
-//            clockData.timeMinuteScope.forEach {
-//                DropdownMenuItem(onClick = { updateClock(clockData.onMinuteSelected(it.toInt())) }) {
-//                    Text(text = it)
-//                }
-//            }
-//        }
     }
 }
 
@@ -194,6 +179,7 @@ fun SaveTimeDialog(
     viewModel: AddWorkTimeViewModel,
     state: AddWorkTimeViewModel.ViewModelState,
 ) {
+    val context = LocalContext.current
     val patternForCalculateTime = "HH:mm"
     if (state.showSaveDialog)
         Dialog(onDismissRequest = { viewModel.onDismissSaveDialog() }) {
@@ -206,10 +192,11 @@ fun SaveTimeDialog(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Twoj czas pracy")
                         state.workTime?.let { Text(it.toString(patternForCalculateTime)) }
-                        Button(onClick =
-                        {
-//                            navController.navigate(Screen.ListOfUsersScreen.route)
-                        }) {
+                        Button(onClick = {
+                            viewModel.onSaveClicked()
+                            context.startActivity(Intent(context, ListOfUsersActivity::class.java))
+                        }
+                        ) {
                             Text(text = "OK")
                         }
                     }

@@ -13,6 +13,7 @@ import com.example.workinghours.presentation.adminScreen.admin.AdminViewModel
 import com.example.workinghours.presentation.previousDaysScreen.PreviousDaysViewModel
 import com.example.workinghours.ui.theme.WorkingHoursTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ListOfUsersActivity : ComponentActivity() {
