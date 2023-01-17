@@ -13,13 +13,12 @@ import com.example.workinghours.presentation.adminScreen.admin.AdminViewModel
 import com.example.workinghours.presentation.previousDaysScreen.PreviousDaysViewModel
 import com.example.workinghours.ui.theme.WorkingHoursTheme
 import dagger.hilt.android.AndroidEntryPoint
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ListOfUsersActivity : ComponentActivity() {
     private val listOfUsersScreenViewModel: ListOfUsersViewModel by viewModels()
-    private val addWorkTimeViewModel: AddWorkTimeViewModel by viewModels()
-    private val previousDaysViewModel: PreviousDaysViewModel by viewModels()
     private val adminViewModel: AdminViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

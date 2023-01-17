@@ -13,6 +13,6 @@ interface WorkDataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveWorkData(vararg workData: WorkDataEntity)
 
-    @Query("SELECT * FROM work_data WHERE id =:id")
-    suspend fun getAllDate(id: Int): List<WorkDataEntity>
+    @Query("SELECT * FROM work_data WHERE user_id =:userId")
+    suspend fun getAllDate(vararg userId: Int): List<WorkDataEntity>
 }

@@ -7,6 +7,7 @@ import com.example.workinghours.infrastructure.database.dao.UserDao
 import com.example.workinghours.infrastructure.database.dao.WorkDataDao
 import com.example.workinghours.infrastructure.database.entities.UserEntity
 import com.example.workinghours.infrastructure.database.entities.WorkDataEntity
+import org.joda.time.DateTime
 
 @Database(
     entities = [
@@ -58,6 +59,44 @@ abstract class AppDatabase : RoomDatabase() {
                 userName = "Irena",
                 userPassword = "1234",
             ),
+        )
+        getWorkDataDao().saveWorkData(
+            WorkDataEntity(
+                id = 1,
+                userId = 2,
+                amountWorkTime = DateTime(1674032400000),
+                userWorkData = DateTime(1674118800000),
+                startWorkTime = DateTime(1674018000000),
+                endWorkTime = DateTime(1674054000000),
+                hygieneWorkTime = DateTime(1674000000000)
+            ),
+            WorkDataEntity(
+                id = 2,
+                userId = 2,
+                amountWorkTime = DateTime(1674032400000),
+                userWorkData = DateTime(1672650000000),
+                startWorkTime = DateTime(1674018000000),
+                endWorkTime = DateTime(1674054000000),
+                hygieneWorkTime = DateTime(1674000000000)
+            ),
+            WorkDataEntity(
+                id = 3,
+                userId = 2,
+                amountWorkTime = DateTime(1674032400000),
+                userWorkData = DateTime(1674982800000),
+                startWorkTime = DateTime(1674018000000),
+                endWorkTime = DateTime(1674054000000),
+                hygieneWorkTime = DateTime(1674000000000)
+            ),
+            WorkDataEntity(
+                id = 4,
+                userId = 2,
+                amountWorkTime = DateTime(1674032400000),
+                userWorkData = DateTime(1672909200000),
+                startWorkTime = DateTime(1674018000000),
+                endWorkTime = DateTime(1674054000000),
+                hygieneWorkTime = DateTime(1674000000000)
+            )
         )
     }
 }

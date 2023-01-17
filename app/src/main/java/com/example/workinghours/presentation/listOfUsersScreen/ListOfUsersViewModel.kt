@@ -7,6 +7,7 @@ import com.example.workinghours.domain.model.User
 import com.example.workinghours.domain.usecase.GetAllUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +22,10 @@ class ListOfUsersViewModel @Inject constructor(
             state.value = state.value.copy(
                 userList = getAllUsers())
         }
+        val x = DateTime.now()
+        val b = x.dayOfWeek()
+        println("dupa${x.dayOfWeek().asText}")
+        println("dupa${x.withDayOfMonth(2)}")
     }
 
 

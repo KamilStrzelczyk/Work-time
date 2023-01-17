@@ -12,7 +12,13 @@ data class WorkDataEntity(
     @ColumnInfo(name = "user_id")
     var userId: Int,
     @ColumnInfo(name = "user_work_amount")
-    var userWorkAmount: DateTime,
+    val amountWorkTime: DateTime,
     @ColumnInfo(name = "user_work_date")
-    var userWorkData: Int,
+    var userWorkData: DateTime,
+    @ColumnInfo(name = "start_work_time")
+    val startWorkTime: DateTime,
+    @ColumnInfo(name = "end_work_time")
+    val endWorkTime: DateTime,
+    @ColumnInfo(name = "hygiene_work_time")
+    val hygieneWorkTime: DateTime,
 )

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.Utils
+import com.example.workinghours.domain.model.CalculateAmountOfHours
 import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.domain.usecase.CalculateAmountOfHoursUseCase
 import com.example.workinghours.domain.usecase.SaveUserWorkDataUseCase
@@ -12,7 +13,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 
 class AddWorkTimeViewModel @AssistedInject constructor(
     private val calculateAmountOfHours: CalculateAmountOfHoursUseCase,
@@ -33,9 +33,12 @@ class AddWorkTimeViewModel @AssistedInject constructor(
             state.value.workTime?.let {
                 WorkData(
                     userId = userId,
-                    userWorkData = state.value.userWorkData,
-                    userWorkAmount = it,
-                )
+                    userWorkDate = it.userWorkData,
+                    startWorkTime = it.startWorkTime,
+                    endWorkTime = it.endWorkTime,
+                    hygieneWorkTime = it.hygieneWorkTime,
+                    amountWorkTime = it.amountWorkTime,
+                    )
             }?.let { saveUserWorkData(it) }
         }
         onDismissSaveDialog()
@@ -85,10 +88,9 @@ class AddWorkTimeViewModel @AssistedInject constructor(
     }
 
     data class ViewModelState(
-        val userWorkData: Int = 2,
         val showSaveDialog: Boolean = false,
         val extraTime: Int = Utils.EMPTY_INT,
-        val workTime: DateTime? = null,
+        val workTime: CalculateAmountOfHours? = null,
         val clockHour: List<String> = listOf<String>(
             "00",
             "01",

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetUserDateUseCase @Inject constructor(private val workDataRepository: WorkDataRepository) {
     suspend operator fun invoke(
         userId: Int,
-    ) : List<WorkData> {
-        return workDataRepository.getAllDate(id = userId)
+    ): List<WorkData> {
+        return workDataRepository.getAllDate(userId = userId)
     }
 }

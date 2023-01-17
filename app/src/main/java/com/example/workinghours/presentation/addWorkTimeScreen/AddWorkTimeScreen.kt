@@ -191,7 +191,9 @@ fun SaveTimeDialog(
                     contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Twoj czas pracy")
-                        state.workTime?.let { Text(it.toString(patternForCalculateTime)) }
+                        state.workTime?.amountWorkTime?.let {
+                            Text(it.toString(patternForCalculateTime))
+                        }
                         Button(onClick = {
                             viewModel.onSaveClicked()
                             context.startActivity(Intent(context, ListOfUsersActivity::class.java))

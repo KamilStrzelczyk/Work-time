@@ -75,4 +75,6 @@ dependencies {
     //Joda-Time
     implementation("joda-time:joda-time:2.12.1")
 
+    // status bar customization
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
 }

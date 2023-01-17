@@ -16,8 +16,8 @@ class WorkDataRepositoryImpl @Inject constructor(
         workDataDao.saveWorkData(mapper.toEntityModel(workData))
     }
 
-    override suspend fun getAllDate(id: Int): List<WorkData> {
-        val list: List<WorkDataEntity> = workDataDao.getAllDate(id)
+    override suspend fun getAllDate(userId: Int): List<WorkData> {
+        val list: List<WorkDataEntity> = workDataDao.getAllDate(userId)
         val domainList = list.map { mapper.toDomainModel(it) }
         return domainList
     }

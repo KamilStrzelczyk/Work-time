@@ -10,8 +10,11 @@ class WorkDataMapper @Inject constructor() {
         WorkData(
             id = id,
             userId = userId,
-            userWorkAmount = userWorkAmount,
-            userWorkData = userWorkData,
+            userWorkDate = userWorkData,
+            startWorkTime = startWorkTime,
+            endWorkTime = endWorkTime,
+            hygieneWorkTime = hygieneWorkTime,
+            amountWorkTime = amountWorkTime,
         )
 
     }
@@ -20,8 +23,11 @@ class WorkDataMapper @Inject constructor() {
         WorkDataEntity(
             id = id,
             userId = userId,
-            userWorkAmount = userWorkAmount,
-            userWorkData = userWorkData,
+            userWorkData = userWorkDate,
+            startWorkTime = startWorkTime,
+            endWorkTime = endWorkTime,
+            hygieneWorkTime = hygieneWorkTime,
+            amountWorkTime = amountWorkTime,
         )
     }
 }
