@@ -41,6 +41,18 @@ class PreviousDaysViewModel @AssistedInject constructor(
         fun create(userId: Int): PreviousDaysViewModel
     }
 
+    fun onTopAppBarFilterAllDaysClicked() {
+        updateState(state.value.copy(
+            showOnlyWorkDays = false
+        ))
+    }
+
+    fun onTopAppBarFilterWorkdaysClicked() {
+        updateState(state.value.copy(
+            showOnlyWorkDays = true
+        ))
+    }
+
     fun onTopAppBarFilterClicked() {
         updateState(state.value.copy(
             showFilterTopAppBar = true
@@ -58,6 +70,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
     }
 
     data class ViewModelState(
+        val showOnlyWorkDays: Boolean = false,
         val showFilterTopAppBar: Boolean = false,
         val nameOfDay: String = Utils.EMPTY_STRING,
         private val userDate: List<WorkData> = emptyList(),
@@ -95,8 +108,8 @@ class PreviousDaysViewModel @AssistedInject constructor(
                     ?.amountWorkTime
                     ?.toString(patternForTime)
                     ?: ""
-            val showIfIsSunday: Boolean =
-                "Sunday" == dayOfMonth.date.dayOfWeek().asText
+            val showIfIsSaturday: Boolean = "sobota" == dayOfMonth.date.dayOfWeek().asText
+            val showIfIsSunday: Boolean = "niedziela" == dayOfMonth.date.dayOfWeek().asText
 
             DayInCalendar(
                 workDate = "${dayOfMonth.numberOfDay}/${dayOfMonth.numberOfMonth}/${dayOfMonth.numberOfYear}",
@@ -108,7 +121,8 @@ class PreviousDaysViewModel @AssistedInject constructor(
                 showOnlyWorkDay = workAmount.isNotEmpty(),
                 showStartWorkTime = startWorkTime.isNotBlank(),
                 showHygieneTime = hygieneWorkTime.isNotBlank(),
-                showIfIsSunday = showIfIsSunday)
+                showIfIsSunday = showIfIsSunday,
+                showIfIsSaturday = showIfIsSaturday)
         }
     }
 }

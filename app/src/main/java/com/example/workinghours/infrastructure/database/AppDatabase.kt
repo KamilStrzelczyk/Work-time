@@ -3,8 +3,10 @@ package com.example.workinghours.infrastructure.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.workinghours.infrastructure.database.dao.AdminDao
 import com.example.workinghours.infrastructure.database.dao.UserDao
 import com.example.workinghours.infrastructure.database.dao.WorkDataDao
+import com.example.workinghours.infrastructure.database.entities.AdminEntity
 import com.example.workinghours.infrastructure.database.entities.UserEntity
 import com.example.workinghours.infrastructure.database.entities.WorkDataEntity
 import org.joda.time.DateTime
@@ -13,6 +15,7 @@ import org.joda.time.DateTime
     entities = [
         UserEntity::class,
         WorkDataEntity::class,
+        AdminEntity::class,
     ],
     version = 1,
 )
@@ -22,7 +25,14 @@ import org.joda.time.DateTime
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getUserDao(): UserDao
     abstract fun getWorkDataDao(): WorkDataDao
+    abstract fun getAdminDao(): AdminDao
     suspend fun initializeDataBase() {
+        getAdminDao().changePassword(
+            AdminEntity(
+                id = 1,
+                password = "1"
+            )
+        )
         getUserDao().saveNewUser(
             UserEntity(
                 id = 1,

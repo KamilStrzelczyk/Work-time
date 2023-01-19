@@ -5,9 +5,9 @@ import org.joda.time.DateTime
 
 
 data class WorkData(
-    var id: Int = 0,
-    var userId: Int,
-    var userWorkDate: DateTime,
+    val id: Int = 0,
+    val userId: Int,
+    val userWorkDate: DateTime,
     val startWorkTime: DateTime,
     val endWorkTime: DateTime,
     val hygieneWorkTime: DateTime,

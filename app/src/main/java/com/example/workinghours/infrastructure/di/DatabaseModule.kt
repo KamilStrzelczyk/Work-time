@@ -3,6 +3,7 @@ package com.example.workinghours.infrastructure.di
 import android.content.Context
 import androidx.room.Room
 import com.example.workinghours.infrastructure.database.AppDatabase
+import com.example.workinghours.infrastructure.database.dao.AdminDao
 import com.example.workinghours.infrastructure.database.dao.UserDao
 import com.example.workinghours.infrastructure.database.dao.WorkDataDao
 import dagger.Module
@@ -16,12 +17,18 @@ import javax.inject.Singleton
 @Module
 class DatabaseModule {
     @Provides
-    fun provideUserDAO(appDatabase: AppDatabase): UserDao {
+    fun provideUserDao(appDatabase: AppDatabase): UserDao {
         return appDatabase.getUserDao()
     }
+
     @Provides
-    fun provideWorkData(appDatabase: AppDatabase): WorkDataDao{
+    fun provideWorkDataDao(appDatabase: AppDatabase): WorkDataDao {
         return appDatabase.getWorkDataDao()
+    }
+
+    @Provides
+    fun provideAdminDao(appDatabase: AppDatabase): AdminDao {
+        return appDatabase.getAdminDao()
     }
 
     @Singleton

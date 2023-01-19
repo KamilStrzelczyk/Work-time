@@ -3,6 +3,7 @@ package com.example.workinghours.presentation.listOfUsersScreen
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.Utils
 import com.example.workinghours.domain.model.User
 import com.example.workinghours.domain.usecase.GetAllUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,10 +23,6 @@ class ListOfUsersViewModel @Inject constructor(
             state.value = state.value.copy(
                 userList = getAllUsers())
         }
-        val x = DateTime.now()
-        val b = x.dayOfWeek()
-        println("dupa${x.dayOfWeek().asText}")
-        println("dupa${x.withDayOfMonth(2)}")
     }
 
 
@@ -59,6 +56,30 @@ class ListOfUsersViewModel @Inject constructor(
         ))
     }
 
+    fun onAdminClicked() {
+        updateState(state.value.copy(
+            showAdminPasswordDialog = true
+        ))
+    }
+
+    fun onDismissAdminPasswordDialog() {
+        updateState(state.value.copy(
+            showAdminPasswordDialog = false
+        ))
+    }
+
+    fun onPasswordChange(password: String) {
+        updateState(state.value.copy(
+            password = password
+        ))
+    }
+
+    fun onOkClicked() {
+        updateState(state.value.copy(
+            showAdminPasswordDialog = false
+        ))
+    }
+
     private fun updateState(state: ViewModelState) {
         this.state.value = state
     }
@@ -66,10 +87,12 @@ class ListOfUsersViewModel @Inject constructor(
     data class ViewModelState(
 
         // showComposeComponent
+        val password: String = Utils.EMPTY_STRING,
+        val showAdminPasswordDialog: Boolean = false,
         val showTopAppBarMoreAction: Boolean = false,
         val showUserActionsDialog: Boolean = false,
         //value
         val userList: List<User> = emptyList(),
-        val userId: Int = 0,
+        val userId: Int = Utils.EMPTY_INT,
     )
 }

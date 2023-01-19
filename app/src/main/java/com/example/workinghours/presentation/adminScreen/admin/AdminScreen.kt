@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.workinghours.R
@@ -55,7 +56,7 @@ fun AdminScreen(
                     context.startActivity(Intent(context, ListOfUsersActivity::class.java))
                 }
                 AdminGirdOptionType.CHANGE_PASSWORD -> {
-                    println("CHANGE_PASSWORD")
+                    viewModel.showChangeAdminPasswordDialog()
                 }
             }
         })
@@ -68,6 +69,11 @@ fun AdminScreen(
         onSaveUserClicked = { viewModel.onSaveUserClicked() },
         onDismissAddUserActionsDialog = { viewModel.onDismissAddUserActionsDialog() }
     )
+    AdminChangePasswordDialog(password = viewModel.state.value.adminPassword,
+        showAdminChangePasswordDialog = viewModel.state.value.showAdminChangePasswordDialog,
+        onDismissAdminChangePasswordDialog = { viewModel.onDismissAdminChangePasswordDialog() },
+        onOKClicked = { viewModel.onOKClicked() },
+        onNewPasswordChange = { viewModel.onNewPasswordChange(it) })
 }
 
 @Composable
@@ -154,6 +160,50 @@ private fun AddUserDialog(
                             label = { Text(text = "Nazwa Hasło") })
                         Button(onClick = { onSaveUserClicked() }) {
                             Text(text = "Zapisz użytkownika")
+                        }
+                    }
+
+                }
+            }
+        }
+}
+
+@Composable
+private fun AdminChangePasswordDialog(
+    password: String,
+    showAdminChangePasswordDialog: Boolean,
+    onDismissAdminChangePasswordDialog: () -> Unit,
+    onOKClicked: () -> Unit,
+    onNewPasswordChange: (String) -> Unit,
+) {
+    val context = LocalContext.current
+    if (showAdminChangePasswordDialog)
+        Dialog(onDismissRequest = { onDismissAdminChangePasswordDialog() }) {
+            Surface(modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+            ) {
+                Box(
+                    modifier = Modifier.padding(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally)
+                    {
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = { onNewPasswordChange(it) },
+                            visualTransformation = PasswordVisualTransformation(),
+                            label = { Text(text = "Podaj hasło") })
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = { onNewPasswordChange(it) },
+                            visualTransformation = PasswordVisualTransformation(),
+                            label = { Text(text = "Podaj nowe hasło") })
+                        Button(
+                            onClick = {
+                                onOKClicked()
+                                context.startActivity(Intent(context, AdminActivity::class.java))
+                            }) {
+                            Text(text = "Ok")
                         }
                     }
 

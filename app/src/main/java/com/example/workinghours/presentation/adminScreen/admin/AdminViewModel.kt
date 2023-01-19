@@ -45,7 +45,7 @@ class AdminViewModel @Inject constructor(
         ))
     }
 
-    fun onDismissAddUserActionsDialog(){
+    fun onDismissAddUserActionsDialog() {
         updateState(state.value.copy(
             showAddUserActionsDialog = false,
         ))
@@ -57,14 +57,47 @@ class AdminViewModel @Inject constructor(
         ))
     }
 
+    fun showChangeAdminPasswordDialog() {
+        updateState(state.value.copy(
+            showAdminChangePasswordDialog = true
+        ))
+    }
+
+    fun onDismissAdminChangePasswordDialog() {
+        updateState(state.value.copy(
+            showAdminChangePasswordDialog = false
+        ))
+    }
+
+    fun onOKClicked() {
+        updateState(state.value.copy(
+            showAddUserActionsDialog = false
+        ))
+    }
+
+    fun onPasswordChange(adminPassword: String) {
+        updateState(state.value.copy(
+            adminPassword = adminPassword
+        ))
+    }
+
+    fun onNewPasswordChange(newAdminPassword: String) {
+        updateState(state.value.copy(
+            newAdminPassword = newAdminPassword
+        ))
+    }
+
     private fun updateState(state: ViewModelState) {
         this.state.value = state
     }
 
     data class ViewModelState(
+        val showAdminChangePasswordDialog: Boolean = false,
         val adminOption: Boolean = false,
         val showAddUserActionsDialog: Boolean = false,
         val userName: String = Utils.EMPTY_STRING,
         val userPassword: String = Utils.EMPTY_STRING,
+        val adminPassword: String = Utils.EMPTY_STRING,
+        val newAdminPassword: String = Utils.EMPTY_STRING,
     )
 }

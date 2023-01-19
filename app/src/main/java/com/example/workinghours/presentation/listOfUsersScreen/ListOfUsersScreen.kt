@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.workinghours.R
@@ -42,7 +43,13 @@ fun ListOfUsersScreen(
         onTopAppBarMoreActionClicked = listOfUsersViewModel::onTopAppBarMoreActionClicked,
         onDismissTopAppBarMoreAction = listOfUsersViewModel::onDismissTopAppBarMoreAction,
         onDismissUserActionsDialog = listOfUsersViewModel::onDismissUserActionsDialog,
+        showAdminPasswordDialog = { listOfUsersViewModel.onAdminClicked() },
+        showAdminPasswordDialogBoolean = listOfUsersState.showAdminPasswordDialog,
         onUserNameBoxClicked = { listOfUsersViewModel.onUserNameBoxClicked(it) },
+        password = listOfUsersState.password,
+        onOkClicked = { listOfUsersViewModel.onOkClicked() },
+        onPasswordChange = { listOfUsersViewModel.onPasswordChange(it) },
+        onDismissAdminPasswordDialog = { listOfUsersViewModel.onDismissAdminPasswordDialog() },
         navigateToAddWorkTimeScreen = {
             context.startActivity(AddWorkTimeActivity.createStartIntent(context,
                 listOfUsersState.userId))
@@ -60,13 +67,19 @@ private fun ListOfUsersScreen(
     showTopAppBarMoreAction: Boolean,
     adminOption: Boolean,
     showUserActionsDialog: Boolean,
+    showAdminPasswordDialogBoolean: Boolean,
     onUsersClicked: () -> Unit,
     onTopAppBarMoreActionClicked: () -> Unit,
     onDismissTopAppBarMoreAction: () -> Unit,
+    showAdminPasswordDialog: () -> Unit,
     onDismissUserActionsDialog: () -> Unit,
+    onDismissAdminPasswordDialog: () -> Unit,
     navigateToAddWorkTimeScreen: () -> Unit,
     navigateToPreviousDayScreen: () -> Unit,
     onUserNameBoxClicked: (Int) -> Unit,
+    password: String,
+    onOkClicked: () -> Unit,
+    onPasswordChange: (String) -> Unit,
 ) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
@@ -75,9 +88,7 @@ private fun ListOfUsersScreen(
             TopAppBar(
                 modifier = Modifier,
                 title = {
-                    Text(
-                        text = "Czas pracy"
-                    )
+                    Text(text = "Czas pracy")
                 },
                 actions = {
                     IconButton(
@@ -87,19 +98,17 @@ private fun ListOfUsersScreen(
                     }
                     MoreAction(
                         showTopAppBarMoreAction = showTopAppBarMoreAction,
-                        onDismissTopAppBarMoreAction = onDismissTopAppBarMoreAction)
+                        onDismissTopAppBarMoreAction = onDismissTopAppBarMoreAction,
+                        showAdminPasswordDialog = showAdminPasswordDialog)
                 }
             )
         }
     ) { padding ->
 
-        Box(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
             ) {
                 items(userList) {
                     UserNameBox(
@@ -112,13 +121,19 @@ private fun ListOfUsersScreen(
                 }
             }
         }
-    }
 
     UserActionsDialog(
         showUserActionsDialog = showUserActionsDialog,
         onDismissUserActionsDialog = onDismissUserActionsDialog,
         navigateToAddWorkTimeScreen = navigateToAddWorkTimeScreen,
         navigateToPreviousDayScreen = navigateToPreviousDayScreen)
+    AdminPasswordDialog(
+        showAdminPasswordDialog = showAdminPasswordDialogBoolean,
+        onDismissAdminPasswordDialog = onDismissAdminPasswordDialog,
+        password = password,
+        onOkClicked = onOkClicked,
+        onPasswordChange = onPasswordChange,
+    )
 
 }
 
@@ -235,8 +250,8 @@ private fun UserActionsDialog(
 private fun MoreAction(
     showTopAppBarMoreAction: Boolean,
     onDismissTopAppBarMoreAction: () -> Unit,
+    showAdminPasswordDialog: () -> Unit,
 ) {
-    val context = LocalContext.current
     if (showTopAppBarMoreAction)
         DropdownMenu(
             expanded = true,
@@ -245,13 +260,53 @@ private fun MoreAction(
             DropdownMenuItem(
                 onClick = {
                     onDismissTopAppBarMoreAction()
-                    context.startActivity(Intent(context, AdminActivity::class.java))
+                    showAdminPasswordDialog()
                 }
             ) {
                 Image(painter = painterResource(id = R.drawable.account_icon),
                     contentDescription = null)
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(text = "Admin")
+            }
+        }
+}
+
+@Composable
+private fun AdminPasswordDialog(
+    password: String,
+    showAdminPasswordDialog: Boolean,
+    onDismissAdminPasswordDialog: () -> Unit,
+    onOkClicked: () -> Unit,
+    onPasswordChange: (String) -> Unit,
+) {
+    val context = LocalContext.current
+    if (showAdminPasswordDialog)
+        Dialog(onDismissRequest = { onDismissAdminPasswordDialog() }) {
+            Surface(modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+            ) {
+                Box(
+                    modifier = Modifier.padding(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally)
+                    {
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = { onPasswordChange(it) },
+                            visualTransformation = PasswordVisualTransformation(),
+                            label = { Text(text = "Podaj hasło") })
+
+                        Button(
+                            onClick = {
+                                onOkClicked()
+                                context.startActivity(Intent(context, AdminActivity::class.java))
+                            }) {
+                            Text(text = "OK")
+                        }
+                    }
+
+                }
             }
         }
 }
