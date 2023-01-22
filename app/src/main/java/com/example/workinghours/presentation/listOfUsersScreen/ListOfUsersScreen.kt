@@ -1,23 +1,34 @@
 package com.example.workinghours.presentation.listOfUsersScreen
 
 import android.content.Intent
+import android.text.BoringLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.workinghours.R
 import com.example.workinghours.domain.model.User
@@ -39,25 +50,34 @@ fun ListOfUsersScreen(
         showTopAppBarMoreAction = listOfUsersState.showTopAppBarMoreAction,
         adminOption = adminState.adminOption,
         showUserActionsDialog = listOfUsersState.showUserActionsDialog,
+        isError = listOfUsersState.isError,
         onUsersClicked = { listOfUsersViewModel.onUsersClicked() },
         onTopAppBarMoreActionClicked = listOfUsersViewModel::onTopAppBarMoreActionClicked,
         onDismissTopAppBarMoreAction = listOfUsersViewModel::onDismissTopAppBarMoreAction,
         onDismissUserActionsDialog = listOfUsersViewModel::onDismissUserActionsDialog,
-        showAdminPasswordDialog = { listOfUsersViewModel.onAdminClicked() },
+        showAdminPasswordDialog = listOfUsersViewModel::onAdminClicked,
         showAdminPasswordDialogBoolean = listOfUsersState.showAdminPasswordDialog,
-        onUserNameBoxClicked = { listOfUsersViewModel.onUserNameBoxClicked(it) },
+        onUserNameBoxClicked = listOfUsersViewModel::onUserNameBoxClicked,
         password = listOfUsersState.password,
-        onOkClicked = { listOfUsersViewModel.onOkClicked() },
+        onOkClicked = listOfUsersViewModel::onOkClicked,
         onPasswordChange = { listOfUsersViewModel.onPasswordChange(it) },
         onDismissAdminPasswordDialog = { listOfUsersViewModel.onDismissAdminPasswordDialog() },
         navigateToAddWorkTimeScreen = {
-            context.startActivity(AddWorkTimeActivity.createStartIntent(context,
-                listOfUsersState.userId))
+            context.startActivity(
+                AddWorkTimeActivity.createStartIntent(
+                    context,
+                    listOfUsersState.userId
+                )
+            )
 
         },
         navigateToPreviousDayScreen = {
-            context.startActivity(PreviousDayActivity.createStartIntent(context,
-                listOfUsersState.userId))
+            context.startActivity(
+                PreviousDayActivity.createStartIntent(
+                    context,
+                    listOfUsersState.userId
+                )
+            )
         })
 }
 
@@ -68,6 +88,7 @@ private fun ListOfUsersScreen(
     adminOption: Boolean,
     showUserActionsDialog: Boolean,
     showAdminPasswordDialogBoolean: Boolean,
+    isError: Boolean,
     onUsersClicked: () -> Unit,
     onTopAppBarMoreActionClicked: () -> Unit,
     onDismissTopAppBarMoreAction: () -> Unit,
@@ -78,7 +99,7 @@ private fun ListOfUsersScreen(
     navigateToPreviousDayScreen: () -> Unit,
     onUserNameBoxClicked: (Int) -> Unit,
     password: String,
-    onOkClicked: () -> Unit,
+    onOkClicked: (() -> Unit) -> Unit,
     onPasswordChange: (String) -> Unit,
 ) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
@@ -99,40 +120,43 @@ private fun ListOfUsersScreen(
                     MoreAction(
                         showTopAppBarMoreAction = showTopAppBarMoreAction,
                         onDismissTopAppBarMoreAction = onDismissTopAppBarMoreAction,
-                        showAdminPasswordDialog = showAdminPasswordDialog)
+                        showAdminPasswordDialog = showAdminPasswordDialog
+                    )
                 }
             )
         }
     ) { padding ->
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                items(userList) {
-                    UserNameBox(
-                        userName = it.userName,
-                        userId = it.id,
-                        showUserActionDialog = onUsersClicked,
-                        showAdminOption = adminOption,
-                        onUserNameBoxClicked = { onUserNameBoxClicked(it) },
-                    )
-                }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            items(userList) {
+                UserNameBox(
+                    userName = it.userName,
+                    userId = it.id,
+                    showUserActionDialog = onUsersClicked,
+                    showAdminOption = adminOption,
+                    onUserNameBoxClicked = { onUserNameBoxClicked(it) },
+                )
             }
         }
+    }
 
     UserActionsDialog(
         showUserActionsDialog = showUserActionsDialog,
         onDismissUserActionsDialog = onDismissUserActionsDialog,
         navigateToAddWorkTimeScreen = navigateToAddWorkTimeScreen,
-        navigateToPreviousDayScreen = navigateToPreviousDayScreen)
+        navigateToPreviousDayScreen = navigateToPreviousDayScreen
+    )
     AdminPasswordDialog(
         showAdminPasswordDialog = showAdminPasswordDialogBoolean,
         onDismissAdminPasswordDialog = onDismissAdminPasswordDialog,
         password = password,
         onOkClicked = onOkClicked,
         onPasswordChange = onPasswordChange,
+        isError = isError,
     )
 
 }
@@ -150,7 +174,7 @@ private fun UserNameBox(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .clickable {
-                showUserActionDialog()
+                showUserActionDialog.invoke()
                 onUserNameBoxClicked(userId)
             }
     ) {
@@ -183,11 +207,15 @@ private fun UserActionsDialog(
 
     if (showUserActionsDialog)
         Dialog(onDismissRequest = { onDismissUserActionsDialog() }) {
-            Surface(modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))) {
-                Box(modifier = Modifier
-                    .padding(20.dp),
-                    contentAlignment = Alignment.Center)
+            Surface(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(20.dp),
+                    contentAlignment = Alignment.Center
+                )
                 {
                     Row(
                         modifier = Modifier
@@ -204,15 +232,19 @@ private fun UserActionsDialog(
                                         onDismissUserActionsDialog()
                                     },
                             ) {
-                                Column(modifier = Modifier
-                                    .fillMaxHeight(),
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center)
+                                    verticalArrangement = Arrangement.Center
+                                )
                                 {
 
                                     Text(text = "Poprzednie dni", Modifier.padding(5.dp))
-                                    Image(painter = painterResource(id = R.drawable.calendar_image),
-                                        contentDescription = null)
+                                    Image(
+                                        painter = painterResource(id = R.drawable.calendar_image),
+                                        contentDescription = null
+                                    )
                                 }
                             }
                         }
@@ -229,14 +261,17 @@ private fun UserActionsDialog(
                                         onDismissUserActionsDialog()
                                     })
                             {
-                                Column(modifier = Modifier
-                                    .fillMaxHeight(),
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
                                     Text(text = "Dodaj nowy dzień", Modifier.padding(5.dp))
-                                    Image(painter = painterResource(id = R.drawable.calendar_add_image),
-                                        contentDescription = null)
+                                    Image(
+                                        painter = painterResource(id = R.drawable.calendar_add_image),
+                                        contentDescription = null
+                                    )
                                 }
                             }
                         }
@@ -263,8 +298,10 @@ private fun MoreAction(
                     showAdminPasswordDialog()
                 }
             ) {
-                Image(painter = painterResource(id = R.drawable.account_icon),
-                    contentDescription = null)
+                Image(
+                    painter = painterResource(id = R.drawable.account_icon),
+                    contentDescription = null
+                )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(text = "Admin")
             }
@@ -273,43 +310,78 @@ private fun MoreAction(
 
 @Composable
 private fun AdminPasswordDialog(
+    isError: Boolean,
     password: String,
     showAdminPasswordDialog: Boolean,
     onDismissAdminPasswordDialog: () -> Unit,
-    onOkClicked: () -> Unit,
+    onOkClicked: (() -> Unit) -> Unit,
     onPasswordChange: (String) -> Unit,
 ) {
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     if (showAdminPasswordDialog)
+
         Dialog(onDismissRequest = { onDismissAdminPasswordDialog() }) {
-            Surface(modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
+            Surface(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
             ) {
                 Box(
                     modifier = Modifier.padding(20.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally)
-                    {
+                    Column {
                         OutlinedTextField(
                             value = password,
                             onValueChange = { onPasswordChange(it) },
-                            visualTransformation = PasswordVisualTransformation(),
-                            label = { Text(text = "Podaj hasło") })
+                            label = { Text(text = "Podaj hasło") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            visualTransformation =
+                            if (passwordVisible) VisualTransformation.None else
+                                PasswordVisualTransformation(),
+                            trailingIcon = {
+                                val image = if (passwordVisible) {
+                                    R.drawable.visivility_image
+                                } else {
+                                    R.drawable.visivilityoff_image
+                                }
+                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                    Image(
+                                        painterResource(id = image),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            isError = isError
+                        )
+                        if (isError) {
+                            Text(
+                                text = "Błędne hasło",
+                                fontSize = 10.sp,
+                                color = MaterialTheme.colors.error
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
 
                         Button(
+                            modifier = Modifier.fillMaxWidth(),
                             onClick = {
-                                onOkClicked()
-                                context.startActivity(Intent(context, AdminActivity::class.java))
-                            }) {
+                                onOkClicked {
+                                    context.startActivity(
+                                        Intent(context, AdminActivity::class.java)
+                                    )
+                                }
+                            }
+                        ) {
                             Text(text = "OK")
                         }
                     }
-
                 }
             }
         }
 }
+
 
 //@Preview(showBackground = true)
 //@Composable
@@ -324,4 +396,110 @@ private fun AdminPasswordDialog(
 //    onDismissUserActionsDialog = { },
 //    navigateToAddWorkTimeScreen = { }) {
 //
+//}
+
+//
+//@Composable
+//fun PasswordTextField(
+//    text: String,
+//    modifier: Modifier = Modifier,
+//    semanticContentDescription: String = "",
+//    labelText: String = "",
+//    validateStrengthPassword: Boolean = false,
+//    hasError: Boolean = false,
+//    onHasStrongPassword: (isStrong: Boolean) -> Unit = {},
+//    onTextChanged: (text: String) -> Unit,
+//) {
+//    val focusManager = LocalFocusManager.current
+//    val showPassword = remember { mutableStateOf(false) }
+//
+//    Column(
+//        modifier = modifier
+//            .fillMaxWidth()
+//    ) {
+//        OutlinedTextField(
+//            modifier = Modifier
+//                .background(color = colorResource(id = R.color.colorVeryDarkDesaturatedBlue))
+//                .fillMaxWidth()
+//                .semantics { contentDescription = semanticContentDescription },
+//            value = text,
+//            onValueChange = onTextChanged,
+//            placeholder = {
+//                Text(
+//                    text = labelText,
+//                    color = Color.White,
+//                    fontSize = 16.sp,
+//                    fontFamily = muliFontFamily
+//                )
+//            },
+//            keyboardOptions = KeyboardOptions.Default.copy(
+//                autoCorrect = true,
+//                keyboardType = KeyboardType.Text,
+//                imeAction = ImeAction.Done
+//            ),
+//            keyboardActions = KeyboardActions(
+//                onDone = {
+//                    focusManager.clearFocus()
+//                }
+//            ),
+//            singleLine = true,
+//            isError = hasError,
+//            visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+//            trailingIcon = {
+//                val (icon, iconColor) = if (showPassword.value) {
+//                    Pair(
+//                        Icons.Filled.Visibility,
+//                        colorResource(id = R.color.colorBrightViolet200)
+//                    )
+//                } else {
+//                    Pair(Icons.Filled.VisibilityOff, colorResource(id = R.color.colorWhite))
+//                }
+//
+//                IconButton(onClick = { showPassword.value = !showPassword.value }) {
+//                    Icon(
+//                        icon,
+//                        contentDescription = "Visibility",
+//                        tint = iconColor
+//                    )
+//                }
+//            },
+//            colors = TextFieldDefaults.outlinedTextFieldColors(
+//                focusedBorderColor = Color.White,
+//                unfocusedBorderColor = Color.White,
+//                textColor = Color.White,
+//                cursorColor = Color.White,
+//            )
+//        )
+//        Spacer(modifier = Modifier.height(8.dp))
+//        if (validateStrengthPassword && text != String.empty()) {
+//            val strengthPasswordType = strengthChecker(text)
+//            if (strengthPasswordType == StrengthPasswordTypes.STRONG) {
+//                onHasStrongPassword(true)
+//            } else {
+//                onHasStrongPassword(false)
+//            }
+//            Text(
+//                modifier = Modifier.semantics { contentDescription = "StrengthPasswordMessage" },
+//                text = buildAnnotatedString {
+//                    withStyle(
+//                        style = SpanStyle(
+//                            color = Color.White,
+//                            fontSize = 10.sp,
+//                            fontFamily = muliFontFamily
+//                        )
+//                    ) {
+//                        append(stringResource(id = R.string.warning_password_level))
+//                        withStyle(style = SpanStyle(color = colorResource(id = R.color.colorOrange100))) {
+//                            when (strengthPasswordType) {
+//                                StrengthPasswordTypes.STRONG ->
+//                                    append(" ${stringResource(id = R.string.warning_password_level_strong)}")
+//                                StrengthPasswordTypes.WEAK ->
+//                                    append(" ${stringResource(id = R.string.warning_password_level_weak)}")
+//                            }
+//                        }
+//                    }
+//                }
+//            )
+//        }
+//    }
 //}

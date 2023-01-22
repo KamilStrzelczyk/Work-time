@@ -13,6 +13,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 
 class PreviousDaysViewModel @AssistedInject constructor(
     private val getUserDate: GetUserDateUseCase,
@@ -20,17 +21,18 @@ class PreviousDaysViewModel @AssistedInject constructor(
     @Assisted
     private val userId: Int,
 ) : ViewModel() {
-
     init {
         viewModelScope.launch {
             val daysOfMonth = getDayOfMonth
             val userDate = getUserDate(
                 userId = userId
             )
-            updateState(state.value.copy(
-                userDate = userDate,
-                daysOfMonth = daysOfMonth()
-            ))
+            updateState(
+                state.value.copy(
+                    userDate = userDate,
+                    daysOfMonth = daysOfMonth()
+                )
+            )
         }
     }
 
@@ -42,27 +44,35 @@ class PreviousDaysViewModel @AssistedInject constructor(
     }
 
     fun onTopAppBarFilterAllDaysClicked() {
-        updateState(state.value.copy(
-            showOnlyWorkDays = false
-        ))
+        updateState(
+            state.value.copy(
+                showOnlyWorkDays = false
+            )
+        )
     }
 
     fun onTopAppBarFilterWorkdaysClicked() {
-        updateState(state.value.copy(
-            showOnlyWorkDays = true
-        ))
+        updateState(
+            state.value.copy(
+                showOnlyWorkDays = true
+            )
+        )
     }
 
     fun onTopAppBarFilterClicked() {
-        updateState(state.value.copy(
-            showFilterTopAppBar = true
-        ))
+        updateState(
+            state.value.copy(
+                showFilterTopAppBar = true
+            )
+        )
     }
 
     fun onDismissFilterTopAppBar() {
-        updateState(state.value.copy(
-            showFilterTopAppBar = false,
-        ))
+        updateState(
+            state.value.copy(
+                showFilterTopAppBar = false,
+            )
+        )
     }
 
     private fun updateState(state: ViewModelState) {
@@ -75,41 +85,25 @@ class PreviousDaysViewModel @AssistedInject constructor(
         val nameOfDay: String = Utils.EMPTY_STRING,
         private val userDate: List<WorkData> = emptyList(),
         private val daysOfMonth: List<DaysOfMonth> = emptyList(),
-        val listOfNameDay: List<String> = listOf(
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-        ),
+//        val listOfNameDay: List<String> = listOf(
+//            "Monday",
+//            "Tuesday",
+//            "Wednesday",
+//            "Thursday",
+//            "Friday",
+//            "Saturday",
+//            "Sunday",
+//        ),
     ) {
         val dayInCalendar: List<DayInCalendar> = daysOfMonth.map { dayOfMonth ->
             val patternForDate = "MM/dd/yyyy"
-            val patternForTime = "HH:mm"
-            val hygieneWorkTime: String =
-                userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay }
-                    ?.hygieneWorkTime
-                    ?.toString(patternForTime)
-                    ?: ""
-            val endWorkTime: String =
-                userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay }
-                    ?.endWorkTime
-                    ?.toString(patternForTime)
-                    ?: ""
-            val startWorkTime: String =
-                userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay }
-                    ?.startWorkTime
-                    ?.toString(patternForTime)
-                    ?: ""
-            val workAmount: String =
-                userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay }
-                    ?.amountWorkTime
-                    ?.toString(patternForTime)
-                    ?: ""
-            val showIfIsSaturday: Boolean = "sobota" == dayOfMonth.date.dayOfWeek().asText
-            val showIfIsSunday: Boolean = "niedziela" == dayOfMonth.date.dayOfWeek().asText
+
+            val hygieneWorkTime: String = getWorkDate(dayOfMonth)?.hygieneWorkTime.toStringOrEmpty()
+            val endWorkTime: String = getWorkDate(dayOfMonth)?.endWorkTime.toStringOrEmpty()
+            val startWorkTime: String = getWorkDate(dayOfMonth)?.startWorkTime.toStringOrEmpty()
+            val workAmount = getWorkDate(dayOfMonth)?.amountWorkTime.toStringOrEmpty()
+            val showIfIsSaturday: Boolean = Utils.SATURDAY == dayOfMonth.date.dayOfWeek
+            val showIfIsSunday: Boolean = Utils.SUNDAY == dayOfMonth.date.dayOfWeek
 
             DayInCalendar(
                 workDate = "${dayOfMonth.numberOfDay}/${dayOfMonth.numberOfMonth}/${dayOfMonth.numberOfYear}",
@@ -122,7 +116,22 @@ class PreviousDaysViewModel @AssistedInject constructor(
                 showStartWorkTime = startWorkTime.isNotBlank(),
                 showHygieneTime = hygieneWorkTime.isNotBlank(),
                 showIfIsSunday = showIfIsSunday,
-                showIfIsSaturday = showIfIsSaturday)
+                showIfIsSaturday = showIfIsSaturday,
+            )
+        }.filter {
+            if (showOnlyWorkDays) {
+                it.showOnlyWorkDay
+            } else {
+                true
+            }
+        }
+
+        private fun getWorkDate(dayOfMonth: DaysOfMonth) =
+            userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay }
+
+        private fun DateTime?.toStringOrEmpty(): String {
+            val patternForTime = "HH:mm"
+            return this?.toString(patternForTime) ?: ""
         }
     }
 }

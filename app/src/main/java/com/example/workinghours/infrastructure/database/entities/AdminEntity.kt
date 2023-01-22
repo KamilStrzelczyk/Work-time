@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "admin")
 data class AdminEntity(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int,
+    @PrimaryKey
+    val id: Int,
     @ColumnInfo(name = "password")
-    var password: String,
+    val password: String,
 )

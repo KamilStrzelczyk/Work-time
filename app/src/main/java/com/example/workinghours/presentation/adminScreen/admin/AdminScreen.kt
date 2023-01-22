@@ -9,18 +9,23 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.workinghours.R
 import com.example.workinghours.presentation.adminScreen.deleteUser.DeleteUserActivity
@@ -34,7 +39,8 @@ fun AdminScreen(
     viewModel: AdminViewModel,
 ) {
     val state = viewModel.state.value
-    Column(modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier.fillMaxSize()
 
     ) {
         val context = LocalContext.current
@@ -69,11 +75,16 @@ fun AdminScreen(
         onSaveUserClicked = { viewModel.onSaveUserClicked() },
         onDismissAddUserActionsDialog = { viewModel.onDismissAddUserActionsDialog() }
     )
-    AdminChangePasswordDialog(password = viewModel.state.value.adminPassword,
+    AdminChangePasswordDialog(
+        password = viewModel.state.value.adminPassword,
+        newPassword = viewModel.state.value.newAdminPassword,
         showAdminChangePasswordDialog = viewModel.state.value.showAdminChangePasswordDialog,
         onDismissAdminChangePasswordDialog = { viewModel.onDismissAdminChangePasswordDialog() },
         onOKClicked = { viewModel.onOKClicked() },
-        onNewPasswordChange = { viewModel.onNewPasswordChange(it) })
+        onNewPasswordChange = { viewModel.onNewPasswordChange(it) },
+        onPasswordChange = { viewModel.onPasswordChange(it) },
+        isError = viewModel.state.value.isError,
+    )
 }
 
 @Composable
@@ -81,28 +92,42 @@ fun Grids(
     onItemClick: (AdminGirdOptionType) -> Unit,
 ) {
     val data = listOf(
-        AdminGridOption("Dzienny raport ",
+        AdminGridOption(
+            "Dzienny raport ",
             AdminGirdOptionType.SEND_DAILY_REPORT,
-            R.drawable.calendartodayimage),
-        AdminGridOption("Raport miesięczny",
+            R.drawable.calendartodayimage
+        ),
+        AdminGridOption(
+            "Raport miesięczny",
             AdminGirdOptionType.SEND_MONTH_REPORT,
-            R.drawable.calendar_image),
-        AdminGridOption("Lista użytkowników",
+            R.drawable.calendar_image
+        ),
+        AdminGridOption(
+            "Lista użytkowników",
             AdminGirdOptionType.USER_PREVIEW,
-            R.drawable.account_icon),
-        AdminGridOption("Zmień hasło",
+            R.drawable.account_icon
+        ),
+        AdminGridOption(
+            "Zmień hasło",
             AdminGirdOptionType.CHANGE_PASSWORD,
-            R.drawable.change_password_image),
-        AdminGridOption("Dodaj użytkownika",
+            R.drawable.change_password_image
+        ),
+        AdminGridOption(
+            "Dodaj użytkownika",
             AdminGirdOptionType.ADDUSER,
-            R.drawable.add_user_image),
-        AdminGridOption("Usuń użytkownika",
+            R.drawable.add_user_image
+        ),
+        AdminGridOption(
+            "Usuń użytkownika",
             AdminGirdOptionType.DELETE_USER,
-            R.drawable.remove_user_image),
+            R.drawable.remove_user_image
+        ),
     )
 
-    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 162.dp),
-        contentPadding = PaddingValues(8.dp)) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 162.dp),
+        contentPadding = PaddingValues(8.dp)
+    ) {
         items(data) { item ->
             Card(onItemClick = onItemClick, adminGridOption = item)
         }
@@ -115,17 +140,23 @@ fun Card(
     onItemClick: (AdminGirdOptionType) -> Unit,
     adminGridOption: AdminGridOption,
 ) {
-    Surface(modifier = Modifier.padding(10.dp),
+    Surface(
+        modifier = Modifier.padding(10.dp),
         elevation = 4.dp,
-        shape = RoundedCornerShape(16.dp)) {
-        Column(modifier = Modifier
-            .height(112.dp)
-            .clickable { onItemClick(adminGridOption.type) },
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .height(112.dp)
+                .clickable { onItemClick(adminGridOption.type) },
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(text = adminGridOption.text)
-            Image(painter = painterResource(id = adminGridOption.imageResId),
-                contentDescription = null)
+            Image(
+                painter = painterResource(id = adminGridOption.imageResId),
+                contentDescription = null
+            )
         }
     }
 }
@@ -141,8 +172,9 @@ private fun AddUserDialog(
 ) {
     if (showAddUserDialog)
         Dialog(onDismissRequest = { onDismissAddUserActionsDialog() }) {
-            Surface(modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
+            Surface(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
             ) {
                 Box(
                     modifier = Modifier.padding(20.dp),
@@ -153,12 +185,15 @@ private fun AddUserDialog(
                         OutlinedTextField(
                             value = state.userName,
                             onValueChange = { onUserNameChange(it) },
-                            label = { Text(text = "Nazwa użytkownika") })
+                            label = { Text(text = "Nazwa użytkownika") }
+                        )
                         OutlinedTextField(
                             value = state.userPassword,
                             onValueChange = { onUserPasswordChange(it) },
-                            label = { Text(text = "Nazwa Hasło") })
-                        Button(onClick = { onSaveUserClicked() }) {
+                            label = { Text(text = "Nazwa Hasło") }
+                        )
+                        Button(onClick = { onSaveUserClicked() }
+                        ) {
                             Text(text = "Zapisz użytkownika")
                         }
                     }
@@ -170,43 +205,93 @@ private fun AddUserDialog(
 
 @Composable
 private fun AdminChangePasswordDialog(
+    isError: Boolean,
     password: String,
+    newPassword: String,
     showAdminChangePasswordDialog: Boolean,
     onDismissAdminChangePasswordDialog: () -> Unit,
     onOKClicked: () -> Unit,
     onNewPasswordChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
 ) {
-    val context = LocalContext.current
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var newPasswordVisible by rememberSaveable { mutableStateOf(false) }
     if (showAdminChangePasswordDialog)
         Dialog(onDismissRequest = { onDismissAdminChangePasswordDialog() }) {
-            Surface(modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
+            Surface(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
             ) {
                 Box(
                     modifier = Modifier.padding(20.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceAround
+                    )
                     {
                         OutlinedTextField(
                             value = password,
-                            onValueChange = { onNewPasswordChange(it) },
-                            visualTransformation = PasswordVisualTransformation(),
-                            label = { Text(text = "Podaj hasło") })
+                            onValueChange = { onPasswordChange(it) },
+                            label = { Text(text = "Podaj stare hasło") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            visualTransformation =
+                            if (passwordVisible) VisualTransformation.None else
+                                PasswordVisualTransformation(),
+                            trailingIcon = {
+                                val image = if (passwordVisible) {
+                                    R.drawable.visivility_image
+                                } else {
+                                    R.drawable.visivilityoff_image
+                                }
+                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                    Image(
+                                        painterResource(id = image),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            isError = isError
+                        )
+                        if (isError) {
+                            Text(
+                                text = "Błędne hasło",
+                                fontSize = 10.sp,
+                                color = MaterialTheme.colors.error
+                            )
+                        }
+
                         OutlinedTextField(
-                            value = password,
+                            value = newPassword,
                             onValueChange = { onNewPasswordChange(it) },
-                            visualTransformation = PasswordVisualTransformation(),
-                            label = { Text(text = "Podaj nowe hasło") })
+                            label = { Text(text = "Podaj nowe hasło") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            visualTransformation =
+                            if (newPasswordVisible) VisualTransformation.None else
+                                PasswordVisualTransformation(),
+                            trailingIcon = {
+                                val image = if (newPasswordVisible) {
+                                    R.drawable.visivility_image
+                                } else {
+                                    R.drawable.visivilityoff_image
+                                }
+                                IconButton(onClick = { newPasswordVisible = !newPasswordVisible }) {
+                                    Image(
+                                        painterResource(id = image),
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        )
+
                         Button(
-                            onClick = {
-                                onOKClicked()
-                                context.startActivity(Intent(context, AdminActivity::class.java))
-                            }) {
-                            Text(text = "Ok")
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = { onOKClicked() }
+                        ) {
+                            Text(text = "OK")
                         }
                     }
-
                 }
             }
         }

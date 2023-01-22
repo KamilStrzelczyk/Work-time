@@ -1,6 +1,5 @@
 package com.example.workinghours.presentation.previousDaysScreen
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,8 +31,10 @@ fun PreviousDaysScreen(
                 actions = {
                     IconButton(onClick = { viewModel.onTopAppBarFilterClicked() }
                     ) {
-                        Image(painterResource(id = R.drawable.filter_image),
-                            contentDescription = null)
+                        Image(
+                            painterResource(id = R.drawable.filter_image),
+                            contentDescription = null
+                        )
                     }
                     FilterTopAppBar(
                         showFilterTopAppBar = viewModel.state.value.showFilterTopAppBar,
@@ -53,16 +54,14 @@ fun PreviousDaysScreen(
             items(viewModel.state.value.dayInCalendar) {
                 DayCard(
                     workDate = it.workDate,
-                    startWorkTime = it.workAmount,
+                    startWorkTime = it.startWorkTime,
                     endWorkTime = it.endWorkTime,
                     workAmount = it.workAmount,
                     hygieneTime = it.hygieneTime,
                     showWorkAmount = it.showWorkAmount,
                     showStartWorkTime = it.showStartWorkTime,
                     showHygieneTime = it.showHygieneTime,
-                    visible = it.showOnlyWorkDay,
                     showIfIsSunday = it.showIfIsSunday,
-                    showOnlyWorkDays = viewModel.state.value.showOnlyWorkDays,
                     showIfIsSaturday = it.showIfIsSaturday,
                 )
             }
@@ -78,63 +77,36 @@ fun DayCard(
     workAmount: String,
     hygieneTime: String,
     showWorkAmount: Boolean,
-    visible: Boolean,
     showStartWorkTime: Boolean,
     showHygieneTime: Boolean,
     showIfIsSunday: Boolean,
-    showOnlyWorkDays: Boolean,
     showIfIsSaturday: Boolean,
 ) {
-    if (showOnlyWorkDays) {
-        if (!visible) return
-        val background = if (showIfIsSunday) Color(0xFF252e5c) else Color.White
-        Card(
-            modifier = Modifier.padding(8.dp),
-            elevation = 10.dp,
-            backgroundColor = background,
+    val background =
+        if (showIfIsSunday) Color(0xFF131B44) else if (showIfIsSaturday) Color(0xFF252E5C) else Color.White
+    Card(
+        modifier = Modifier.padding(8.dp),
+        elevation = 10.dp,
+        backgroundColor = background,
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(24.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
 
-                Text(text = workDate)
-                if (showWorkAmount) {
-                    Text(text = "Czas pracy $workAmount")
-                }
-                if (showStartWorkTime)
-                    Text(text = "Praca w godzinach $startWorkTime - $endWorkTime")
-                if (showHygieneTime)
-                    Text(text = "Czas trwania higien $hygieneTime")
+            Text(
+                text = workDate,
+                color = Color.White
+            )
+            if (showWorkAmount) {
+                Text(text = "Czas pracy $workAmount")
             }
-        }
-    } else {
-        val background =
-//            if (showIfIsSunday) Color(R.color.main_color) else if (showIfIsSaturday) Color(R.color.second_color) else Color.White
-        if (showIfIsSunday) Color(0xFF131b44) else if (showIfIsSaturday) Color(0xFF252e5c) else Color.White
-        Card(
-            modifier = Modifier.padding(8.dp),
-            elevation = 10.dp,
-            backgroundColor = background,
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text(text = workDate)
-                if (showWorkAmount) {
-                    Text(text = "Czas pracy $workAmount")
-                }
-                if (showStartWorkTime)
-                    Text(text = "Praca w godzinach $startWorkTime - $endWorkTime")
-                if (showHygieneTime)
-                    Text(text = "Czas trwania higien $hygieneTime")
-            }
+            if (showStartWorkTime)
+                Text(text = "Praca w godzinach $startWorkTime - $endWorkTime")
+            if (showHygieneTime)
+                Text(text = "Czas trwania higien $hygieneTime")
         }
     }
 }

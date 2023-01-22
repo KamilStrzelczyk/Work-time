@@ -27,12 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getWorkDataDao(): WorkDataDao
     abstract fun getAdminDao(): AdminDao
     suspend fun initializeDataBase() {
-        getAdminDao().changePassword(
-            AdminEntity(
-                id = 1,
-                password = "1"
-            )
-        )
+        getAdminDao().insert(AdminEntity(password = "1234", id = 1))
         getUserDao().saveNewUser(
             UserEntity(
                 id = 1,

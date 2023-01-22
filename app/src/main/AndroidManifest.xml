@@ -28,6 +28,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
             android:name=".presentation.adminScreen.admin.AdminActivity"
             android:theme="@style/Theme.WorkingHours" />
@@ -47,6 +48,18 @@
             android:name=".presentation.adminScreen.deleteUser.DeleteUserActivity"
             android:theme="@style/Theme.WorkingHours" />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.workinghours.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
     </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
 </manifest>

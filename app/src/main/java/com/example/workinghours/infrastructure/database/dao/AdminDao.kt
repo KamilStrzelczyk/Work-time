@@ -8,9 +8,13 @@ import com.example.workinghours.infrastructure.database.entities.AdminEntity
 
 @Dao
 interface AdminDao {
-    @Query("SELECT * FROM admin")
-    suspend fun getPassword(): List<AdminEntity>
+    @Query("SELECT password FROM admin LIMIT 1 ")
+    suspend fun getPassword(): String
+
+    @Query("UPDATE admin SET password = :password WHERE id= :id")
+    suspend fun changePassword(password: String, id: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun changePassword(password: AdminEntity)
+    suspend fun insert(adminEntity: AdminEntity)
+
 }
