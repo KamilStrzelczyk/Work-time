@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 fun DeleteUserScreen(
     deleteUserViewModel: DeleteUserViewModel,
 ) {
-
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
@@ -37,8 +36,9 @@ fun DeleteUserScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
                 items(deleteUserViewModel.state.value.userList) {
                     UserNameBox(

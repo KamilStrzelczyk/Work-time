@@ -25,7 +25,6 @@ class ListOfUsersViewModel @Inject constructor(
                 userList = getAllUsers(),
                 adminPassword = getAdminPassword()
             )
-
         }
     }
 
@@ -118,14 +117,11 @@ class ListOfUsersViewModel @Inject constructor(
     }
 
     data class ViewModelState(
-
-        // showComposeComponent
         val isError: Boolean = false,
         val showAdminPasswordDialog: Boolean = false,
         val showTopAppBarMoreAction: Boolean = false,
         val showUserActionsDialog: Boolean = false,
         val correctPassword: Boolean = false,
-        //value
         val userList: List<User> = emptyList(),
         val userId: Int = Utils.EMPTY_INT,
         val adminPassword: String = Utils.EMPTY_STRING,

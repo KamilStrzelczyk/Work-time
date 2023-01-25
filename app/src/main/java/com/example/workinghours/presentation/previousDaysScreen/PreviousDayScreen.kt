@@ -13,13 +13,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.workinghours.R
 
-
 @Composable
 fun PreviousDaysScreen(
     viewModel: PreviousDaysViewModel,
 ) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
-
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -83,7 +81,7 @@ fun DayCard(
     showIfIsSaturday: Boolean,
 ) {
     val background =
-        if (showIfIsSunday) Color(0xFF131B44) else if (showIfIsSaturday) Color(0xFF252E5C) else Color.White
+        if (showIfIsSunday) Color(0xFF131B44) else if (showIfIsSaturday) Color(0xFF131B44) else Color.White
     Card(
         modifier = Modifier.padding(8.dp),
         elevation = 10.dp,
@@ -95,10 +93,8 @@ fun DayCard(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Text(
                 text = workDate,
-                color = Color.White
             )
             if (showWorkAmount) {
                 Text(text = "Czas pracy $workAmount")
@@ -130,7 +126,6 @@ private fun FilterTopAppBar(
                 }
             ) {
                 Text(text = "Przepracowane dni")
-
             }
             DropdownMenuItem(
                 onClick = {

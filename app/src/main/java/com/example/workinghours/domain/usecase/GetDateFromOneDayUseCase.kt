@@ -6,9 +6,7 @@ import org.joda.time.LocalDate
 import javax.inject.Inject
 
 class GetDateFromOneDayUseCase @Inject constructor(private val workDataRepository: WorkDataRepository) {
-    suspend operator fun invoke(
-        currentDate: LocalDate,
-    ): List<WorkData> {
+    suspend operator fun invoke(currentDate: LocalDate): List<WorkData> {
         return workDataRepository.getDateFromOneDay(LocalDate(currentDate))
     }
 }

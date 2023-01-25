@@ -9,7 +9,6 @@ import com.example.workinghours.infrastructure.database.entities.UserEntity
 
 @Dao
 interface UserDao {
-
     @Query("SELECT * FROM user")
     suspend fun getAllUsers(): List<UserEntity>
 

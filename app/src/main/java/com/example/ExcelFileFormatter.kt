@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.workinghours.presentation.model.DataToExcelFile
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.apache.poi.ss.usermodel.*
-
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileNotFoundException
@@ -15,18 +14,14 @@ import javax.inject.Inject
 class ExcelFileFormatter @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
-
-    open fun createWorkBook2(listOfData: List<DataToExcelFile>): Workbook {
+    open fun createWorkBook(listOfData: List<DataToExcelFile>): Workbook {
         val workbook = XSSFWorkbook()
-
         val sheet = workbook.createSheet("Styczeń")
         addData(sheet, listOfData)
         return workbook
     }
 
-
     open fun createExel(workbook: Workbook, fileName: String) {
-
         val addData = File(context.filesDir, "$fileName.xlsx")
         try {
             val filedOut = FileOutputStream(addData)
@@ -61,7 +56,6 @@ class ExcelFileFormatter @Inject constructor(
         createCell(row2, 3, "Higieny")
         createCell(row2, 4, "Suma")
 
-
         listOfData.forEach {
             val row = sheet.createRow(rowIndex++)
             val row0 = sheet.createRow(0)
@@ -76,13 +70,9 @@ class ExcelFileFormatter @Inject constructor(
             cell3.setCellValue(it.endWorkTime)
             val cell4 = row.createCell(3)
             cell4.setCellValue(it.hygieneTime)
-
             val cell5 = row.createCell(cellForAmount)
             cell5.setCellValue(it.workAmount)
-
             cellForAmount += 4
-
-
         }
 //        listOfData.forEach {
 //            val row = sheet.createRow(rowIndex++)

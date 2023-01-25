@@ -22,5 +22,4 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun deleteUser(user: User) {
         userDao.deleteUser(mapper.toEntityModel(user))
     }
-
 }

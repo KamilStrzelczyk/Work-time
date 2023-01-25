@@ -9,4 +9,4 @@ data class CalculateAmountOfHours(
     val endWorkTime: DateTime,
     val hygieneWorkTime: DateTime,
     val amountWorkTime: DateTime,
-    )
+)

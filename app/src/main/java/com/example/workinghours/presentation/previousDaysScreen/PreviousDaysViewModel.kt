@@ -21,6 +21,8 @@ class PreviousDaysViewModel @AssistedInject constructor(
     @Assisted
     private val userId: Int,
 ) : ViewModel() {
+    val state = mutableStateOf(ViewModelState())
+
     init {
         viewModelScope.launch {
             val daysOfMonth = getDayOfMonth
@@ -35,8 +37,6 @@ class PreviousDaysViewModel @AssistedInject constructor(
             )
         }
     }
-
-    val state = mutableStateOf(ViewModelState())
 
     @AssistedFactory
     interface Factory {
@@ -87,8 +87,6 @@ class PreviousDaysViewModel @AssistedInject constructor(
         private val daysOfMonth: List<DaysOfMonth> = emptyList(),
     ) {
         val dayInCalendar: List<DayInCalendar> = daysOfMonth.map { dayOfMonth ->
-            val patternForDate = "MM/dd/yyyy"
-
             val hygieneWorkTime: String = getWorkDate(dayOfMonth)?.hygieneWorkTime.toStringOrEmpty()
             val endWorkTime: String = getWorkDate(dayOfMonth)?.endWorkTime.toStringOrEmpty()
             val startWorkTime: String = getWorkDate(dayOfMonth)?.startWorkTime.toStringOrEmpty()

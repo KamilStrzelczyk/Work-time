@@ -1,6 +1,5 @@
 package com.example.workinghours.presentation.adminScreen.admin
 
-import android.speech.tts.UtteranceProgressListener
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,7 +28,6 @@ class AdminViewModel @Inject constructor(
                 )
             )
         }
-
     }
 
     fun onSaveUserClicked() {
@@ -124,7 +122,6 @@ class AdminViewModel @Inject constructor(
                     isError = false,
                 )
             )
-
         } else {
             updateState(
                 state.value.copy(

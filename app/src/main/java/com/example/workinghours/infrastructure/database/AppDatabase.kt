@@ -28,7 +28,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getWorkDataDao(): WorkDataDao
     abstract fun getAdminDao(): AdminDao
     suspend fun initializeDataBase() {
-        getAdminDao().insert(AdminEntity(password = "1234", id = 1))
+        getAdminDao().insert(
+            AdminEntity(
+                password = "1234",
+                id = 1,
+            )
+        )
         getUserDao().saveNewUser(
             UserEntity(
                 id = 1,
@@ -74,7 +79,7 @@ abstract class AppDatabase : RoomDatabase() {
                 userWorkData = LocalDate(1674514800000),
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
-                hygieneWorkTime = DateTime(1674000000000)
+                hygieneWorkTime = DateTime(1674000000000),
             ),
             WorkDataEntity(
                 id = 2,
@@ -83,7 +88,7 @@ abstract class AppDatabase : RoomDatabase() {
                 userWorkData = LocalDate(1674514800000),
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
-                hygieneWorkTime = DateTime(1674000000000)
+                hygieneWorkTime = DateTime(1674000000000),
             ),
             WorkDataEntity(
                 id = 3,
@@ -92,7 +97,7 @@ abstract class AppDatabase : RoomDatabase() {
                 userWorkData = LocalDate(1674514800000),
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
-                hygieneWorkTime = DateTime(1674000000000)
+                hygieneWorkTime = DateTime(1674000000000),
             ),
             WorkDataEntity(
                 id = 4,
@@ -101,7 +106,7 @@ abstract class AppDatabase : RoomDatabase() {
                 userWorkData = LocalDate(1674514800000),
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
-                hygieneWorkTime = DateTime(1674000000000)
+                hygieneWorkTime = DateTime(1674000000000),
             )
         )
     }

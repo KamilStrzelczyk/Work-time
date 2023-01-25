@@ -14,7 +14,6 @@ class UserMapper @Inject constructor() {
         )
     }
 
-
     fun toEntityModel(user: User) = user.run {
         UserEntity(
             id = id,

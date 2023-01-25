@@ -1,6 +1,5 @@
 package com.example.workinghours.domain.usecase
 
-
 import com.example.workinghours.domain.model.CalculateAmountOfHours
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -17,20 +16,20 @@ class CalculateAmountOfHoursUseCase @Inject constructor() {
         hygieneMinute: Int,
     ): CalculateAmountOfHours {
         val localTime = LocalDate.now()
-        val time = DateTimeFormat.forPattern("HH:mm")
-        val startWorkTime = time.parseDateTime("$startHour:$startMinute")
-        val endWorkTime = time.parseDateTime("$endHour:$endMinute")
-        val hygieneWorkTime = time.parseDateTime("$hygieneHour:$hygieneMinute")
-        val duration = endWorkTime.minusHours(startHour).minusMinutes(startMinute)
-        val sum = duration.minusHours(hygieneHour).minusMinutes(hygieneMinute)
-        val convertSum = DateTime(sum)
+        val dateTimeFormatter = DateTimeFormat.forPattern("HH:mm")
+        val startWorkTime = dateTimeFormatter.parseDateTime("$startHour:$startMinute")
+        val endWorkTime = dateTimeFormatter.parseDateTime("$endHour:$endMinute")
+        val hygieneWorkTime = dateTimeFormatter.parseDateTime("$hygieneHour:$hygieneMinute")
+        val durationWorkTime = endWorkTime.minusHours(startHour).minusMinutes(startMinute)
+        val durationWorkTimeWithHygiene = durationWorkTime.minusHours(hygieneHour).minusMinutes(hygieneMinute)
+        val convertToDateTime = DateTime(durationWorkTimeWithHygiene)
 
         return CalculateAmountOfHours(
             userWorkDate = localTime,
             startWorkTime = startWorkTime,
             endWorkTime = endWorkTime,
             hygieneWorkTime = hygieneWorkTime,
-            amountWorkTime = convertSum
+            amountWorkTime = convertToDateTime
         )
     }
 }

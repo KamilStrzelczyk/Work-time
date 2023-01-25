@@ -12,8 +12,6 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.workinghours.presentation.addWorkTimeScreen.AddWorkTimeActivity
-import com.example.workinghours.presentation.addWorkTimeScreen.AddWorkTimeViewModel
 import com.example.workinghours.ui.theme.WorkingHoursTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,15 +24,20 @@ class PreviousDayActivity : ComponentActivity(
     private val previousDaysViewModel: PreviousDaysViewModel by viewModels {
         provideAddWorkTimeViewModelFactory(
             factory = viewModelFactory,
-            userId = intent.getIntExtra(USER_ID, 0)
+            userId = intent.getIntExtra(
+                USER_ID,
+                0
+            )
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Surface(modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colors.background) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colors.background
+            ) {
                 WorkingHoursTheme {
                     PreviousDaysScreen(viewModel = previousDaysViewModel)
                 }
@@ -54,8 +57,7 @@ class PreviousDayActivity : ComponentActivity(
     }
 
     companion object {
-
-        private val USER_ID = "user_id"
+        private const val USER_ID = "user_id"
         fun createStartIntent(context: Context, userId: Int): Intent {
             return Intent(context, PreviousDayActivity::class.java).apply {
                 putExtra(USER_ID, userId)

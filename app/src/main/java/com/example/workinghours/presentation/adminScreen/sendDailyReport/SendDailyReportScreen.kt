@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.joda.time.LocalDate
 import com.example.workinghours.R
-import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.presentation.model.DataToExcelFile
 
 @Composable
@@ -38,10 +37,8 @@ fun SendDailyReportScreen(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
-            Column(
-//                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally)
+            {
                 AndroidCalendar(
                     viewModel = viewModel,
                     onSendClicked = onSendClicked,
@@ -69,7 +66,9 @@ private fun AndroidCalendar(
                 )
             }
         })
-    Button(onClick = { onSendClicked(dataForExcel) }) {
+    Button(
+        onClick = { onSendClicked(dataForExcel) }
+    ) {
         Text(text = "Wyślij raport dzienny")
     }
 }

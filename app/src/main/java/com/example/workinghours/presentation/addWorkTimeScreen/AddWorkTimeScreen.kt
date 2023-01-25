@@ -28,12 +28,15 @@ fun AddWorkTimeScreen(
     val pattern = "MM/dd/yyyy HH:mm"
     val state = viewModel.state.value
 
-    Column(modifier = Modifier
-        .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
-        Box(modifier = Modifier.padding(20.dp)) {
+        Box(
+            modifier = Modifier
+                .padding(20.dp),
+        ) {
             Text(dataTime.toString(pattern))
         }
 
@@ -42,29 +45,35 @@ fun AddWorkTimeScreen(
         ClockComponent(
             text = "Rozpoczęcie pracy",
             state.startWorkClock,
-            viewModel::updateStartWorkClock)
+            viewModel::updateStartWorkClock
+        )
         ClockComponent(
             text = "Zakończenie pracy",
             state.endWorkClock,
-            viewModel::updateEndWorkClock)
+            viewModel::updateEndWorkClock
+        )
         ClockComponent(
             text = "Higieny",
             state.hygieneClock,
-            viewModel::updateHygieneWorkClock)
+            viewModel::updateHygieneWorkClock
+        )
 
-
-        Box(modifier = Modifier
-            .padding(20.dp))
-        {
+        Box(
+            modifier = Modifier
+                .padding(20.dp),
+        ) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth(),
-                onClick = { viewModel.onButtonClicked() }) {
-                Text(text = "Zapisz", color = Color.White)
+                onClick = { viewModel.onButtonClicked() }
+            ) {
+                Text(
+                    text = "Zapisz",
+                    color = Color.White,
+                )
                 SaveTimeDialog(
                     viewModel = viewModel,
                     state = state,
-//                    navController = navController
                 )
             }
         }
@@ -78,55 +87,76 @@ fun ClockComponent(
     updateClock: (AddWorkTimeViewModel.Clock) -> Unit,
 ) {
 
-    Box(modifier = Modifier
-        .padding(20.dp)) {
-        Column(modifier = Modifier,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-
+    Box(
+        modifier = Modifier
+            .padding(20.dp),
+    ) {
+        Column(
+            modifier = Modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Text(text = text)
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            Row(modifier = Modifier
-                .border(1.dp, Color.LightGray)
-                .padding(20.dp)
-                .padding(start = 60.dp)
-                .padding(end = 40.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Row(
+                modifier = Modifier
+                    .border(1.dp, Color.LightGray)
+                    .padding(20.dp)
+                    .padding(start = 60.dp)
+                    .padding(end = 40.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .clickable { updateClock(clock.showClockHour()) }) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .clickable { updateClock(clock.showClockHour()) }
+                ) {
                     Row {
+
                         Text(clock.setHour.toString())
-                        Icon(imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = null)
-                        HourClock(clockData = clock, updateClock = updateClock)
+
+                        Icon(
+                            imageVector = Icons.Filled.ArrowDropDown,
+                            contentDescription = null,
+                        )
+
+                        HourClock(
+                            clockData = clock,
+                            updateClock = updateClock,
+                        )
                     }
                 }
 
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = ":")
+                    text = ":",
+                )
 
-                Box(modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .clickable { updateClock(clock.showClockMinute()) }) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .clickable { updateClock(clock.showClockMinute()) }
+                ) {
                     Row {
                         Text(clock.setMinute.toString())
-                        Icon(imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = null)
-                        MinuteClock(clockData = clock, updateClock = updateClock)
+                        Icon(
+                            imageVector = Icons.Filled.ArrowDropDown,
+                            contentDescription = null,
+                        )
+                        MinuteClock(
+                            clockData = clock,
+                            updateClock = updateClock,
+                        )
                     }
                 }
             }
         }
     }
     Divider()
-
 }
 
 @Composable
@@ -135,9 +165,13 @@ fun ClockDropDown(
     onItemSelected: (String) -> Unit,
     options: List<String>,
 ) {
-    DropdownMenu(expanded = true, onDismissRequest = dismissClock) {
+    DropdownMenu(
+        expanded = true,
+        onDismissRequest = dismissClock
+    ) {
         options.forEach {
-            DropdownMenuItem(onClick = { onItemSelected(it) }) {
+            DropdownMenuItem(onClick = { onItemSelected(it) }
+            ) {
                 Text(text = it)
             }
         }
@@ -151,11 +185,10 @@ fun HourClock(
 ) {
     if (clockData.showClock) {
         ClockDropDown(
-            dismissClock = {
-                updateClock(clockData.hideClock())
-            },
+            dismissClock = { updateClock(clockData.hideClock()) },
             onItemSelected = { updateClock(clockData.onHourSelected(it.toInt())) },
-            options = clockData.timeHourScope)
+            options = clockData.timeHourScope,
+        )
     }
 }
 
@@ -166,11 +199,10 @@ fun MinuteClock(
 ) {
     if (clockData.showMinuteClock) {
         ClockDropDown(
-            dismissClock = {
-                updateClock(clockData.hideClock())
-            },
+            dismissClock = { updateClock(clockData.hideClock()) },
             onItemSelected = { updateClock(clockData.onMinuteSelected(it.toInt())) },
-            options = clockData.timeMinuteScope)
+            options = clockData.timeMinuteScope,
+        )
     }
 }
 
@@ -182,22 +214,31 @@ fun SaveTimeDialog(
     val context = LocalContext.current
     val patternForCalculateTime = "HH:mm"
     if (state.showSaveDialog)
-        Dialog(onDismissRequest = { viewModel.onDismissSaveDialog() }) {
-            Surface(modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))) {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                    contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Dialog(
+            onDismissRequest = { viewModel.onDismissSaveDialog() }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(text = "Twoj czas pracy")
                         state.workTime?.amountWorkTime?.let {
                             Text(it.toString(patternForCalculateTime))
                         }
-                        Button(onClick = {
-                            viewModel.onSaveClicked()
-                            context.startActivity(Intent(context, ListOfUsersActivity::class.java))
-                        }
+                        Button(
+                            onClick = {
+                                viewModel.onSaveClicked()
+                                context.startActivity(Intent(context, ListOfUsersActivity::class.java))
+                            }
                         ) {
                             Text(text = "OK")
                         }

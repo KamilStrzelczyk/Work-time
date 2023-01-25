@@ -1,7 +1,5 @@
 package com.example.workinghours.presentation.adminScreen.sendDailyReport
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.workinghours.domain.model.WorkData
@@ -54,8 +52,7 @@ class SendDailyReportViewModel @Inject constructor(
         val dateFromCalendar: LocalDate = LocalDate(),
         val currentDate: LocalDate = LocalDate(1674514800000),
         val currentWorkDate: List<WorkData> = emptyList(),
-
-        ) {
+    ) {
         val dataForExcel: List<DataToExcelFile> = currentWorkDate.map {
             DataToExcelFile(
                 workDate = it.userWorkDate.toStringOrEmptyDate(),

@@ -1,28 +1,22 @@
 package com.example.workinghours.presentation.listOfUsersScreen
 
 import android.content.Intent
-import android.text.BoringLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -62,23 +56,8 @@ fun ListOfUsersScreen(
         onOkClicked = listOfUsersViewModel::onOkClicked,
         onPasswordChange = { listOfUsersViewModel.onPasswordChange(it) },
         onDismissAdminPasswordDialog = { listOfUsersViewModel.onDismissAdminPasswordDialog() },
-        navigateToAddWorkTimeScreen = {
-            context.startActivity(
-                AddWorkTimeActivity.createStartIntent(
-                    context,
-                    listOfUsersState.userId
-                )
-            )
-
-        },
-        navigateToPreviousDayScreen = {
-            context.startActivity(
-                PreviousDayActivity.createStartIntent(
-                    context,
-                    listOfUsersState.userId
-                )
-            )
-        })
+        navigateToAddWorkTimeScreen = { context.startActivity(AddWorkTimeActivity.createStartIntent(context, listOfUsersState.userId)) },
+        navigateToPreviousDayScreen = { context.startActivity(PreviousDayActivity.createStartIntent(context, listOfUsersState.userId)) })
 }
 
 @Composable
@@ -143,7 +122,6 @@ private fun ListOfUsersScreen(
             }
         }
     }
-
     UserActionsDialog(
         showUserActionsDialog = showUserActionsDialog,
         onDismissUserActionsDialog = onDismissUserActionsDialog,
@@ -158,7 +136,6 @@ private fun ListOfUsersScreen(
         onPasswordChange = onPasswordChange,
         isError = isError,
     )
-
 }
 
 @Composable
@@ -172,7 +149,10 @@ private fun UserNameBox(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(
+                horizontal = 8.dp,
+                vertical = 8.dp,
+            )
             .clickable {
                 showUserActionDialog.invoke()
                 onUserNameBoxClicked(userId)
@@ -206,7 +186,9 @@ private fun UserActionsDialog(
 ) {
 
     if (showUserActionsDialog)
-        Dialog(onDismissRequest = { onDismissUserActionsDialog() }) {
+        Dialog(
+            onDismissRequest = { onDismissUserActionsDialog() }
+        ) {
             Surface(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
@@ -215,14 +197,16 @@ private fun UserActionsDialog(
                     modifier = Modifier
                         .padding(20.dp),
                     contentAlignment = Alignment.Center
-                )
-                {
+                ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        Surface(elevation = 4.dp, shape = RoundedCornerShape(16.dp)) {
+                        Surface(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
@@ -237,10 +221,11 @@ private fun UserActionsDialog(
                                         .fillMaxHeight(),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
-                                )
-                                {
-
-                                    Text(text = "Poprzednie dni", Modifier.padding(5.dp))
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(5.dp),
+                                        text = "Poprzednie dni",
+                                    )
                                     Image(
                                         painter = painterResource(id = R.drawable.calendar_image),
                                         contentDescription = null
@@ -251,7 +236,10 @@ private fun UserActionsDialog(
 
                         Spacer(modifier = Modifier.weight(0.1f))
 
-                        Surface(elevation = 4.dp, shape = RoundedCornerShape(16.dp)) {
+                        Surface(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
@@ -259,15 +247,17 @@ private fun UserActionsDialog(
                                     .clickable {
                                         navigateToAddWorkTimeScreen()
                                         onDismissUserActionsDialog()
-                                    })
-                            {
+                                    }
+                            ) {
                                 Column(
-                                    modifier = Modifier
-                                        .fillMaxHeight(),
+                                    modifier = Modifier.fillMaxHeight(),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
-                                    Text(text = "Dodaj nowy dzień", Modifier.padding(5.dp))
+                                    Text(
+                                        modifier = Modifier.padding(5.dp),
+                                        text = "Dodaj nowy dzień",
+                                    )
                                     Image(
                                         painter = painterResource(id = R.drawable.calendar_add_image),
                                         contentDescription = null
@@ -320,11 +310,9 @@ private fun AdminPasswordDialog(
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     if (showAdminPasswordDialog)
-
         Dialog(onDismissRequest = { onDismissAdminPasswordDialog() }) {
             Surface(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
+                modifier = Modifier.clip(RoundedCornerShape(16.dp))
             ) {
                 Box(
                     modifier = Modifier.padding(20.dp),
@@ -337,16 +325,16 @@ private fun AdminPasswordDialog(
                             label = { Text(text = "Podaj hasło") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
-                            visualTransformation =
-                            if (passwordVisible) VisualTransformation.None else
-                                PasswordVisualTransformation(),
+                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
                                 val image = if (passwordVisible) {
                                     R.drawable.visivility_image
                                 } else {
                                     R.drawable.visivilityoff_image
                                 }
-                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                IconButton(
+                                    onClick = { passwordVisible = !passwordVisible }
+                                ) {
                                     Image(
                                         painterResource(id = image),
                                         contentDescription = null

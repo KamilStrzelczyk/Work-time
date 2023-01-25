@@ -10,6 +10,7 @@ class AdminRepositoryImpl @Inject constructor(
     private val adminDao: AdminDao,
 ) : AdminRepository {
     override suspend fun getPassword(): String = adminDao.getPassword()
+
     override suspend fun changePassword(password: String, id: Int) {
         adminDao.changePassword(password, id)
     }

@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.core.content.FileProvider
 import com.example.ExcelFileFormatter
 import com.example.workinghours.BuildConfig
-import com.example.workinghours.presentation.adminScreen.admin.AdminViewModel
 import com.example.workinghours.ui.theme.WorkingHoursTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SendDailyReportActivity : ComponentActivity() {
-
     @Inject
     lateinit var excelFileFormatter: ExcelFileFormatter
     private val sendDailyReportViewModel: SendDailyReportViewModel by viewModels()
@@ -30,7 +28,7 @@ class SendDailyReportActivity : ComponentActivity() {
                     viewModel = sendDailyReportViewModel,
                     onSendClicked = {
                         excelFileFormatter.createExel(
-                            workbook = excelFileFormatter.createWorkBook2(it),
+                            workbook = excelFileFormatter.createWorkBook(it),
                             fileName = "excel",
                         )
                         val file = File("/data/data/com.example.workinghours/files/excel.xlsx")
@@ -55,7 +53,8 @@ class SendDailyReportActivity : ComponentActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    })
+                    }
+                )
             }
         }
     }

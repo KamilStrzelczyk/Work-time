@@ -5,7 +5,6 @@ import com.example.workinghours.domain.repository.WorkDataRepository
 import com.example.workinghours.infrastructure.database.dao.WorkDataDao
 import com.example.workinghours.infrastructure.database.entities.WorkDataEntity
 import com.example.workinghours.infrastructure.mapper.WorkDataMapper
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import javax.inject.Inject
 
@@ -20,14 +19,11 @@ class WorkDataRepositoryImpl @Inject constructor(
 
     override suspend fun getAllDate(userId: Int): List<WorkData> {
         val list: List<WorkDataEntity> = workDataDao.getAllDate(userId)
-        val domainList = list.map { mapper.toDomainModel(it) }
-        return domainList
+        return list.map { mapper.toDomainModel(it) }
     }
 
     override suspend fun getDateFromOneDay(userWorkDate: LocalDate): List<WorkData> {
         val list: List<WorkDataEntity> = workDataDao.getDateFromOneDay(userWorkDate)
-        val domainList = list.map { mapper.toDomainModel(it) }
-        return domainList
+        return list.map { mapper.toDomainModel(it) }
     }
-
 }

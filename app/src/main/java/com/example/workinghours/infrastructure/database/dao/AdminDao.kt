@@ -16,5 +16,4 @@ interface AdminDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(adminEntity: AdminEntity)
-
 }

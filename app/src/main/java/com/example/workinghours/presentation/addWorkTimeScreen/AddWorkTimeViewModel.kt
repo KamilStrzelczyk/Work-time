@@ -38,16 +38,18 @@ class AddWorkTimeViewModel @AssistedInject constructor(
                     endWorkTime = it.endWorkTime,
                     hygieneWorkTime = it.hygieneWorkTime,
                     amountWorkTime = it.amountWorkTime,
-                    )
+                )
             }?.let { saveUserWorkData(it) }
         }
         onDismissSaveDialog()
     }
 
     fun onDismissSaveDialog() {
-        updateState(state.value.copy(
-            showSaveDialog = false,
-        ))
+        updateState(
+            state.value.copy(
+                showSaveDialog = false,
+            )
+        )
     }
 
     fun onButtonClicked() {
@@ -59,28 +61,36 @@ class AddWorkTimeViewModel @AssistedInject constructor(
             hygieneHour = state.value.hygieneClock.setHour,
             hygieneMinute = state.value.hygieneClock.setMinute,
         )
-        updateState(state.value.copy(
-            workTime = workTime,
-            showSaveDialog = true,
-        ))
+        updateState(
+            state.value.copy(
+                workTime = workTime,
+                showSaveDialog = true,
+            )
+        )
     }
 
     fun updateStartWorkClock(clock: Clock) {
-        updateState(state.value.copy(
-            startWorkClock = clock
-        ))
+        updateState(
+            state.value.copy(
+                startWorkClock = clock
+            )
+        )
     }
 
     fun updateEndWorkClock(clock: Clock) {
-        updateState(state.value.copy(
-            endWorkClock = clock
-        ))
+        updateState(
+            state.value.copy(
+                endWorkClock = clock
+            )
+        )
     }
 
     fun updateHygieneWorkClock(clock: Clock) {
-        updateState(state.value.copy(
-            hygieneClock = clock
-        ))
+        updateState(
+            state.value.copy(
+                hygieneClock = clock
+            )
+        )
     }
 
     private fun updateState(state: ViewModelState) {
@@ -91,7 +101,7 @@ class AddWorkTimeViewModel @AssistedInject constructor(
         val showSaveDialog: Boolean = false,
         val extraTime: Int = Utils.EMPTY_INT,
         val workTime: CalculateAmountOfHours? = null,
-        val clockHour: List<String> = listOf<String>(
+        val clockHour: List<String> = listOf(
             "00",
             "01",
             "02",
@@ -115,13 +125,15 @@ class AddWorkTimeViewModel @AssistedInject constructor(
             "20",
             "21",
             "22",
-            "23"),
-        val clockMinute: List<String> = listOf<String>(
+            "23"
+        ),
+        val clockMinute: List<String> = listOf(
             "00",
             "15",
             "30",
-            "45"),
-        val hygieneClockHour: List<String> = listOf<String>(
+            "45"
+        ),
+        val hygieneClockHour: List<String> = listOf(
             "0",
             "1",
             "2",
@@ -132,15 +144,17 @@ class AddWorkTimeViewModel @AssistedInject constructor(
             "7",
             "8",
             "9",
-            "10"),
-        val hygieneClockMinute: List<String> = listOf<String>(
+            "10"
+        ),
+        val hygieneClockMinute: List<String> = listOf(
             "00",
             "10",
             "20",
             "30",
             "40",
             "50",
-            "60"),
+            "60"
+        ),
         val startWorkClock: Clock = Clock(
             showMinuteClock = false,
             showClock = false,
@@ -177,11 +191,17 @@ class AddWorkTimeViewModel @AssistedInject constructor(
     ) {
 
         fun onHourSelected(hour: Int): Clock {
-            return copy(showClock = false, setHour = hour)
+            return copy(
+                showClock = false,
+                setHour = hour
+            )
         }
 
         fun onMinuteSelected(minute: Int): Clock {
-            return copy(showMinuteClock = false, setMinute = minute)
+            return copy(
+                showMinuteClock = false,
+                setMinute = minute
+            )
         }
 
         fun showClockHour(): Clock {
@@ -193,7 +213,10 @@ class AddWorkTimeViewModel @AssistedInject constructor(
         }
 
         fun hideClock(): Clock {
-            return copy(showClock = false, showMinuteClock = false)
+            return copy(
+                showClock = false,
+                showMinuteClock = false
+            )
         }
     }
 }

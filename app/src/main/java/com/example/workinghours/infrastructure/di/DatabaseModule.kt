@@ -38,7 +38,7 @@ class DatabaseModule {
         return Room.databaseBuilder(
             appContext,
             AppDatabase::class.java,
-            "Users"
+            "Users",
         ).build()
     }
 }

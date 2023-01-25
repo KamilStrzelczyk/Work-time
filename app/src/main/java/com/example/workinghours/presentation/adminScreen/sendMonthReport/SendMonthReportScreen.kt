@@ -45,38 +45,42 @@ fun SendMonthReportScreen() {
                         modifier = Modifier
                             .weight(1f)
                             .clickable { },
-                        imageVector = Icons.Default.ArrowBack, contentDescription = null,
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = null,
                     )
+
                     Text(text = "2023")
+
                     Icon(
                         modifier = Modifier
                             .weight(1f)
                             .clickable { },
                         imageVector = Icons.Default.ArrowForward,
                         contentDescription = null,
-
-                        )
+                    )
                 }
 
-                Grids(onItemClick = {
-                    when (it) {
-                        MONTH1 -> TODO()
-                        MONTH2 -> TODO()
-                        MONTH3 -> TODO()
-                        MONTH4 -> TODO()
-                        MONTH5 -> TODO()
-                        MONTH6 -> TODO()
-                        MONTH7 -> TODO()
-                        MONTH8 -> TODO()
-                        MONTH9 -> TODO()
-                        MONTH10 -> TODO()
-                        MONTH11 -> TODO()
-                        MONTH12 -> TODO()
-                    }
-                })
+                Grids(
+                    onItemClick = {
+                        when (it) {
+                            MONTH1 -> TODO()
+                            MONTH2 -> TODO()
+                            MONTH3 -> TODO()
+                            MONTH4 -> TODO()
+                            MONTH5 -> TODO()
+                            MONTH6 -> TODO()
+                            MONTH7 -> TODO()
+                            MONTH8 -> TODO()
+                            MONTH9 -> TODO()
+                            MONTH10 -> TODO()
+                            MONTH11 -> TODO()
+                            MONTH12 -> TODO()
+                        }
+                    })
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { /*TODO*/ }
+                ) {
                     Text(text = "Wyślij miesięczny raport")
                 }
             }
@@ -154,7 +158,6 @@ fun Grids(
     )
     val isActiveColor = data.firstOrNull() {
         (date.monthOfYear == it.numberOfMonth)
-
     }
 
     LazyVerticalGrid(
@@ -169,7 +172,6 @@ fun Grids(
             )
         }
     }
-
 }
 
 @Composable

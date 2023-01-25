@@ -1,6 +1,5 @@
 package com.example.workinghours.presentation.adminScreen.admin
 
-
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -130,9 +129,11 @@ fun Grids(
         contentPadding = PaddingValues(8.dp)
     ) {
         items(data) { item ->
-            Card(onItemClick = onItemClick, adminGridOption = item)
+            Card(
+                onItemClick = onItemClick,
+                adminGridOption = item
+            )
         }
-
     }
 }
 
@@ -172,7 +173,9 @@ private fun AddUserDialog(
     onDismissAddUserActionsDialog: () -> Unit,
 ) {
     if (showAddUserDialog)
-        Dialog(onDismissRequest = { onDismissAddUserActionsDialog() }) {
+        Dialog(
+            onDismissRequest = { onDismissAddUserActionsDialog() }
+        ) {
             Surface(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
@@ -198,7 +201,6 @@ private fun AddUserDialog(
                             Text(text = "Zapisz użytkownika")
                         }
                     }
-
                 }
             }
         }
@@ -218,7 +220,9 @@ private fun AdminChangePasswordDialog(
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var newPasswordVisible by rememberSaveable { mutableStateOf(false) }
     if (showAdminChangePasswordDialog)
-        Dialog(onDismissRequest = { onDismissAdminChangePasswordDialog() }) {
+        Dialog(
+            onDismissRequest = { onDismissAdminChangePasswordDialog() }
+        ) {
             Surface(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
@@ -230,23 +234,21 @@ private fun AdminChangePasswordDialog(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceAround
-                    )
-                    {
+                    ) {
                         OutlinedTextField(
                             value = password,
                             onValueChange = { onPasswordChange(it) },
                             label = { Text(text = "Podaj stare hasło") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            visualTransformation =
-                            if (passwordVisible) VisualTransformation.None else
-                                PasswordVisualTransformation(),
+                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
                                 val image = if (passwordVisible) {
                                     R.drawable.visivility_image
                                 } else {
                                     R.drawable.visivilityoff_image
                                 }
-                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                IconButton(onClick = { passwordVisible = !passwordVisible }
+                                ) {
                                     Image(
                                         painterResource(id = image),
                                         contentDescription = null
@@ -255,29 +257,27 @@ private fun AdminChangePasswordDialog(
                             },
                             isError = isError
                         )
-                        if (isError) {
+                        if (isError)
                             Text(
                                 text = "Błędne hasło",
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colors.error
                             )
-                        }
 
                         OutlinedTextField(
                             value = newPassword,
                             onValueChange = { onNewPasswordChange(it) },
                             label = { Text(text = "Podaj nowe hasło") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            visualTransformation =
-                            if (newPasswordVisible) VisualTransformation.None else
-                                PasswordVisualTransformation(),
+                            visualTransformation = if (newPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
                                 val image = if (newPasswordVisible) {
                                     R.drawable.visivility_image
                                 } else {
                                     R.drawable.visivilityoff_image
                                 }
-                                IconButton(onClick = { newPasswordVisible = !newPasswordVisible }) {
+                                IconButton(onClick = { newPasswordVisible = !newPasswordVisible }
+                                ) {
                                     Image(
                                         painterResource(id = image),
                                         contentDescription = null
@@ -285,7 +285,6 @@ private fun AdminChangePasswordDialog(
                                 }
                             }
                         )
-
                         Button(
                             modifier = Modifier.fillMaxWidth(),
                             onClick = { onOKClicked() }

@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.workinghours.domain.model.User
 import com.example.workinghours.domain.usecase.DeleteUserUseCase
 import com.example.workinghours.domain.usecase.GetAllUsersUseCase
-import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,7 +40,6 @@ class DeleteUserViewModel @Inject constructor(
     }
 
     data class ViewModelState(
-        //value
         val userList: List<User> = emptyList(),
     )
 }
