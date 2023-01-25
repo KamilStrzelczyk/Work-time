@@ -6,6 +6,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.infrastructure.database.entities.WorkDataEntity
+import org.joda.time.DateTime
+import org.joda.time.LocalDate
 
 @Dao
 interface WorkDataDao {
@@ -15,4 +17,7 @@ interface WorkDataDao {
 
     @Query("SELECT * FROM work_data WHERE user_id =:userId")
     suspend fun getAllDate(vararg userId: Int): List<WorkDataEntity>
+
+    @Query("SELECT * FROM work_data WHERE user_work_date =:userWorkDate")
+    suspend fun getDateFromOneDay(vararg userWorkDate: LocalDate): List<WorkDataEntity>
 }

@@ -19,7 +19,7 @@ internal class CalculateAmountOfHoursUseCaseTest {
     @Test
     fun `WHEN user pass correct data THEN result shout be calculated`() {
         val expectedResult = CalculateAmountOfHours(
-            userWorkData = DateTime(1673996400000),
+            userWorkDate = DateTime(1673996400000),
             startWorkTime = DateTime(1495800000),
             endWorkTime = DateTime(1529100000),
             hygieneWorkTime = DateTime(1470000000),

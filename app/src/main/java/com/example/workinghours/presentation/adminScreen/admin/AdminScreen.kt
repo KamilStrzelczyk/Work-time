@@ -30,9 +30,10 @@ import androidx.compose.ui.window.Dialog
 import com.example.workinghours.R
 import com.example.workinghours.presentation.adminScreen.deleteUser.DeleteUserActivity
 import com.example.workinghours.presentation.adminScreen.sendDailyReport.SendDailyReportActivity
+import com.example.workinghours.presentation.adminScreen.sendMonthReport.SendMonthReportActivity
 import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersActivity
-import com.example.workinghours.ui.AdminGirdOptionType
-import com.example.workinghours.ui.AdminGridOption
+import com.example.workinghours.ui.AdminGridOption.AdminGirdOptionType
+import com.example.workinghours.ui.AdminGridOption.AdminGridOption
 
 @Composable
 fun AdminScreen(
@@ -50,7 +51,7 @@ fun AdminScreen(
                     context.startActivity(Intent(context, SendDailyReportActivity::class.java))
                 }
                 AdminGirdOptionType.SEND_MONTH_REPORT -> {
-                    println("SEND_MONTH_REPORT")
+                    context.startActivity(Intent(context, SendMonthReportActivity::class.java))
                 }
                 AdminGirdOptionType.DELETE_USER -> {
                     context.startActivity(Intent(context, DeleteUserActivity::class.java))

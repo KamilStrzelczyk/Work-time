@@ -10,6 +10,7 @@ import com.example.workinghours.infrastructure.database.entities.AdminEntity
 import com.example.workinghours.infrastructure.database.entities.UserEntity
 import com.example.workinghours.infrastructure.database.entities.WorkDataEntity
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 
 @Database(
     entities = [
@@ -68,9 +69,9 @@ abstract class AppDatabase : RoomDatabase() {
         getWorkDataDao().saveWorkData(
             WorkDataEntity(
                 id = 1,
-                userId = 2,
+                userId = 1,
                 amountWorkTime = DateTime(1674032400000),
-                userWorkData = DateTime(1674118800000),
+                userWorkData = LocalDate(1674514800000),
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
                 hygieneWorkTime = DateTime(1674000000000)
@@ -79,25 +80,25 @@ abstract class AppDatabase : RoomDatabase() {
                 id = 2,
                 userId = 2,
                 amountWorkTime = DateTime(1674032400000),
-                userWorkData = DateTime(1672650000000),
+                userWorkData = LocalDate(1674514800000),
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
                 hygieneWorkTime = DateTime(1674000000000)
             ),
             WorkDataEntity(
                 id = 3,
-                userId = 2,
+                userId = 3,
                 amountWorkTime = DateTime(1674032400000),
-                userWorkData = DateTime(1674982800000),
+                userWorkData = LocalDate(1674514800000),
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
                 hygieneWorkTime = DateTime(1674000000000)
             ),
             WorkDataEntity(
                 id = 4,
-                userId = 2,
+                userId = 4,
                 amountWorkTime = DateTime(1674032400000),
-                userWorkData = DateTime(1672909200000),
+                userWorkData = LocalDate(1674514800000),
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
                 hygieneWorkTime = DateTime(1674000000000)

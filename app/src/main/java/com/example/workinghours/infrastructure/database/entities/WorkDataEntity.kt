@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 
 @Entity(tableName = "work_data")
 data class WorkDataEntity(
@@ -14,7 +15,7 @@ data class WorkDataEntity(
     @ColumnInfo(name = "user_work_amount")
     val amountWorkTime: DateTime,
     @ColumnInfo(name = "user_work_date")
-    var userWorkData: DateTime,
+    var userWorkData: LocalDate,
     @ColumnInfo(name = "start_work_time")
     val startWorkTime: DateTime,
     @ColumnInfo(name = "end_work_time")

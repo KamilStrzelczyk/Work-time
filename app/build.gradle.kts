@@ -1,3 +1,5 @@
+import java.util.regex.Pattern.compile
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -46,7 +48,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.compose.ui:ui:1.3.3")
     implementation("androidx.compose.material:material:1.3.1")
@@ -81,4 +82,6 @@ dependencies {
     //Apache POI for excel
     implementation("org.apache.poi:poi:5.2.3")
     implementation("org.apache.poi:poi-ooxml:5.2.3")
+
+    implementation("com.google.android.material:material:1.9.0-alpha01")
 }

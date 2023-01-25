@@ -85,15 +85,6 @@ class PreviousDaysViewModel @AssistedInject constructor(
         val nameOfDay: String = Utils.EMPTY_STRING,
         private val userDate: List<WorkData> = emptyList(),
         private val daysOfMonth: List<DaysOfMonth> = emptyList(),
-//        val listOfNameDay: List<String> = listOf(
-//            "Monday",
-//            "Tuesday",
-//            "Wednesday",
-//            "Thursday",
-//            "Friday",
-//            "Saturday",
-//            "Sunday",
-//        ),
     ) {
         val dayInCalendar: List<DayInCalendar> = daysOfMonth.map { dayOfMonth ->
             val patternForDate = "MM/dd/yyyy"

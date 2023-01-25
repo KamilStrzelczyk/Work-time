@@ -1,6 +1,4 @@
-package com.example.workinghours.ui
-
-import android.webkit.MimeTypeMap
+package com.example.workinghours.ui.AdminGridOption
 
 data class AdminGridOption(
     val text : String,

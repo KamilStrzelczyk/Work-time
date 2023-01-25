@@ -1,4 +1,4 @@
-package com.example.workinghours.ui
+package com.example.workinghours.ui.AdminGridOption
 
 enum class AdminGirdOptionType {
     SEND_DAILY_REPORT,

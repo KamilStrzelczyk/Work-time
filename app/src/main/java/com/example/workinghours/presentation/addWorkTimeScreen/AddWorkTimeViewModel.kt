@@ -33,7 +33,7 @@ class AddWorkTimeViewModel @AssistedInject constructor(
             state.value.workTime?.let {
                 WorkData(
                     userId = userId,
-                    userWorkDate = it.userWorkData,
+                    userWorkDate = it.userWorkDate,
                     startWorkTime = it.startWorkTime,
                     endWorkTime = it.endWorkTime,
                     hygieneWorkTime = it.hygieneWorkTime,

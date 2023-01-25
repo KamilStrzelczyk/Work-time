@@ -1,12 +1,12 @@
 package com.example
 
 import android.content.Context
-import android.os.Environment
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.xssf.usermodel.IndexedColorMap
 import org.apache.poi.xssf.usermodel.XSSFColor
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.joda.time.DateTime
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -17,16 +17,16 @@ open class ExcelClass @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
 
-    open fun createWorkBook(): Workbook {
+    open fun createWorkBook(userId: Int, startWorkTime: DateTime, endWorkTime: DateTime): Workbook {
         val workbook = XSSFWorkbook()
 
-        val sheet: Sheet = workbook.createSheet("CZAS")
+        val sheet: Sheet = workbook.createSheet("Styczeń")
 
         val cellStyle = getHeaderStyle(workbook)
 
         createSheetHeader(cellStyle, sheet)
 
-        addData(0, sheet)
+        addData(0, sheet, userId, startWorkTime, endWorkTime)
 
         return workbook
     }
@@ -68,12 +68,19 @@ open class ExcelClass @Inject constructor(
         return cellStyle
     }
 
-    private fun addData(rowIndex: Int, sheet: Sheet) {
+    private fun addData(
+        rowIndex: Int,
+        sheet: Sheet,
+        userId: Int,
+        startWorkTime: DateTime,
+        endWorkTime: DateTime,
+    ) {
         val row = sheet.createRow(rowIndex)
 
-        createCell(row, 0, "value 1")
-        createCell(row, 1, "value 2")
-        createCell(row, 2, "value 3")
+        createCell(row, 0, userId.toString())
+        createCell(row, 1, startWorkTime.toString())
+        createCell(row, 2, endWorkTime.toString())
+        createCell(row, 3, endWorkTime.toString())
     }
 
     private fun createCell(row: Row, columnIndex: Int, value: String?) {
@@ -94,4 +101,6 @@ open class ExcelClass @Inject constructor(
         }
 
     }
+
+
 }

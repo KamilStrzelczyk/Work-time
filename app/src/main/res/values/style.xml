@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    <style name="CalendarColor" parent="android:Widget.CalendarView">-->
+    <!--        <item name="android:colorPrimary">#131B44</item>-->
+    <!--    </style>-->
+
+    <style name="CustomCalendar" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="colorAccent">#383F63</item>
+        <item name="colorOnPrimary">#333C6C</item>
+        <item name="colorSurface">@color/second_color</item>
+    </style>
+</resources>
