@@ -1,5 +1,8 @@
 buildscript {
     val compose_ui_version = "1.6.21"
+    dependencies {
+        classpath("com.google.gms:google-services:4.3.10")
+    }
 }
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
