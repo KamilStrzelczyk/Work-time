@@ -25,9 +25,10 @@ class AddWorkTimeActivity : ComponentActivity() {
     private val addWorkTimeViewModel: AddWorkTimeViewModel by viewModels {
         provideAddWorkTimeViewModelFactory(
             factory = viewModelFactory,
+            userName = intent.getStringExtra(USER_NAME).orEmpty(),
             userId = intent.getIntExtra(
                 USER_ID,
-                0
+                0,
             ),
         )
     }
@@ -49,19 +50,22 @@ class AddWorkTimeActivity : ComponentActivity() {
     private fun provideAddWorkTimeViewModelFactory(
         factory: AddWorkTimeViewModel.Factory,
         userId: Int,
+        userName: String,
     ): ViewModelProvider.Factory {
         return object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return factory.create(userId) as T
+                return factory.create(userId, userName) as T
             }
         }
     }
 
     companion object {
         private const val USER_ID = "user_id"
-        fun createStartIntent(context: Context, userId: Int): Intent {
+        private const val USER_NAME = "user_Name"
+        fun createStartIntent(context: Context, userId: Int, userName: String): Intent {
             return Intent(context, AddWorkTimeActivity::class.java).apply {
                 putExtra(USER_ID, userId)
+                putExtra(USER_NAME, userName)
             }
         }
     }

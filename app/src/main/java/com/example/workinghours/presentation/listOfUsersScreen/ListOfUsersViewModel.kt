@@ -1,6 +1,5 @@
 package com.example.workinghours.presentation.listOfUsersScreen
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.Utils
@@ -8,7 +7,10 @@ import com.example.workinghours.domain.model.User
 import com.example.workinghours.domain.usecase.GetAdminPasswordUseCase
 import com.example.workinghours.domain.usecase.GetAllUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.apache.poi.xdgf.util.Util
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,28 +19,30 @@ class ListOfUsersViewModel @Inject constructor(
     private val getAdminPassword: GetAdminPasswordUseCase,
 ) : ViewModel() {
 
-    val state = mutableStateOf(ViewModelState())
+    private val _state = MutableStateFlow(ViewModelState())
+    val state: StateFlow<ViewModelState> = _state
 
     init {
         viewModelScope.launch {
-            state.value = state.value.copy(
+            _state.value = _state.value.copy(
                 userList = getAllUsers(),
                 adminPassword = getAdminPassword()
             )
         }
     }
 
-    fun onUserNameBoxClicked(userId: Int) {
+    fun onUserNameBoxClicked(userId: Int, userName: String) {
         updateState(
-            state.value.copy(
-                userId = userId
+            _state.value.copy(
+                userId = userId,
+                userName = userName,
             )
         )
     }
 
     fun onTopAppBarMoreActionClicked() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showTopAppBarMoreAction = true
             )
         )
@@ -46,7 +50,7 @@ class ListOfUsersViewModel @Inject constructor(
 
     fun onDismissTopAppBarMoreAction() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showTopAppBarMoreAction = false
             )
         )
@@ -54,7 +58,7 @@ class ListOfUsersViewModel @Inject constructor(
 
     fun onDismissUserActionsDialog() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showUserActionsDialog = false
             )
         )
@@ -62,7 +66,7 @@ class ListOfUsersViewModel @Inject constructor(
 
     fun onUsersClicked() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showUserActionsDialog = true
             )
         )
@@ -70,7 +74,7 @@ class ListOfUsersViewModel @Inject constructor(
 
     fun onAdminClicked() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showAdminPasswordDialog = true
             )
         )
@@ -78,7 +82,7 @@ class ListOfUsersViewModel @Inject constructor(
 
     fun onDismissAdminPasswordDialog() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showAdminPasswordDialog = false
             )
         )
@@ -86,17 +90,17 @@ class ListOfUsersViewModel @Inject constructor(
 
     fun onPasswordChange(password: String) {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 password = password
             )
         )
     }
 
     fun onOkClicked(onValidationPassed: () -> Unit) {
-        if (state.value.adminPassword == state.value.password) {
+        if (_state.value.adminPassword == _state.value.password) {
             onValidationPassed()
             updateState(
-                state.value.copy(
+                _state.value.copy(
                     showAdminPasswordDialog = false,
                     correctPassword = true,
                     password = Utils.EMPTY_STRING,
@@ -105,7 +109,7 @@ class ListOfUsersViewModel @Inject constructor(
             )
         } else {
             updateState(
-                state.value.copy(
+                _state.value.copy(
                     isError = true
                 )
             )
@@ -113,7 +117,7 @@ class ListOfUsersViewModel @Inject constructor(
     }
 
     private fun updateState(state: ViewModelState) {
-        this.state.value = state
+        this._state.value = state
     }
 
     data class ViewModelState(
@@ -124,6 +128,7 @@ class ListOfUsersViewModel @Inject constructor(
         val correctPassword: Boolean = false,
         val userList: List<User> = emptyList(),
         val userId: Int = Utils.EMPTY_INT,
+        val userName: String = Utils.EMPTY_STRING,
         val adminPassword: String = Utils.EMPTY_STRING,
         val password: String = Utils.EMPTY_STRING,
     )

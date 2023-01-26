@@ -26,4 +26,9 @@ class WorkDataRepositoryImpl @Inject constructor(
         val list: List<WorkDataEntity> = workDataDao.getDateFromOneDay(userWorkDate)
         return list.map { mapper.toDomainModel(it) }
     }
+
+    override suspend fun getDateFromOneMonth(year: Int, month: Int): List<WorkData> {
+        val list: List<WorkDataEntity> = workDataDao.getDateFromOneMonth(year, month)
+        return list.map { mapper.toDomainModel(it) }
+    }
 }

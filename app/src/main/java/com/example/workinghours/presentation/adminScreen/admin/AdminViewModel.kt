@@ -146,5 +146,5 @@ class AdminViewModel @Inject constructor(
         val adminPasswordFromDataBase: String = Utils.EMPTY_STRING,
         val adminPassword: String = Utils.EMPTY_STRING,
         val newAdminPassword: String = Utils.EMPTY_STRING,
-    )
+    ){}
 }

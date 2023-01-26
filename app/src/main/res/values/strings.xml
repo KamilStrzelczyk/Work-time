@@ -1,3 +1,72 @@
 <resources>
     <string name="app_name">Working Hours</string>
+
+
+    <string name="OK">OK</string>
+    <string name="DailyReport">Raport dzienny</string>
+    <string name="WrongPassword">Błędne hasło</string>
+    <string name="WorkTime">Czas pracy</string>
+
+    //AddWorkTimeScreen
+    <string name="StartWorkingTime">Rozpoczęcie pracy</string>
+    <string name="EndWorkTime">Zakończenie pracy</string>
+    <string name="Hygiene">Higieny</string>
+    <string name="ClockColon">:</string>
+    <string name="Save">Zapisz</string>
+    <string name="YourTimeJob">Twój czas pracy</string>
+
+    //AdminScreenGrids
+    <string name="MonthReport">Raport miesięczny</string>
+    <string name="ListOfUsers">Lista użytkowników</string>
+    <string name="ChangePassword">Zmień hasło</string>
+    <string name="AddUser">Dodaj użytkownika</string>
+    <string name="DeleteUser">Usuń użytkownika</string>
+
+    //AdminScreen
+    <string name="UserName">Nazwa użytkownika</string>
+    <string name="UserPassword">Hasło</string>
+    <string name="SaveUser">Zapisz użytkownika</string>
+    <string name="GetOldPassword">Podaj stare hasło</string>
+    <string name="GetNewPassword">Podaj nowe hasło</string>
+
+    //
+    DeleteUserScreen
+    <string name="DeleteUsers">Usuwanie użytkowników</string>
+    <string name="DidRemoveUser">Czy usunąć urzytkownika</string>
+
+    //SendDailReportScreen
+    <string name="SendDailyReport">Wyślij raport dzienny</string>
+
+    //SendMonthReportScreen
+    <string name="SendMonthReport">Wyślij raport miesięczny</string>
+
+    // ListOfUsersScreen
+    <string name="PreviousDays">Poprzednie dni</string>
+    <string name="AddNewDay">Dodaj nowy dzień</string>
+    <string name="Admin">Admin</string>
+    <string name="GetPassword">Podaj hasło</string>
+
+    //PreviousDayScreen
+    <string name="DailyStatement">Zestawienie dzienne</string>
+    <string name="Work">Błędne hasło</string>
+    <string name="WorkAtTime">Praca w godzinach</string>
+    <string name="PeriodOfHygiene">Czas trwania higien</string>
+    <string name="WorkedDays">Przepracowane dni</string>
+    <string name="AllDays">Wszystkie dni</string>
+    <string name="PreviousMonth">Poprzedni miesiąc</string>
+    <string name="ShowData">Pokaż dane</string>
+
+    //MonthGrids
+    <string name="January">sty</string>
+    <string name="February">lut</string>
+    <string name="March">mar</string>
+    <string name="April">kwi</string>
+    <string name="May">maj</string>
+    <string name="June">cze</string>
+    <string name="July">lip</string>
+    <string name="August">sie</string>
+    <string name="September">paź</string>
+    <string name="October">lis</string>
+    <string name="November">wrz</string>
+    <string name="December">gru</string>
 </resources>

@@ -9,24 +9,25 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersActivity
-import org.joda.time.DateTime
+import com.example.workinghours.R
 
 @Composable
 
 fun AddWorkTimeScreen(
     viewModel: AddWorkTimeViewModel,
 ) {
-    val dataTime = DateTime.now()
     val pattern = "MM/dd/yyyy HH:mm"
-    val state = viewModel.state.value
+    val state = viewModel.state.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -37,23 +38,23 @@ fun AddWorkTimeScreen(
             modifier = Modifier
                 .padding(20.dp),
         ) {
-            Text(dataTime.toString(pattern))
+            Text(state.run { currentDataAndTime!!.toString(pattern) })
         }
 
         Divider()
 
         ClockComponent(
-            text = "Rozpoczęcie pracy",
+            text = stringResource(id = R.string.StartWorkingTime),
             state.startWorkClock,
             viewModel::updateStartWorkClock
         )
         ClockComponent(
-            text = "Zakończenie pracy",
+            text = stringResource(id = R.string.EndWorkTime),
             state.endWorkClock,
             viewModel::updateEndWorkClock
         )
         ClockComponent(
-            text = "Higieny",
+            text = stringResource(id = R.string.Hygiene),
             state.hygieneClock,
             viewModel::updateHygieneWorkClock
         )
@@ -68,7 +69,7 @@ fun AddWorkTimeScreen(
                 onClick = { viewModel.onButtonClicked() }
             ) {
                 Text(
-                    text = "Zapisz",
+                    text = stringResource(id = R.string.Save),
                     color = Color.White,
                 )
                 SaveTimeDialog(
@@ -81,7 +82,7 @@ fun AddWorkTimeScreen(
 }
 
 @Composable
-fun ClockComponent(
+private fun ClockComponent(
     text: String,
     clock: AddWorkTimeViewModel.Clock,
     updateClock: (AddWorkTimeViewModel.Clock) -> Unit,
@@ -132,7 +133,7 @@ fun ClockComponent(
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = ":",
+                    text = stringResource(id = R.string.ClockColon),
                 )
 
                 Box(
@@ -160,7 +161,7 @@ fun ClockComponent(
 }
 
 @Composable
-fun ClockDropDown(
+private fun ClockDropDown(
     dismissClock: () -> Unit,
     onItemSelected: (String) -> Unit,
     options: List<String>,
@@ -179,7 +180,7 @@ fun ClockDropDown(
 }
 
 @Composable
-fun HourClock(
+private fun HourClock(
     clockData: AddWorkTimeViewModel.Clock,
     updateClock: (AddWorkTimeViewModel.Clock) -> Unit,
 ) {
@@ -193,7 +194,7 @@ fun HourClock(
 }
 
 @Composable
-fun MinuteClock(
+private fun MinuteClock(
     clockData: AddWorkTimeViewModel.Clock,
     updateClock: (AddWorkTimeViewModel.Clock) -> Unit,
 ) {
@@ -207,7 +208,7 @@ fun MinuteClock(
 }
 
 @Composable
-fun SaveTimeDialog(
+private fun SaveTimeDialog(
     viewModel: AddWorkTimeViewModel,
     state: AddWorkTimeViewModel.ViewModelState,
 ) {
@@ -230,14 +231,19 @@ fun SaveTimeDialog(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Twoj czas pracy")
+                        Text(text = stringResource(id = R.string.YourTimeJob))
                         state.workTime?.amountWorkTime?.let {
                             Text(it.toString(patternForCalculateTime))
                         }
                         Button(
                             onClick = {
                                 viewModel.onSaveClicked()
-                                context.startActivity(Intent(context, ListOfUsersActivity::class.java))
+                                context.startActivity(
+                                    Intent(
+                                        context,
+                                        ListOfUsersActivity::class.java
+                                    )
+                                )
                             }
                         ) {
                             Text(text = "OK")

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -88,37 +89,37 @@ fun AdminScreen(
 }
 
 @Composable
-fun Grids(
+private fun Grids(
     onItemClick: (AdminGirdOptionType) -> Unit,
 ) {
-    val data = listOf(
+    val dataGrids = listOf(
         AdminGridOption(
-            "Dzienny raport ",
+            stringResource(id = R.string.DailyReport),
             AdminGirdOptionType.SEND_DAILY_REPORT,
             R.drawable.calendartodayimage
         ),
         AdminGridOption(
-            "Raport miesięczny",
+            stringResource(id = R.string.MonthReport),
             AdminGirdOptionType.SEND_MONTH_REPORT,
             R.drawable.calendar_image
         ),
         AdminGridOption(
-            "Lista użytkowników",
+            stringResource(id = R.string.ListOfUsers),
             AdminGirdOptionType.USER_PREVIEW,
             R.drawable.account_icon
         ),
         AdminGridOption(
-            "Zmień hasło",
+            stringResource(id = R.string.ChangePassword),
             AdminGirdOptionType.CHANGE_PASSWORD,
             R.drawable.change_password_image
         ),
         AdminGridOption(
-            "Dodaj użytkownika",
+            stringResource(id = R.string.AddUser),
             AdminGirdOptionType.ADDUSER,
             R.drawable.add_user_image
         ),
         AdminGridOption(
-            "Usuń użytkownika",
+            stringResource(id = R.string.DeleteUser),
             AdminGirdOptionType.DELETE_USER,
             R.drawable.remove_user_image
         ),
@@ -128,7 +129,7 @@ fun Grids(
         columns = GridCells.Adaptive(minSize = 162.dp),
         contentPadding = PaddingValues(8.dp)
     ) {
-        items(data) { item ->
+        items(dataGrids) { item ->
             Card(
                 onItemClick = onItemClick,
                 adminGridOption = item
@@ -138,7 +139,7 @@ fun Grids(
 }
 
 @Composable
-fun Card(
+private fun Card(
     onItemClick: (AdminGirdOptionType) -> Unit,
     adminGridOption: AdminGridOption,
 ) {
@@ -189,16 +190,16 @@ private fun AddUserDialog(
                         OutlinedTextField(
                             value = state.userName,
                             onValueChange = { onUserNameChange(it) },
-                            label = { Text(text = "Nazwa użytkownika") }
+                            label = { Text(stringResource(id = R.string.UserName)) }
                         )
                         OutlinedTextField(
                             value = state.userPassword,
                             onValueChange = { onUserPasswordChange(it) },
-                            label = { Text(text = "Nazwa Hasło") }
+                            label = { Text(text = stringResource(id = R.string.UserPassword)) }
                         )
                         Button(onClick = { onSaveUserClicked() }
                         ) {
-                            Text(text = "Zapisz użytkownika")
+                            Text(text = stringResource(id = R.string.SaveUser))
                         }
                     }
                 }
@@ -238,7 +239,7 @@ private fun AdminChangePasswordDialog(
                         OutlinedTextField(
                             value = password,
                             onValueChange = { onPasswordChange(it) },
-                            label = { Text(text = "Podaj stare hasło") },
+                            label = { Text(text = stringResource(id = R.string.GetOldPassword)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
@@ -259,7 +260,7 @@ private fun AdminChangePasswordDialog(
                         )
                         if (isError)
                             Text(
-                                text = "Błędne hasło",
+                                text = stringResource(id = R.string.WrongPassword),
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colors.error
                             )
@@ -267,7 +268,7 @@ private fun AdminChangePasswordDialog(
                         OutlinedTextField(
                             value = newPassword,
                             onValueChange = { onNewPasswordChange(it) },
-                            label = { Text(text = "Podaj nowe hasło") },
+                            label = { Text(text = stringResource(id = R.string.GetNewPassword)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             visualTransformation = if (newPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
@@ -289,7 +290,7 @@ private fun AdminChangePasswordDialog(
                             modifier = Modifier.fillMaxWidth(),
                             onClick = { onOKClicked() }
                         ) {
-                            Text(text = "OK")
+                            Text(text = stringResource(id = R.string.OK))
                         }
                     }
                 }

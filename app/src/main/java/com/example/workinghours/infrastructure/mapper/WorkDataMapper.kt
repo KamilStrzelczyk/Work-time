@@ -15,6 +15,9 @@ class WorkDataMapper @Inject constructor() {
             endWorkTime = endWorkTime,
             hygieneWorkTime = hygieneWorkTime,
             amountWorkTime = amountWorkTime,
+            year = year,
+            monthNumber = monthNumber,
+            userName = userName,
         )
 
     }
@@ -28,6 +31,9 @@ class WorkDataMapper @Inject constructor() {
             endWorkTime = endWorkTime,
             hygieneWorkTime = hygieneWorkTime,
             amountWorkTime = amountWorkTime,
+            year = year,
+            monthNumber = monthNumber,
+            userName = userName,
         )
     }
 }

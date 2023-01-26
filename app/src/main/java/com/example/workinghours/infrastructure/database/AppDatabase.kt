@@ -80,6 +80,9 @@ abstract class AppDatabase : RoomDatabase() {
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
                 hygieneWorkTime = DateTime(1674000000000),
+                userName = "Dominik",
+                year = 2023,
+                monthNumber = 12,
             ),
             WorkDataEntity(
                 id = 2,
@@ -89,6 +92,9 @@ abstract class AppDatabase : RoomDatabase() {
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
                 hygieneWorkTime = DateTime(1674000000000),
+                userName = "Agnieszka",
+                year = 2023,
+                monthNumber = 12,
             ),
             WorkDataEntity(
                 id = 3,
@@ -98,6 +104,9 @@ abstract class AppDatabase : RoomDatabase() {
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
                 hygieneWorkTime = DateTime(1674000000000),
+                userName = "Paweł",
+                year = 2023,
+                monthNumber = 12,
             ),
             WorkDataEntity(
                 id = 4,
@@ -107,6 +116,9 @@ abstract class AppDatabase : RoomDatabase() {
                 startWorkTime = DateTime(1674018000000),
                 endWorkTime = DateTime(1674054000000),
                 hygieneWorkTime = DateTime(1674000000000),
+                userName = "Kasia",
+                year = 2023,
+                monthNumber = 12,
             )
         )
     }

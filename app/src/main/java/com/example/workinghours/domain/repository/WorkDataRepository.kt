@@ -9,4 +9,5 @@ interface WorkDataRepository {
     suspend fun saveNewData(workData: WorkData)
     suspend fun getAllDate(userId: Int): List<WorkData>
     suspend fun getDateFromOneDay(userWorkDate: LocalDate): List<WorkData>
+    suspend fun getDateFromOneMonth(year: Int, month: Int): List<WorkData>
 }

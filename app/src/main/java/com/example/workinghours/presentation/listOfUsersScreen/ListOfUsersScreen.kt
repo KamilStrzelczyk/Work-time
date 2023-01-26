@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -36,7 +37,7 @@ fun ListOfUsersScreen(
     listOfUsersViewModel: ListOfUsersViewModel,
     adminViewModel: AdminViewModel,
 ) {
-    val listOfUsersState = listOfUsersViewModel.state.value
+    val listOfUsersState = listOfUsersViewModel.state.collectAsState().value
     val adminState = adminViewModel.state.value
     val context = LocalContext.current
     ListOfUsersScreen(
@@ -56,8 +57,23 @@ fun ListOfUsersScreen(
         onOkClicked = listOfUsersViewModel::onOkClicked,
         onPasswordChange = { listOfUsersViewModel.onPasswordChange(it) },
         onDismissAdminPasswordDialog = { listOfUsersViewModel.onDismissAdminPasswordDialog() },
-        navigateToAddWorkTimeScreen = { context.startActivity(AddWorkTimeActivity.createStartIntent(context, listOfUsersState.userId)) },
-        navigateToPreviousDayScreen = { context.startActivity(PreviousDayActivity.createStartIntent(context, listOfUsersState.userId)) })
+        navigateToAddWorkTimeScreen = {
+            context.startActivity(
+                AddWorkTimeActivity.createStartIntent(
+                    context,
+                    listOfUsersState.userId,
+                    listOfUsersState.userName,
+                )
+            )
+        },
+        navigateToPreviousDayScreen = {
+            context.startActivity(
+                PreviousDayActivity.createStartIntent(
+                    context,
+                    listOfUsersState.userId
+                )
+            )
+        })
 }
 
 @Composable
@@ -76,7 +92,7 @@ private fun ListOfUsersScreen(
     onDismissAdminPasswordDialog: () -> Unit,
     navigateToAddWorkTimeScreen: () -> Unit,
     navigateToPreviousDayScreen: () -> Unit,
-    onUserNameBoxClicked: (Int) -> Unit,
+    onUserNameBoxClicked: (Int, String) -> Unit,
     password: String,
     onOkClicked: (() -> Unit) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -88,7 +104,7 @@ private fun ListOfUsersScreen(
             TopAppBar(
                 modifier = Modifier,
                 title = {
-                    Text(text = "Czas pracy")
+                    Text(text = stringResource(id = R.string.WorkTime))
                 },
                 actions = {
                     IconButton(
@@ -117,7 +133,7 @@ private fun ListOfUsersScreen(
                     userId = it.id,
                     showUserActionDialog = onUsersClicked,
                     showAdminOption = adminOption,
-                    onUserNameBoxClicked = { onUserNameBoxClicked(it) },
+                    onUserNameBoxClicked = onUserNameBoxClicked,
                 )
             }
         }
@@ -143,7 +159,7 @@ private fun UserNameBox(
     userId: Int,
     userName: String,
     showUserActionDialog: () -> Unit,
-    onUserNameBoxClicked: (Int) -> Unit,
+    onUserNameBoxClicked: (Int, String) -> Unit,
     showAdminOption: Boolean,
 ) {
     Column(
@@ -155,7 +171,7 @@ private fun UserNameBox(
             )
             .clickable {
                 showUserActionDialog.invoke()
-                onUserNameBoxClicked(userId)
+                onUserNameBoxClicked(userId, userName)
             }
     ) {
         Card(elevation = 10.dp) {
@@ -224,7 +240,7 @@ private fun UserActionsDialog(
                                 ) {
                                     Text(
                                         modifier = Modifier.padding(5.dp),
-                                        text = "Poprzednie dni",
+                                        text = stringResource(id = R.string.PreviousDays),
                                     )
                                     Image(
                                         painter = painterResource(id = R.drawable.calendar_image),
@@ -256,7 +272,7 @@ private fun UserActionsDialog(
                                 ) {
                                     Text(
                                         modifier = Modifier.padding(5.dp),
-                                        text = "Dodaj nowy dzień",
+                                        text = stringResource(id = R.string.AddNewDay),
                                     )
                                     Image(
                                         painter = painterResource(id = R.drawable.calendar_add_image),
@@ -293,7 +309,7 @@ private fun MoreAction(
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(5.dp))
-                Text(text = "Admin")
+                Text(text = stringResource(id = R.string.Admin))
             }
         }
 }
@@ -322,7 +338,7 @@ private fun AdminPasswordDialog(
                         OutlinedTextField(
                             value = password,
                             onValueChange = { onPasswordChange(it) },
-                            label = { Text(text = "Podaj hasło") },
+                            label = { Text(text = stringResource(id = R.string.GetPassword)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
                             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -345,7 +361,7 @@ private fun AdminPasswordDialog(
                         )
                         if (isError) {
                             Text(
-                                text = "Błędne hasło",
+                                text = stringResource(id = R.string.WrongPassword),
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colors.error
                             )
@@ -362,7 +378,7 @@ private fun AdminPasswordDialog(
                                 }
                             }
                         ) {
-                            Text(text = "OK")
+                            Text(text = stringResource(id = R.string.OK))
                         }
                     }
                 }

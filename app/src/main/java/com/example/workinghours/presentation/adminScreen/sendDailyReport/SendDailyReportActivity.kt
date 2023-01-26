@@ -29,7 +29,7 @@ class SendDailyReportActivity : ComponentActivity() {
                     onSendClicked = {
                         excelFileFormatter.createExel(
                             workbook = excelFileFormatter.createWorkBook(it),
-                            fileName = "excel",
+                            fileName = "Daily Report",
                         )
                         val file = File("/data/data/com.example.workinghours/files/excel.xlsx")
                         val file2 = FileProvider.getUriForFile(

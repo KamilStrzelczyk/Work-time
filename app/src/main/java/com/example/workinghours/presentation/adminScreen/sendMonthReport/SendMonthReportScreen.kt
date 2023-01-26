@@ -6,82 +6,95 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.workinghours.ui.MonthPickerGridOption
-import com.example.workinghours.ui.MonthPickerGridOptionType
-import com.example.workinghours.ui.MonthPickerGridOptionType.*
 import org.joda.time.LocalDate
+import com.example.workinghours.R
+import com.example.workinghours.presentation.model.DataToExcelFile
 
 @Composable
-fun SendMonthReportScreen() {
-    Surface(
-        modifier = Modifier
-            .clip(RoundedCornerShape(16.dp))
-    ) {
-        Box(
+fun SendMonthReportScreen(
+    viewModel: SendMonthReportViewModel,
+    onSendClicked: (List<DataToExcelFile>) -> Unit,
+) {
+    val state = viewModel.state.collectAsState().value
+    val scaffoldState = rememberScaffoldState()
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+            TopAppBar(
+                modifier = Modifier,
+                title = {
+                    Text(text = stringResource(id = R.string.MonthReport))
+                },
+            )
+        }
+    ) { padding ->
+        Surface(
             modifier = Modifier
-                .padding(20.dp)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        )
-        {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Icon(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable { },
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = null,
-                    )
-
-                    Text(text = "2023")
-
-                    Icon(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable { },
-                        imageVector = Icons.Default.ArrowForward,
-                        contentDescription = null,
-                    )
-                }
-
-                Grids(
-                    onItemClick = {
-                        when (it) {
-                            MONTH1 -> TODO()
-                            MONTH2 -> TODO()
-                            MONTH3 -> TODO()
-                            MONTH4 -> TODO()
-                            MONTH5 -> TODO()
-                            MONTH6 -> TODO()
-                            MONTH7 -> TODO()
-                            MONTH8 -> TODO()
-                            MONTH9 -> TODO()
-                            MONTH10 -> TODO()
-                            MONTH11 -> TODO()
-                            MONTH12 -> TODO()
-                        }
-                    })
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { /*TODO*/ }
+                .clip(RoundedCornerShape(16.dp))
+                .padding(padding)
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            )
+            {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Wyślij miesięczny raport")
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Icon(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { viewModel.minusYear() },
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = null,
+                        )
+
+                        Text(text = state.yearOnScreen.year.toString())
+
+                        Icon(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { viewModel.addYear() },
+                            imageVector = Icons.Default.ArrowForward,
+                            contentDescription = null,
+                        )
+                    }
+                    Grids(
+                        onItemClick = {
+                            viewModel.onMonthClicked(
+                                year = state.yearOnScreen.year,
+                                monthOfYear = it.numberOfMonth
+                            )
+                        },
+                        gridList = state.gridList,
+                        localDate = state.date,
+                    )
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            viewModel.sendMontReport {
+                                onSendClicked(state.dataForExcel)
+                            }
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.SendMonthReport))
+                    }
                 }
             }
         }
@@ -89,82 +102,19 @@ fun SendMonthReportScreen() {
 }
 
 @Composable
-fun Grids(
-    onItemClick: (MonthPickerGridOptionType) -> Unit,
+private fun Grids(
+    onItemClick: (MonthPickerGridOption) -> Unit,
+    gridList: List<MonthPickerGridOption>,
+    localDate: LocalDate,
 ) {
-    val date = LocalDate()
-
-    val data = listOf(
-        MonthPickerGridOption(
-            "sty",
-            1,
-            MONTH1
-        ),
-        MonthPickerGridOption(
-            "lut",
-            2,
-            MONTH2
-        ),
-        MonthPickerGridOption(
-            "mar",
-            3,
-            MONTH3
-        ),
-        MonthPickerGridOption(
-            "kwi",
-            4,
-            MONTH4
-        ),
-        MonthPickerGridOption(
-            "maj",
-            5,
-            MONTH5
-        ),
-        MonthPickerGridOption(
-            "cze",
-            6,
-            MONTH6
-        ),
-        MonthPickerGridOption(
-            "lip",
-            7,
-            MONTH7
-        ),
-        MonthPickerGridOption(
-            "sie",
-            8,
-            MONTH8
-        ),
-        MonthPickerGridOption(
-            "wrz",
-            9,
-            MONTH9
-        ),
-        MonthPickerGridOption(
-            "paź",
-            10,
-            MONTH10
-        ),
-        MonthPickerGridOption(
-            "lis",
-            11,
-            MONTH11
-        ),
-        MonthPickerGridOption(
-            "gru",
-            12,
-            MONTH12
-        ),
-    )
-    val isActiveColor = data.firstOrNull() {
-        (date.monthOfYear == it.numberOfMonth)
+    val isActiveColor = gridList.firstOrNull() {
+        (localDate.monthOfYear == it.numberOfMonth)
     }
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(8.dp)
     ) {
-        items(data) { item ->
+        items(gridList) { item ->
             Card(
                 onItemClick = onItemClick,
                 monthPickerGridOption = item,
@@ -175,8 +125,8 @@ fun Grids(
 }
 
 @Composable
-fun Card(
-    onItemClick: (MonthPickerGridOptionType) -> Unit,
+private fun Card(
+    onItemClick: (MonthPickerGridOption) -> Unit,
     monthPickerGridOption: MonthPickerGridOption,
     isActiveColor: Boolean,
 ) {
@@ -190,7 +140,7 @@ fun Card(
     ) {
         Column(
             modifier = Modifier
-                .clickable { onItemClick(monthPickerGridOption.type) }
+                .clickable { onItemClick(monthPickerGridOption) }
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

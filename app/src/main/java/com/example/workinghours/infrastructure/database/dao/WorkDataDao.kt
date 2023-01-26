@@ -18,4 +18,6 @@ interface WorkDataDao {
 
     @Query("SELECT * FROM work_data WHERE user_work_date =:userWorkDate")
     suspend fun getDateFromOneDay(vararg userWorkDate: LocalDate): List<WorkDataEntity>
+    @Query("SELECT * FROM work_data WHERE year =:year AND month_number =:month")
+    suspend fun getDateFromOneMonth (year: Int, month: Int): List<WorkDataEntity>
 }

@@ -12,6 +12,12 @@ data class WorkDataEntity(
     var id: Int,
     @ColumnInfo(name = "user_id")
     var userId: Int,
+    @ColumnInfo(name = "user_name")
+    var userName: String,
+    @ColumnInfo(name = "month_number")
+    var monthNumber: Int,
+    @ColumnInfo(name = "year")
+    var year: Int,
     @ColumnInfo(name = "user_work_amount")
     val amountWorkTime: DateTime,
     @ColumnInfo(name = "user_work_date")

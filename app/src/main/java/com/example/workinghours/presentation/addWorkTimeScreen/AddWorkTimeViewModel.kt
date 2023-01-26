@@ -1,43 +1,65 @@
 package com.example.workinghours.presentation.addWorkTimeScreen
 
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.Utils
 import com.example.workinghours.domain.model.CalculateAmountOfHours
 import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.domain.usecase.CalculateAmountOfHoursUseCase
+import com.example.workinghours.domain.usecase.GetCurrentDateAndTimeUseCase
 import com.example.workinghours.domain.usecase.SaveUserWorkDataUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 
 class AddWorkTimeViewModel @AssistedInject constructor(
     private val calculateAmountOfHours: CalculateAmountOfHoursUseCase,
     private val saveUserWorkData: SaveUserWorkDataUseCase,
+    private val getCurrentDateAndTime: GetCurrentDateAndTimeUseCase,
     @Assisted
     private val userId: Int,
+    @Assisted
+    private val userName: String,
 ) : ViewModel() {
 
-    val state = mutableStateOf(ViewModelState())
+    private val _state = MutableStateFlow(ViewModelState())
+    val state: StateFlow<ViewModelState> = _state
 
     @AssistedFactory
     interface Factory {
-        fun create(userId: Int): AddWorkTimeViewModel
+        fun create(userId: Int, userName: String): AddWorkTimeViewModel
+    }
+
+    init {
+        viewModelScope.launch {
+            getCurrentDateAndTime().collect {
+                updateState(
+                    _state.value.copy(
+                        currentDataAndTime = it
+                    )
+                )
+            }
+        }
     }
 
     fun onSaveClicked() {
         viewModelScope.launch {
-            state.value.workTime?.let {
+            _state.value.workTime?.let {
                 WorkData(
                     userId = userId,
+                    userName = userName,
                     userWorkDate = it.userWorkDate,
                     startWorkTime = it.startWorkTime,
                     endWorkTime = it.endWorkTime,
                     hygieneWorkTime = it.hygieneWorkTime,
                     amountWorkTime = it.amountWorkTime,
+                    year = it.userWorkDate.year,
+                    monthNumber = it.userWorkDate.monthOfYear,
                 )
             }?.let { saveUserWorkData(it) }
         }
@@ -46,7 +68,7 @@ class AddWorkTimeViewModel @AssistedInject constructor(
 
     fun onDismissSaveDialog() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showSaveDialog = false,
             )
         )
@@ -54,15 +76,15 @@ class AddWorkTimeViewModel @AssistedInject constructor(
 
     fun onButtonClicked() {
         val workTime = calculateAmountOfHours(
-            startHour = state.value.startWorkClock.setHour,
-            startMinute = state.value.startWorkClock.setMinute,
-            endHour = state.value.endWorkClock.setHour,
-            endMinute = state.value.endWorkClock.setMinute,
-            hygieneHour = state.value.hygieneClock.setHour,
-            hygieneMinute = state.value.hygieneClock.setMinute,
+            startHour = _state.value.startWorkClock.setHour,
+            startMinute = _state.value.startWorkClock.setMinute,
+            endHour = _state.value.endWorkClock.setHour,
+            endMinute = _state.value.endWorkClock.setMinute,
+            hygieneHour = _state.value.hygieneClock.setHour,
+            hygieneMinute = _state.value.hygieneClock.setMinute,
         )
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 workTime = workTime,
                 showSaveDialog = true,
             )
@@ -71,7 +93,7 @@ class AddWorkTimeViewModel @AssistedInject constructor(
 
     fun updateStartWorkClock(clock: Clock) {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 startWorkClock = clock
             )
         )
@@ -79,7 +101,7 @@ class AddWorkTimeViewModel @AssistedInject constructor(
 
     fun updateEndWorkClock(clock: Clock) {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 endWorkClock = clock
             )
         )
@@ -87,17 +109,18 @@ class AddWorkTimeViewModel @AssistedInject constructor(
 
     fun updateHygieneWorkClock(clock: Clock) {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 hygieneClock = clock
             )
         )
     }
 
     private fun updateState(state: ViewModelState) {
-        this.state.value = state
+        this._state.value = state
     }
 
     data class ViewModelState(
+        val currentDataAndTime: DateTime? = null,
         val showSaveDialog: Boolean = false,
         val extraTime: Int = Utils.EMPTY_INT,
         val workTime: CalculateAmountOfHours? = null,

@@ -8,12 +8,17 @@ import com.example.workinghours.domain.model.DaysOfMonth
 import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.domain.usecase.GetDayOfMonthUseCase
 import com.example.workinghours.domain.usecase.GetUserDateUseCase
+import com.example.workinghours.presentation.adminScreen.sendDailyReport.SendDailyReportViewModel
 import com.example.workinghours.presentation.model.DayInCalendar
+import com.example.workinghours.ui.MonthPickerGridOption
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 
 class PreviousDaysViewModel @AssistedInject constructor(
     private val getUserDate: GetUserDateUseCase,
@@ -21,18 +26,19 @@ class PreviousDaysViewModel @AssistedInject constructor(
     @Assisted
     private val userId: Int,
 ) : ViewModel() {
-    val state = mutableStateOf(ViewModelState())
+    private val _state = MutableStateFlow(ViewModelState())
+    val state: StateFlow<ViewModelState> = _state
 
     init {
         viewModelScope.launch {
-            val daysOfMonth = getDayOfMonth
+            val daysOfMonth = getDayOfMonth(_state.value.currentDate)
             val userDate = getUserDate(
                 userId = userId
             )
             updateState(
-                state.value.copy(
+                _state.value.copy(
                     userDate = userDate,
-                    daysOfMonth = daysOfMonth()
+                    daysOfMonth = daysOfMonth
                 )
             )
         }
@@ -45,7 +51,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
 
     fun onTopAppBarFilterAllDaysClicked() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showOnlyWorkDays = false
             )
         )
@@ -53,7 +59,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
 
     fun onTopAppBarFilterWorkdaysClicked() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showOnlyWorkDays = true
             )
         )
@@ -61,7 +67,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
 
     fun onTopAppBarFilterClicked() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showFilterTopAppBar = true
             )
         )
@@ -69,17 +75,75 @@ class PreviousDaysViewModel @AssistedInject constructor(
 
     fun onDismissFilterTopAppBar() {
         updateState(
-            state.value.copy(
+            _state.value.copy(
                 showFilterTopAppBar = false,
             )
         )
     }
 
+    fun showCalendar() {
+        updateState(
+            _state.value.copy(
+                showCalendar = true
+            )
+        )
+    }
+
+    fun onDismissCalendar() {
+        updateState(
+            _state.value.copy(
+                showCalendar = false
+            )
+        )
+    }
+
+    fun minusYear() {
+        val newYear = _state.value.year
+        updateState(
+            _state.value.copy(
+                year = LocalDate(newYear.minusYears(1))
+            )
+        )
+    }
+
+    fun addYear() {
+        val newYear = _state.value.year
+        updateState(
+            _state.value.copy(
+                year = LocalDate(newYear.plusYears(1))
+            )
+        )
+    }
+
+    fun onOtherMonthClicked(year: Int, month: Int) {
+        val newMonth: LocalDate = LocalDate().withYearOfEra(year).withMonthOfYear(month)
+        updateState(
+            _state.value.copy(
+                calendarDate = newMonth,
+            )
+        )
+    }
+
+    fun onShowDateClicked() {
+        viewModelScope.launch {
+            updateState(
+                _state.value.copy(
+                    daysOfMonth = getDayOfMonth(_state.value.calendarDate),
+                    showCalendar = false,
+                )
+            )
+        }
+    }
+
     private fun updateState(state: ViewModelState) {
-        this.state.value = state
+        this._state.value = state
     }
 
     data class ViewModelState(
+        val currentDate: LocalDate = LocalDate.now(),
+        val year: LocalDate = LocalDate(),
+        val calendarDate: LocalDate = LocalDate(),
+        val showCalendar: Boolean = false,
         val showOnlyWorkDays: Boolean = false,
         val showFilterTopAppBar: Boolean = false,
         val nameOfDay: String = Utils.EMPTY_STRING,
@@ -116,11 +180,62 @@ class PreviousDaysViewModel @AssistedInject constructor(
         }
 
         private fun getWorkDate(dayOfMonth: DaysOfMonth) =
-            userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay }
+            userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay && it.userWorkDate.year == dayOfMonth.numberOfYear }
 
         private fun DateTime?.toStringOrEmpty(): String {
             val patternForTime = "HH:mm"
             return this?.toString(patternForTime) ?: ""
         }
+
+        val gridList = listOf(
+            MonthPickerGridOption(
+                "sty",
+                1,
+            ),
+            MonthPickerGridOption(
+                "lut",
+                2,
+            ),
+            MonthPickerGridOption(
+                "mar",
+                3,
+            ),
+            MonthPickerGridOption(
+                "kwi",
+                4,
+            ),
+            MonthPickerGridOption(
+                "maj",
+                5,
+            ),
+            MonthPickerGridOption(
+                "cze",
+                6,
+            ),
+            MonthPickerGridOption(
+                "lip",
+                7,
+            ),
+            MonthPickerGridOption(
+                "sie",
+                8,
+            ),
+            MonthPickerGridOption(
+                "wrz",
+                9,
+            ),
+            MonthPickerGridOption(
+                "paź",
+                10,
+            ),
+            MonthPickerGridOption(
+                "lis",
+                11,
+            ),
+            MonthPickerGridOption(
+                "gru",
+                12,
+            ),
+        )
     }
 }
