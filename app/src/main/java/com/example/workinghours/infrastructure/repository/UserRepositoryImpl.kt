@@ -15,11 +15,11 @@ class UserRepositoryImpl @Inject constructor(
         mapper.toDomainModel(it)
     }
 
-    override suspend fun saveNewUser(user: User) {
+    override suspend fun save(user: User) {
         userDao.saveNewUser(mapper.toEntityModel(user))
     }
 
-    override suspend fun deleteUser(user: User) {
+    override suspend fun delete(user: User) {
         userDao.deleteUser(mapper.toEntityModel(user))
     }
 }

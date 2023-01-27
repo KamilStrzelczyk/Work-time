@@ -12,12 +12,12 @@ interface WorkDataDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveWorkData(vararg workData: WorkDataEntity)
-
     @Query("SELECT * FROM work_data WHERE user_id =:userId")
     suspend fun getAllDate(vararg userId: Int): List<WorkDataEntity>
 
     @Query("SELECT * FROM work_data WHERE user_work_date =:userWorkDate")
     suspend fun getDateFromOneDay(vararg userWorkDate: LocalDate): List<WorkDataEntity>
+
     @Query("SELECT * FROM work_data WHERE year =:year AND month_number =:month")
     suspend fun getDateFromOneMonth (year: Int, month: Int): List<WorkDataEntity>
 }

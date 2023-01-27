@@ -13,21 +13,21 @@ class WorkDataRepositoryImpl @Inject constructor(
     private val mapper: WorkDataMapper,
 
     ) : WorkDataRepository {
-    override suspend fun saveNewData(workData: WorkData) {
+    override suspend fun save(workData: WorkData) {
         workDataDao.saveWorkData(mapper.toEntityModel(workData))
     }
 
-    override suspend fun getAllDate(userId: Int): List<WorkData> {
+    override suspend fun getAllData(userId: Int): List<WorkData> {
         val list: List<WorkDataEntity> = workDataDao.getAllDate(userId)
         return list.map { mapper.toDomainModel(it) }
     }
 
-    override suspend fun getDateFromOneDay(userWorkDate: LocalDate): List<WorkData> {
+    override suspend fun getDataFromOneDay(userWorkDate: LocalDate): List<WorkData> {
         val list: List<WorkDataEntity> = workDataDao.getDateFromOneDay(userWorkDate)
         return list.map { mapper.toDomainModel(it) }
     }
 
-    override suspend fun getDateFromOneMonth(year: Int, month: Int): List<WorkData> {
+    override suspend fun getDataFromOneMonth(year: Int, month: Int): List<WorkData> {
         val list: List<WorkDataEntity> = workDataDao.getDateFromOneMonth(year, month)
         return list.map { mapper.toDomainModel(it) }
     }

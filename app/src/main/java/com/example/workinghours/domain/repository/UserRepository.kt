@@ -4,6 +4,6 @@ import com.example.workinghours.domain.model.User
 
 interface UserRepository {
     suspend fun getAll(): List<User>
-    suspend fun saveNewUser(user: User)
-    suspend fun deleteUser(user: User)
+    suspend fun save(user: User)
+    suspend fun delete(user: User)
 }

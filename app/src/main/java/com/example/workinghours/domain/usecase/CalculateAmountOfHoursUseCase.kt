@@ -21,7 +21,8 @@ class CalculateAmountOfHoursUseCase @Inject constructor() {
         val endWorkTime = dateTimeFormatter.parseDateTime("$endHour:$endMinute")
         val hygieneWorkTime = dateTimeFormatter.parseDateTime("$hygieneHour:$hygieneMinute")
         val durationWorkTime = endWorkTime.minusHours(startHour).minusMinutes(startMinute)
-        val durationWorkTimeWithHygiene = durationWorkTime.minusHours(hygieneHour).minusMinutes(hygieneMinute)
+        val durationWorkTimeWithHygiene =
+            durationWorkTime.minusHours(hygieneHour).minusMinutes(hygieneMinute)
         val convertToDateTime = DateTime(durationWorkTimeWithHygiene)
 
         return CalculateAmountOfHours(
@@ -29,7 +30,7 @@ class CalculateAmountOfHoursUseCase @Inject constructor() {
             startWorkTime = startWorkTime,
             endWorkTime = endWorkTime,
             hygieneWorkTime = hygieneWorkTime,
-            amountWorkTime = convertToDateTime
+            amountWorkTime = convertToDateTime,
         )
     }
 }

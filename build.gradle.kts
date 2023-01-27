@@ -1,5 +1,4 @@
 buildscript {
-    val compose_ui_version = "1.6.21"
     dependencies {
         classpath("com.google.gms:google-services:4.3.10")
     }

@@ -17,28 +17,23 @@ import javax.inject.Singleton
 @Module
 class DatabaseModule {
     @Provides
-    fun provideUserDao(appDatabase: AppDatabase): UserDao {
-        return appDatabase.getUserDao()
-    }
+    fun provideUserDao(appDatabase: AppDatabase): UserDao =
+        appDatabase.getUserDao()
 
     @Provides
-    fun provideWorkDataDao(appDatabase: AppDatabase): WorkDataDao {
-        return appDatabase.getWorkDataDao()
-    }
+    fun provideWorkDataDao(appDatabase: AppDatabase): WorkDataDao =
+        appDatabase.getWorkDataDao()
 
     @Provides
-    fun provideAdminDao(appDatabase: AppDatabase): AdminDao {
-        return appDatabase.getAdminDao()
-    }
+    fun provideAdminDao(appDatabase: AppDatabase): AdminDao =
+        appDatabase.getAdminDao()
 
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext appContext: Context):
-            AppDatabase {
-        return Room.databaseBuilder(
-            appContext,
-            AppDatabase::class.java,
-            "Users",
+    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase =
+        Room.databaseBuilder(
+            context = appContext,
+            klass = AppDatabase::class.java,
+            name = "Users",
         ).build()
-    }
 }
