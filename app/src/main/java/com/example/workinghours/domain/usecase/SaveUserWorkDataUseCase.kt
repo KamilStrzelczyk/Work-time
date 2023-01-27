@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 class SaveUserWorkDataUseCase @Inject constructor(private val repository: WorkDataRepository) {
     suspend operator fun invoke(workData: WorkData) {
-        repository.saveNewData(workData)
+        repository.save(workData)
     }
 }

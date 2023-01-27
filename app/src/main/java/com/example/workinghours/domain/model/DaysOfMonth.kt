@@ -1,6 +1,5 @@
 package com.example.workinghours.domain.model
 
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
 
 data class DaysOfMonth(

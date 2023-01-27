@@ -9,7 +9,7 @@ class AddNewUserUseCase @Inject constructor(private val repository: UserReposito
         userName: String,
         userPassword: String,
     ) {
-        repository.saveNewUser(
+        repository.save(
             User(
                 userName = userName,
                 userPassword = userPassword

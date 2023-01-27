@@ -8,20 +8,19 @@ import javax.inject.Inject
 
 internal class AddNewUserUseCaseTest @Inject constructor(repository: UserRepository) {
 
-    private val useCase = AddNewUserUseCase (repository)
+    private val useCase = AddNewUserUseCase(repository)
     private val userName = "Jacek"
     private val userPassword = "1234"
 
     @Test
-    suspend fun `WHEN user pass correct data THEN new user shout by added`() {
+    suspend fun `WHEN user pass correct data THEN new user should by added`() {
+        // GIVEN
         val expectedResult = User(userName = "Jacek", userPassword = "1234")
 
-        //WHEN
-        val result = useCase.invoke(
-            userName,
-            userPassword,
-        )
-        //THEN
+        // WHEN
+        val result = useCase(userName, userPassword)
+
+        // THEN
         assertEquals(expectedResult, result)
     }
 }

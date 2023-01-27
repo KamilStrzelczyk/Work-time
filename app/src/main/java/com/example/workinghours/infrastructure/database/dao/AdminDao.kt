@@ -11,8 +11,8 @@ interface AdminDao {
     @Query("SELECT password FROM admin LIMIT 1 ")
     suspend fun getPassword(): String
 
-    @Query("UPDATE admin SET password = :password WHERE id= :id")
-    suspend fun changePassword(password: String, id: Int)
+    @Query("UPDATE admin SET password = :password WHERE id = 1")
+    suspend fun changePassword(password: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(adminEntity: AdminEntity)

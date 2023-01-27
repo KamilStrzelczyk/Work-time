@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetDateFromOneDayUseCase @Inject constructor(private val workDataRepository: WorkDataRepository) {
     suspend operator fun invoke(currentDate: LocalDate): List<WorkData> {
-        return workDataRepository.getDateFromOneDay(LocalDate(currentDate))
+        return workDataRepository.getDataFromOneDay(LocalDate(currentDate))
     }
 }

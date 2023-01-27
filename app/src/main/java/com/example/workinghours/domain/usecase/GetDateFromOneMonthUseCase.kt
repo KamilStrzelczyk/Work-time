@@ -9,6 +9,6 @@ class GetDateFromOneMonthUseCase @Inject constructor(private val workDataReposit
         year: Int,
         month: Int,
     ): List<WorkData> {
-        return workDataRepository.getDateFromOneMonth(year, month)
+        return workDataRepository.getDataFromOneMonth(year, month)
     }
 }
