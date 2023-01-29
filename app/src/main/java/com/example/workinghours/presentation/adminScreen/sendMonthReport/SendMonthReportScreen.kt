@@ -18,15 +18,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.workinghours.R
 import com.example.workinghours.ui.MonthPickerGridOption
 import org.joda.time.LocalDate
-import com.example.workinghours.R
-import com.example.workinghours.presentation.model.DataToExcelFile
+import java.io.File
 
 @Composable
 fun SendMonthReportScreen(
     viewModel: SendMonthReportViewModel,
-    onSendClicked: (List<DataToExcelFile>) -> Unit,
+    onMonthReportGenerated: (File?) -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
     val scaffoldState = rememberScaffoldState()
@@ -88,8 +88,8 @@ fun SendMonthReportScreen(
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            viewModel.sendMontReport {
-                                onSendClicked(state.dataForExcel)
+                            viewModel.onSendMonthReportClicked {
+                                onMonthReportGenerated(it)
                             }
                         }
                     ) {

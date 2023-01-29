@@ -1,23 +1,20 @@
 package com.example.workinghours.domain.usecase
 
-import com.example.workinghours.domain.model.DaysOfMonth
-import org.joda.time.DateTime
+import com.example.workinghours.domain.model.Day
 import org.joda.time.LocalDate
 import javax.inject.Inject
-import kotlin.collections.List
 
-class GetDayOfMonthUseCase @Inject constructor() {
-    operator fun invoke(
-        currentDate: LocalDate,
-    ): List<DaysOfMonth> {
-//        val currentDate = DateTime.now()
-        val numberOfDays = currentDate.dayOfMonth().maximumValue
-        val numberOfMonth = currentDate.monthOfYear
-        val numberOfYear = currentDate.year
-        val days = mutableListOf<DaysOfMonth>()
+class GetDaysOfCurrentMonthUseCase @Inject constructor() {
+
+    operator fun invoke(): List<Day> {
+        val now = LocalDate.now()
+        val numberOfDays = now.dayOfMonth().maximumValue
+        val numberOfMonth = now.monthOfYear
+        val numberOfYear = now.year
+        val days = mutableListOf<Day>()
         repeat(numberOfDays) { numberOfDay ->
             days.add(
-                DaysOfMonth(
+                Day(
                     numberOfDay = numberOfDay.plus(1),
                     numberOfMonth = numberOfMonth,
                     numberOfYear = numberOfYear,

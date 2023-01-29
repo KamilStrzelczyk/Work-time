@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.workinghours.infrastructure.database.entities.AdminEntity
+import com.example.workinghours.infrastructure.database.entity.AdminEntity
 
 @Dao
 interface AdminDao {

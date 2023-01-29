@@ -2,23 +2,24 @@ package com.example.workinghours.presentation.adminScreen.sendMonthReport
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.Utils
 import com.example.workinghours.domain.model.WorkData
+import com.example.workinghours.domain.usecase.GenerateMonthReportUseCase
 import com.example.workinghours.domain.usecase.GetDateFromOneMonthUseCase
 import com.example.workinghours.presentation.model.DataToExcelFile
 import com.example.workinghours.ui.MonthPickerGridOption
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class SendMonthReportViewModel @Inject constructor(
     private val getDateFromOneMonth: GetDateFromOneMonthUseCase,
+    private val generateMonthReport: GenerateMonthReportUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ViewModelState())
     val state: StateFlow<ViewModelState> = _state
@@ -70,6 +71,13 @@ class SendMonthReportViewModel @Inject constructor(
         )
     }
 
+    fun onSendMonthReportClicked(onResult: (File?) -> Unit) {
+        viewModelScope.launch {
+            val fileWithReport = generateMonthReport()
+            onResult(fileWithReport)
+        }
+    }
+
     private fun updateState(state: ViewModelState) {
         this._state.value = state
     }
@@ -92,14 +100,14 @@ class SendMonthReportViewModel @Inject constructor(
             )
         }
 
-        private fun DateTime?.toStringOrEmpty(): String {
+        private fun DateTime.toStringOrEmpty(): String {
             val patternForTime = "HH:mm"
-            return this?.toString(patternForTime) ?: ""
+            return toString(patternForTime) ?: ""
         }
 
         private fun LocalDate.toStringOrEmptyDate(): String {
             val patternForTime = "dd/MM"
-            return this?.toString(patternForTime) ?: ""
+            return toString(patternForTime) ?: ""
         }
 
         val gridList = listOf(

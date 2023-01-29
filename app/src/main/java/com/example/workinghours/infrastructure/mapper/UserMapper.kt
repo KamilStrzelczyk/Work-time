@@ -1,7 +1,7 @@
 package com.example.workinghours.infrastructure.mapper
 
 import com.example.workinghours.domain.model.User
-import com.example.workinghours.infrastructure.database.entities.UserEntity
+import com.example.workinghours.infrastructure.database.entity.UserEntity
 import javax.inject.Inject
 
 class UserMapper @Inject constructor() {

@@ -1,7 +1,7 @@
 package com.example.workinghours.infrastructure.mapper
 
 import com.example.workinghours.domain.model.WorkData
-import com.example.workinghours.infrastructure.database.entities.WorkDataEntity
+import com.example.workinghours.infrastructure.database.entity.WorkDataEntity
 import javax.inject.Inject
 
 class WorkDataMapper @Inject constructor() {
@@ -10,7 +10,7 @@ class WorkDataMapper @Inject constructor() {
         WorkData(
             id = id,
             userId = userId,
-            userWorkDate = userWorkData,
+            userWorkDate = userWorkDate,
             startWorkTime = startWorkTime,
             endWorkTime = endWorkTime,
             hygieneWorkTime = hygieneWorkTime,
@@ -26,7 +26,7 @@ class WorkDataMapper @Inject constructor() {
         WorkDataEntity(
             id = id,
             userId = userId,
-            userWorkData = userWorkDate,
+            userWorkDate = userWorkDate,
             startWorkTime = startWorkTime,
             endWorkTime = endWorkTime,
             hygieneWorkTime = hygieneWorkTime,

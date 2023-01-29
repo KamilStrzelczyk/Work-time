@@ -1,14 +1,12 @@
 package com.example.workinghours.presentation.previousDaysScreen
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.Utils
-import com.example.workinghours.domain.model.DaysOfMonth
+import com.example.workinghours.domain.model.Day
 import com.example.workinghours.domain.model.WorkData
-import com.example.workinghours.domain.usecase.GetDayOfMonthUseCase
+import com.example.workinghours.domain.usecase.GetDaysOfCurrentMonthUseCase
 import com.example.workinghours.domain.usecase.GetUserDateUseCase
-import com.example.workinghours.presentation.adminScreen.sendDailyReport.SendDailyReportViewModel
 import com.example.workinghours.presentation.model.DayInCalendar
 import com.example.workinghours.ui.MonthPickerGridOption
 import dagger.assisted.Assisted
@@ -22,7 +20,7 @@ import org.joda.time.LocalDate
 
 class PreviousDaysViewModel @AssistedInject constructor(
     private val getUserDate: GetUserDateUseCase,
-    private val getDayOfMonth: GetDayOfMonthUseCase,
+    private val getDaysOfCurrentMonth: GetDaysOfCurrentMonthUseCase,
     @Assisted
     private val userId: Int,
 ) : ViewModel() {
@@ -31,7 +29,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            val daysOfMonth = getDayOfMonth(_state.value.currentDate)
+            val daysOfMonth = getDaysOfCurrentMonth()
             val userDate = getUserDate(
                 userId = userId
             )
@@ -128,7 +126,6 @@ class PreviousDaysViewModel @AssistedInject constructor(
         viewModelScope.launch {
             updateState(
                 _state.value.copy(
-                    daysOfMonth = getDayOfMonth(_state.value.calendarDate),
                     showCalendar = false,
                 )
             )
@@ -148,7 +145,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
         val showFilterTopAppBar: Boolean = false,
         val nameOfDay: String = Utils.EMPTY_STRING,
         private val userDate: List<WorkData> = emptyList(),
-        private val daysOfMonth: List<DaysOfMonth> = emptyList(),
+        private val daysOfMonth: List<Day> = emptyList(),
     ) {
         val dayInCalendar: List<DayInCalendar> = daysOfMonth.map { dayOfMonth ->
             val hygieneWorkTime: String = getWorkDate(dayOfMonth)?.hygieneWorkTime.toStringOrEmpty()
@@ -179,7 +176,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
             }
         }
 
-        private fun getWorkDate(dayOfMonth: DaysOfMonth) =
+        private fun getWorkDate(dayOfMonth: Day) =
             userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay && it.userWorkDate.year == dayOfMonth.numberOfYear }
 
         private fun DateTime?.toStringOrEmpty(): String {
