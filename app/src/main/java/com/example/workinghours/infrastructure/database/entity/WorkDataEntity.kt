@@ -1,4 +1,4 @@
-package com.example.workinghours.infrastructure.database.entities
+package com.example.workinghours.infrastructure.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -21,7 +21,7 @@ data class WorkDataEntity(
     @ColumnInfo(name = "user_work_amount")
     val amountWorkTime: DateTime,
     @ColumnInfo(name = "user_work_date")
-    var userWorkData: LocalDate,
+    var userWorkDate: LocalDate,
     @ColumnInfo(name = "start_work_time")
     val startWorkTime: DateTime,
     @ColumnInfo(name = "end_work_time")

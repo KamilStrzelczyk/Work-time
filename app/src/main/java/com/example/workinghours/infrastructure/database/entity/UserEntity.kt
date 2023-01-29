@@ -1,4 +1,4 @@
-package com.example.workinghours.infrastructure.database.entities
+package com.example.workinghours.infrastructure.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
