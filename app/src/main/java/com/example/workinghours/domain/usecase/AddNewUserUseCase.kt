@@ -9,6 +9,12 @@ class AddNewUserUseCase @Inject constructor(private val repository: UserReposito
         userName: String,
         userPassword: String,
     ) {
+        repository.saveToFireStore(
+            User(
+                userName = userName,
+                userPassword = userPassword
+            )
+        )
         repository.save(
             User(
                 userName = userName,

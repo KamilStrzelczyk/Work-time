@@ -22,4 +22,5 @@ interface RepositoryModule {
 
     @Binds
     fun bindsAdminRepository(impl: AdminRepositoryImpl): AdminRepository
+
 }

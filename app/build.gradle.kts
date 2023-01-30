@@ -53,7 +53,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("com.google.firebase:firebase-database-ktx:20.0.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -65,7 +64,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.5.3")
 
     //Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.44")
+    implementation("com.google.dagger:hilt-android:2.44.2")
     kapt("com.google.dagger:hilt-compiler:2.44")
 
     // Room
@@ -84,4 +83,9 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.3")
 
     implementation("com.google.android.material:material:1.9.0-alpha01")
+
+    //Firebase
+    implementation ("com.google.firebase:firebase-firestore-ktx:24.4.2")
+    implementation("com.google.firebase:firebase-database-ktx:20.1.0")
+    implementation ("com.google.firebase:firebase-bom:31.2.0")
 }
