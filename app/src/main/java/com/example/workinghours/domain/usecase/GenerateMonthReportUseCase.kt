@@ -6,6 +6,8 @@ import javax.inject.Inject
 class GenerateMonthReportUseCase @Inject constructor(
     private val workDataRepository: WorkDataRepositoryImpl,
 ) {
-
-    suspend operator fun invoke() = workDataRepository.generateMonthReport()
+    suspend operator fun invoke(
+        year: Int,
+        month: Int,
+    ) = workDataRepository.generateMonthReport(year = year, month = month)
 }

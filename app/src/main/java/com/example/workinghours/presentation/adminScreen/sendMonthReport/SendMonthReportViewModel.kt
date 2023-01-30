@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SendMonthReportViewModel @Inject constructor(
-    private val getDateFromOneMonth: GetDateFromOneMonthUseCase,
     private val generateMonthReport: GenerateMonthReportUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ViewModelState())
@@ -48,19 +47,6 @@ class SendMonthReportViewModel @Inject constructor(
         )
     }
 
-    fun sendMontReport(onResult: (List<DataToExcelFile>) -> Unit) {
-        viewModelScope.launch {
-            val getDateFromOneMonth: List<WorkData> =
-                getDateFromOneMonth(_state.value.year, _state.value.month)
-            updateState(
-                _state.value.copy(
-                    oneMonthWorkDate = getDateFromOneMonth
-                )
-            )
-            onResult(state.value.dataForExcel)
-        }
-    }
-
     fun onMonthClicked(year: Int, monthOfYear: Int) {
         updateState(
             _state.value.copy(
@@ -73,7 +59,10 @@ class SendMonthReportViewModel @Inject constructor(
 
     fun onSendMonthReportClicked(onResult: (File?) -> Unit) {
         viewModelScope.launch {
-            val fileWithReport = generateMonthReport()
+            val fileWithReport = generateMonthReport(
+                year = _state.value.year,
+                month = _state.value.month
+            )
             onResult(fileWithReport)
         }
     }
@@ -89,27 +78,6 @@ class SendMonthReportViewModel @Inject constructor(
         val month: Int = LocalDate().monthOfYear,
         val oneMonthWorkDate: List<WorkData> = emptyList(),
     ) {
-        val dataForExcel: List<DataToExcelFile> = oneMonthWorkDate.map {
-            DataToExcelFile(
-                workDate = it.userWorkDate.toStringOrEmptyDate(),
-                userName = it.userName,
-                workAmount = it.amountWorkTime.toStringOrEmpty(),
-                startWorkTime = it.startWorkTime.toStringOrEmpty(),
-                endWorkTime = it.endWorkTime.toStringOrEmpty(),
-                hygieneTime = it.hygieneWorkTime.toStringOrEmpty(),
-            )
-        }
-
-        private fun DateTime.toStringOrEmpty(): String {
-            val patternForTime = "HH:mm"
-            return toString(patternForTime) ?: ""
-        }
-
-        private fun LocalDate.toStringOrEmptyDate(): String {
-            val patternForTime = "dd/MM"
-            return toString(patternForTime) ?: ""
-        }
-
         val gridList = listOf(
             MonthPickerGridOption(
                 "sty",

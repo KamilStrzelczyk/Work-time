@@ -18,6 +18,7 @@ class ReportGenerator @Inject constructor(
 ) {
 
     fun generateReportForMonth(
+        sheetName: String,
         daysOfCurrentMonth: List<Day>,
         data: Map<String, List<ReportWorkData>>,
     ): File? =
@@ -25,24 +26,28 @@ class ReportGenerator @Inject constructor(
             reportFile = File(context.filesDir, "$MONTHLY_REPORT_FILE_NAME$FILE_EXTENSION"),
             days = daysOfCurrentMonth,
             data = data,
+            sheetName = sheetName,
         )
 
     fun generateReportForDay(
+        sheetName: String,
         day: Day,
         data: Map<String, List<ReportWorkData>>,
     ): File? = generateReport(
         reportFile = File(context.filesDir, "$DAILY_REPORT_FILE_NAME$FILE_EXTENSION"),
         days = listOf(day),
         data = data,
+        sheetName = sheetName,
     )
 
     private fun generateReport(
+        sheetName: String,
         reportFile: File,
         days: List<Day>,
         data: Map<String, List<ReportWorkData>>,
     ) = runCatching {
         val filedOut = FileOutputStream(reportFile)
-        createWorkBook(days, data).write(filedOut)
+        createWorkBook(days = days, data = data, sheetName = sheetName).write(filedOut)
         filedOut.close()
         return@runCatching reportFile
     }
@@ -50,21 +55,31 @@ class ReportGenerator @Inject constructor(
         .getOrNull()
 
     private fun createWorkBook(
+        sheetName: String,
         days: List<Day>,
         data: Map<String, List<ReportWorkData>>,
     ): Workbook {
         val workbook = XSSFWorkbook()
-        val sheet = workbook.createSheet("Styczeń")
-        writeData(sheet, days, data)
+        val cellStyle = workbook.createCellStyle()
+        val sheet = workbook.createSheet(sheetName)
+        cellStyle.fillForegroundColor = IndexedColors.LIGHT_TURQUOISE.index
+        cellStyle.fillPattern = FillPatternType.SOLID_FOREGROUND
+        cellStyle.setBorderTop(BorderStyle.MEDIUM);
+        cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        cellStyle.setBorderLeft(BorderStyle.MEDIUM);
+        cellStyle.setBorderRight(BorderStyle.MEDIUM);
+        writeData(sheet = sheet, days = days, data = data, cellStyle = cellStyle)
         return workbook
     }
 
     private fun writeData(
+        cellStyle: CellStyle,
         sheet: XSSFSheet,
         days: List<Day>,
         data: Map<String, List<ReportWorkData>>,
     ) {
         val names = data.keys.toList()
+
         val userDataHeaders = listOf(
             START_TIME_HEADER,
             END_TIME_HEADER,
@@ -81,17 +96,20 @@ class ReportGenerator @Inject constructor(
         insertDateHeader(
             headersRow = headersRow,
             columnIndex = 0,
+            cellStyle = cellStyle,
         )
         insertUserDataHeaders(
             userDataHeaders = userDataHeaders,
             headersRow = headersRow,
             startColumnIndex = 1,
             iterations = names.size,
+            cellStyle = cellStyle,
         )
         sheet.insetWorkData(
             days = days,
             data = data,
             startRowIndex = 2,
+            cellStyle = cellStyle,
         )
     }
 
@@ -119,8 +137,8 @@ class ReportGenerator @Inject constructor(
         }
     }
 
-    private fun insertDateHeader(headersRow: Row, columnIndex: Int) {
-        createCell(headersRow, columnIndex, DATE_HEADER)
+    private fun insertDateHeader(headersRow: Row, columnIndex: Int, cellStyle: CellStyle) {
+        createCell(headersRow, columnIndex, DATE_HEADER, cellStyle)
     }
 
     private fun insertUserDataHeaders(
@@ -128,13 +146,16 @@ class ReportGenerator @Inject constructor(
         headersRow: Row,
         startColumnIndex: Int,
         iterations: Int,
+        cellStyle: CellStyle,
     ) {
-
         var firstIndex = startColumnIndex
         repeat(iterations) {
             userDataHeaders.forEachIndexed { headerIndex, header ->
                 val columnIndex = firstIndex + headerIndex
-                createCell(headersRow, columnIndex, header)
+                if (headerIndex == 3) {
+                    createCell(headersRow, columnIndex, header, cellStyle)
+                } else
+                    createCell(headersRow, columnIndex, header)
             }
             firstIndex += userDataHeaders.size
         }
@@ -143,29 +164,40 @@ class ReportGenerator @Inject constructor(
     private fun Sheet.insetWorkData(
         days: List<Day>,
         data: Map<String, List<ReportWorkData>>,
-        startRowIndex: Int
+        startRowIndex: Int,
+        cellStyle: CellStyle,
     ) {
         days.forEachIndexed { index, day ->
             val row = createRow(startRowIndex + index)
-            createCell(row, 0, day.date.toString(DATE_FORMAT))
-
+            createCell(row, 0, day.date.toString(DATE_FORMAT), cellStyle)
             var firstIndex = 1
             data.values.forEach { reportWorkData ->
+                val totalAmountCell = row.createCell(firstIndex + 3)
+                totalAmountCell.cellStyle = cellStyle
                 reportWorkData.firstOrNull { it.data == day.date }
                     ?.run {
                         createCell(row, firstIndex, startTime)
                         createCell(row, firstIndex + 1, endTime)
                         createCell(row, firstIndex + 2, hygiene)
-                        createCell(row, firstIndex + 3, totalAmount)
+                        createCell(row, firstIndex + 3, totalAmount, cellStyle)
+                        totalAmountCell.setCellValue(totalAmount)
                     }
                 firstIndex += 4
             }
         }
     }
 
-    private fun createCell(sheetRow: Row, columnIndex: Int, cellValue: String?) {
+    private fun createCell(
+        sheetRow: Row,
+        columnIndex: Int,
+        cellValue: String?,
+        cellStyle: CellStyle? = null,
+    ) {
         val ourCell = sheetRow.createCell(columnIndex)
         ourCell?.setCellValue(cellValue)
+        cellStyle?.run {
+            ourCell?.cellStyle = cellStyle
+        }
     }
 
     data class ReportWorkData(
@@ -181,9 +213,9 @@ class ReportGenerator @Inject constructor(
         private const val DAILY_REPORT_FILE_NAME = "Day Report"
         private const val MONTHLY_REPORT_FILE_NAME = "Month Report"
         private const val DATE_HEADER = "Data"
-        private const val START_TIME_HEADER = "Godzina rozpoczęcia"
-        private const val END_TIME_HEADER = "Godzina zakończenia"
-        private const val AMOUNT_OF_HYGIENE_HEADER = "Ilość higien"
+        private const val START_TIME_HEADER = "Rozpoczęcie"
+        private const val END_TIME_HEADER = "Zakończenie"
+        private const val AMOUNT_OF_HYGIENE_HEADER = "Higieny"
         private const val TOTAL_AMOUNT_HEADER = "Suma"
         private const val DATE_FORMAT = "dd/MM"
         const val HOUR_FORMAT = "HH:mm"

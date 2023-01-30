@@ -3,19 +3,18 @@ package com.example.workinghours.presentation.adminScreen.sendDailyReport
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.workinghours.domain.model.WorkData
-import com.example.workinghours.domain.usecase.GetDateFromOneDayUseCase
-import com.example.workinghours.presentation.model.DataToExcelFile
+import com.example.workinghours.domain.usecase.GenerateDailyReportUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class SendDailyReportViewModel @Inject constructor(
-    private val getDateFromOneDay: GetDateFromOneDayUseCase,
+    private val generateDailyReport: GenerateDailyReportUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ViewModelState())
@@ -29,16 +28,12 @@ class SendDailyReportViewModel @Inject constructor(
         )
     }
 
-    fun onSendReportClicked(onResult: (List<DataToExcelFile>) -> Unit) {
+    fun onSendReportClicked(onResult: (File?) -> Unit) {
         viewModelScope.launch {
-            val getDateFromOneDay: List<WorkData> =
-                getDateFromOneDay(_state.value.dateFromCalendar)
-            updateState(
-                _state.value.copy(
-                    oneDayWorkDate = getDateFromOneDay
-                )
+            val fileWithReport = generateDailyReport(
+                date = _state.value.dateFromCalendar
             )
-            onResult(state.value.dataForExcel)
+            onResult(fileWithReport)
         }
     }
 
@@ -49,27 +44,5 @@ class SendDailyReportViewModel @Inject constructor(
     data class ViewModelState(
         val dateFromCalendar: LocalDate = LocalDate(),
         val oneDayWorkDate: List<WorkData> = emptyList(),
-    ) {
-        val dataForExcel: List<DataToExcelFile> = oneDayWorkDate.map {
-            DataToExcelFile(
-                workDate = it.userWorkDate.toStringOrEmptyDate(),
-                userName = it.userName,
-                workAmount = it.amountWorkTime.toStringOrEmpty(),
-                startWorkTime = it.startWorkTime.toStringOrEmpty(),
-                endWorkTime = it.endWorkTime.toStringOrEmpty(),
-                hygieneTime = it.hygieneWorkTime.toStringOrEmpty(),
-            )
-        }
-
-        private fun DateTime?.toStringOrEmpty(): String {
-            val patternForTime = "HH:mm"
-            return this?.toString(patternForTime) ?: ""
-        }
-
-        private fun LocalDate.toStringOrEmptyDate(): String {
-            val patternForTime = "dd/MM"
-            return this?.toString(patternForTime) ?: ""
-        }
-
-    }
+    )
 }
