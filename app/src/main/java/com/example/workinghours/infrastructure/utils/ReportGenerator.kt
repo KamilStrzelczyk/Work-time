@@ -60,20 +60,32 @@ class ReportGenerator @Inject constructor(
         data: Map<String, List<ReportWorkData>>,
     ): Workbook {
         val workbook = XSSFWorkbook()
-        val cellStyle = workbook.createCellStyle()
+        val cellStyleWithBorderAndColor = workbook.createCellStyle()
+        val cellStyleWithBorder = workbook.createCellStyle()
         val sheet = workbook.createSheet(sheetName)
-        cellStyle.fillForegroundColor = IndexedColors.LIGHT_TURQUOISE.index
-        cellStyle.fillPattern = FillPatternType.SOLID_FOREGROUND
-        cellStyle.setBorderTop(BorderStyle.MEDIUM);
-        cellStyle.setBorderBottom(BorderStyle.MEDIUM);
-        cellStyle.setBorderLeft(BorderStyle.MEDIUM);
-        cellStyle.setBorderRight(BorderStyle.MEDIUM);
-        writeData(sheet = sheet, days = days, data = data, cellStyle = cellStyle)
+        cellStyleWithBorderAndColor.fillForegroundColor = IndexedColors.LIGHT_TURQUOISE.index
+        cellStyleWithBorderAndColor.fillPattern = FillPatternType.SOLID_FOREGROUND
+        cellStyleWithBorderAndColor.borderTop = BorderStyle.THIN;
+        cellStyleWithBorderAndColor.borderBottom = BorderStyle.THIN;
+        cellStyleWithBorderAndColor.borderLeft = BorderStyle.THIN;
+        cellStyleWithBorderAndColor.borderRight = BorderStyle.THIN;
+        cellStyleWithBorder.borderTop = BorderStyle.THIN;
+        cellStyleWithBorder.borderBottom = BorderStyle.THIN;
+        cellStyleWithBorder.borderLeft = BorderStyle.THIN;
+        cellStyleWithBorder.borderRight = BorderStyle.THIN;
+        writeData(
+            sheet = sheet,
+            days = days,
+            data = data,
+            cellStyleWithBorderAndColor = cellStyleWithBorderAndColor,
+            cellStyleWithBorder = cellStyleWithBorder,
+        )
         return workbook
     }
 
     private fun writeData(
-        cellStyle: CellStyle,
+        cellStyleWithBorder: CellStyle,
+        cellStyleWithBorderAndColor: CellStyle,
         sheet: XSSFSheet,
         days: List<Day>,
         data: Map<String, List<ReportWorkData>>,
@@ -91,25 +103,29 @@ class ReportGenerator @Inject constructor(
             userNamesRowIndex = 0,
             startColumnIndex = 1,
             amountOfCellsToMerge = userDataHeaders.size,
+            cellStyleWithBorder = cellStyleWithBorder,
         )
         val headersRow = sheet.createRow(1)
         insertDateHeader(
             headersRow = headersRow,
             columnIndex = 0,
-            cellStyle = cellStyle,
+            cellStyleWithBorderAndColor = cellStyleWithBorderAndColor,
         )
         insertUserDataHeaders(
+            sheet = sheet,
             userDataHeaders = userDataHeaders,
             headersRow = headersRow,
             startColumnIndex = 1,
             iterations = names.size,
-            cellStyle = cellStyle,
+            cellStyleWithBorderAndColor = cellStyleWithBorderAndColor,
+            cellStyleWithBorder = cellStyleWithBorder,
         )
         sheet.insetWorkData(
             days = days,
             data = data,
             startRowIndex = 2,
-            cellStyle = cellStyle,
+            cellStyleWithBorderAndColor = cellStyleWithBorderAndColor,
+            cellStyleWithBorder = cellStyleWithBorder,
         )
     }
 
@@ -118,6 +134,7 @@ class ReportGenerator @Inject constructor(
         userNamesRowIndex: Int,
         startColumnIndex: Int,
         amountOfCellsToMerge: Int,
+        cellStyleWithBorder: CellStyle,
     ) {
         val namesRow = createRow(userNamesRowIndex)
         var firstIndex = startColumnIndex
@@ -131,31 +148,37 @@ class ReportGenerator @Inject constructor(
                     lastIndex
                 )
             )
-            createCell(namesRow, firstIndex, name)
+            createCell(namesRow, firstIndex, name, cellStyleWithBorder)
             firstIndex = lastIndex + 1
             lastIndex = firstIndex + amountOfCellsToMerge - 1
         }
     }
 
-    private fun insertDateHeader(headersRow: Row, columnIndex: Int, cellStyle: CellStyle) {
-        createCell(headersRow, columnIndex, DATE_HEADER, cellStyle)
+    private fun insertDateHeader(
+        headersRow: Row,
+        columnIndex: Int,
+        cellStyleWithBorderAndColor: CellStyle,
+    ) {
+        createCell(headersRow, columnIndex, DATE_HEADER, cellStyleWithBorderAndColor)
     }
 
     private fun insertUserDataHeaders(
+        sheet: Sheet,
         userDataHeaders: List<String>,
         headersRow: Row,
         startColumnIndex: Int,
         iterations: Int,
-        cellStyle: CellStyle,
+        cellStyleWithBorderAndColor: CellStyle,
+        cellStyleWithBorder: CellStyle,
     ) {
         var firstIndex = startColumnIndex
         repeat(iterations) {
             userDataHeaders.forEachIndexed { headerIndex, header ->
                 val columnIndex = firstIndex + headerIndex
                 if (headerIndex == 3) {
-                    createCell(headersRow, columnIndex, header, cellStyle)
+                    createCell(headersRow, columnIndex, header, cellStyleWithBorderAndColor)
                 } else
-                    createCell(headersRow, columnIndex, header)
+                    createCell(headersRow, columnIndex, header, cellStyleWithBorder)
             }
             firstIndex += userDataHeaders.size
         }
@@ -165,23 +188,33 @@ class ReportGenerator @Inject constructor(
         days: List<Day>,
         data: Map<String, List<ReportWorkData>>,
         startRowIndex: Int,
-        cellStyle: CellStyle,
+        cellStyleWithBorderAndColor: CellStyle,
+        cellStyleWithBorder: CellStyle,
     ) {
         days.forEachIndexed { index, day ->
             val row = createRow(startRowIndex + index)
-            createCell(row, 0, day.date.toString(DATE_FORMAT), cellStyle)
+            createCell(row, 0, day.date.toString(DATE_FORMAT), cellStyleWithBorderAndColor)
             var firstIndex = 1
             data.values.forEach { reportWorkData ->
                 val totalAmountCell = row.createCell(firstIndex + 3)
-                totalAmountCell.cellStyle = cellStyle
+                totalAmountCell.cellStyle = cellStyleWithBorderAndColor
                 reportWorkData.firstOrNull { it.data == day.date }
                     ?.run {
-                        createCell(row, firstIndex, startTime)
-                        createCell(row, firstIndex + 1, endTime)
-                        createCell(row, firstIndex + 2, hygiene)
-                        createCell(row, firstIndex + 3, totalAmount, cellStyle)
+                        createCell(row, firstIndex, startTime, cellStyleWithBorder)
+                        createCell(row, firstIndex + 1, endTime, cellStyleWithBorder)
+                        createCell(row, firstIndex + 2, hygiene, cellStyleWithBorder)
+                        createCell(row, firstIndex + 3, totalAmount, cellStyleWithBorderAndColor)
                         totalAmountCell.setCellValue(totalAmount)
-                    }
+                    } ?: run {
+                    val cell0 = row.createCell(firstIndex)
+                    cell0.cellStyle = cellStyleWithBorder
+                    val cell1 = row.createCell(firstIndex + 1)
+                    cell1.cellStyle = cellStyleWithBorder
+                    val cell2 = row.createCell(firstIndex + 2)
+                    cell2.cellStyle = cellStyleWithBorder
+                    val cell3 = row.createCell(firstIndex + 3)
+                    cell3.cellStyle = cellStyleWithBorderAndColor
+                }
                 firstIndex += 4
             }
         }
