@@ -107,6 +107,7 @@ class ReportGenerator @Inject constructor(
         )
         val headersRow = sheet.createRow(1)
         insertDateHeader(
+            sheet = sheet,
             headersRow = headersRow,
             columnIndex = 0,
             cellStyleWithBorderAndColor = cellStyleWithBorderAndColor,
@@ -155,11 +156,13 @@ class ReportGenerator @Inject constructor(
     }
 
     private fun insertDateHeader(
+        sheet: Sheet,
         headersRow: Row,
         columnIndex: Int,
         cellStyleWithBorderAndColor: CellStyle,
     ) {
         createCell(headersRow, columnIndex, DATE_HEADER, cellStyleWithBorderAndColor)
+        sheet.setColumnWidth(columnIndex, 6 * 256)
     }
 
     private fun insertUserDataHeaders(
@@ -175,10 +178,22 @@ class ReportGenerator @Inject constructor(
         repeat(iterations) {
             userDataHeaders.forEachIndexed { headerIndex, header ->
                 val columnIndex = firstIndex + headerIndex
+                if (headerIndex == 0) {
+                    createCell(headersRow, columnIndex, header, cellStyleWithBorder)
+                    sheet.setColumnWidth(columnIndex, 12 * 256)
+                }
+                if (headerIndex == 1) {
+                    createCell(headersRow, columnIndex, header, cellStyleWithBorder)
+                    sheet.setColumnWidth(columnIndex, 12 * 256)
+                }
+                if (headerIndex == 2) {
+                    createCell(headersRow, columnIndex, header, cellStyleWithBorder)
+                    sheet.setColumnWidth(columnIndex, 8 * 256)
+                }
                 if (headerIndex == 3) {
                     createCell(headersRow, columnIndex, header, cellStyleWithBorderAndColor)
-                } else
-                    createCell(headersRow, columnIndex, header, cellStyleWithBorder)
+                    sheet.setColumnWidth(columnIndex, 6 * 256)
+                }
             }
             firstIndex += userDataHeaders.size
         }

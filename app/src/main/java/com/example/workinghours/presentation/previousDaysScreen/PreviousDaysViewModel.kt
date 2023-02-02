@@ -6,6 +6,7 @@ import com.example.Utils
 import com.example.workinghours.domain.model.Day
 import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.domain.usecase.GetDaysOfCurrentMonthUseCase
+import com.example.workinghours.domain.usecase.GetDaysOfMonthUseCase
 import com.example.workinghours.domain.usecase.GetUserDateUseCase
 import com.example.workinghours.presentation.model.DayInCalendar
 import com.example.workinghours.ui.MonthPickerGridOption
@@ -21,6 +22,7 @@ import org.joda.time.LocalDate
 class PreviousDaysViewModel @AssistedInject constructor(
     private val getUserDate: GetUserDateUseCase,
     private val getDaysOfCurrentMonth: GetDaysOfCurrentMonthUseCase,
+    private val getDaysOfMonth: GetDaysOfMonthUseCase,
     @Assisted
     private val userId: Int,
 ) : ViewModel() {
@@ -124,9 +126,14 @@ class PreviousDaysViewModel @AssistedInject constructor(
 
     fun onShowDateClicked() {
         viewModelScope.launch {
+            val daysOfMonth = getDaysOfMonth(
+                month = _state.value.calendarDate.monthOfYear,
+                year = _state.value.calendarDate.year
+            )
             updateState(
                 _state.value.copy(
                     showCalendar = false,
+                    daysOfMonth = daysOfMonth
                 )
             )
         }
@@ -177,7 +184,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
         }
 
         private fun getWorkDate(dayOfMonth: Day) =
-            userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay && it.userWorkDate.year == dayOfMonth.numberOfYear }
+            userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay && it.userWorkDate.year == dayOfMonth.numberOfYear && it.userWorkDate.monthOfYear == dayOfMonth.numberOfMonth }
 
         private fun DateTime?.toStringOrEmpty(): String {
             val patternForTime = "HH:mm"

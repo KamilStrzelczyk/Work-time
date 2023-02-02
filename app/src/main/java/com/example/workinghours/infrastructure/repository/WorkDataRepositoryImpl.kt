@@ -1,7 +1,6 @@
 package com.example.workinghours.infrastructure.repository
 
 import com.example.workinghours.domain.factory.DayFactory
-import com.example.workinghours.domain.model.Day
 import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.domain.repository.WorkDataRepository
 import com.example.workinghours.domain.usecase.GetDaysOfMonthUseCase
@@ -12,7 +11,6 @@ import com.example.workinghours.infrastructure.mapper.WorkDataMapper
 import com.example.workinghours.infrastructure.utils.ReportGenerator
 import com.example.workinghours.infrastructure.utils.ReportGenerator.Companion.HOUR_FORMAT
 import com.example.workinghours.infrastructure.utils.ReportGenerator.ReportWorkData
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import java.io.File
 import javax.inject.Inject

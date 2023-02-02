@@ -1,5 +1,6 @@
 package com.example.workinghours.domain.usecase
 
+
 import com.example.Utils
 import com.example.workinghours.domain.factory.DayFactory
 import com.example.workinghours.domain.model.Day
