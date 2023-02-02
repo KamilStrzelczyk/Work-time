@@ -9,7 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.content.FileProvider
-import com.example.ExcelFileFormatter
 import com.example.workinghours.BuildConfig
 import com.example.workinghours.ui.theme.WorkingHoursTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,8 +16,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SendMonthReportActivity : ComponentActivity() {
-    @Inject
-    lateinit var excelFormatter: ExcelFileFormatter
     private val sendMonthReportViewModel: SendMonthReportViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -18,14 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.joda.time.LocalDate
 import com.example.workinghours.R
-import com.example.workinghours.presentation.model.DataToExcelFile
+import java.io.File
 
 @Composable
 fun SendDailyReportScreen(
     viewModel: SendDailyReportViewModel,
-    onSendClicked: (List<DataToExcelFile>) -> Unit,
+    onSendClicked: (File?) -> Unit,
 ) {
-    val state = viewModel.state.collectAsState().value
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
@@ -55,10 +54,9 @@ fun SendDailyReportScreen(
                         viewModel = viewModel,
                         onSendClicked = {
                             viewModel.onSendReportClicked {
-                                onSendClicked(state.dataForExcel)
+                                onSendClicked(it)
                             }
                         },
-                        dataForExcel = state.dataForExcel,
                     )
                 }
             }
@@ -69,8 +67,7 @@ fun SendDailyReportScreen(
 @Composable
 private fun AndroidCalendar(
     viewModel: SendDailyReportViewModel,
-    onSendClicked: (List<DataToExcelFile>) -> Unit,
-    dataForExcel: List<DataToExcelFile>,
+    onSendClicked: () -> Unit,
 ) {
     AndroidView(
         {
@@ -84,7 +81,7 @@ private fun AndroidCalendar(
             }
         })
     Button(
-        onClick = { onSendClicked(dataForExcel) }
+        onClick = { onSendClicked() }
     ) {
         Text(text = stringResource(id = R.string.SendDailyReport))
     }

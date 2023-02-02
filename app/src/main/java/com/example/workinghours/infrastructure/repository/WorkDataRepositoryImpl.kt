@@ -1,8 +1,9 @@
 package com.example.workinghours.infrastructure.repository
 
+import com.example.workinghours.domain.factory.DayFactory
 import com.example.workinghours.domain.model.WorkData
 import com.example.workinghours.domain.repository.WorkDataRepository
-import com.example.workinghours.domain.usecase.GetDaysOfCurrentMonthUseCase
+import com.example.workinghours.domain.usecase.GetDaysOfMonthUseCase
 import com.example.workinghours.infrastructure.database.dao.UserDao
 import com.example.workinghours.infrastructure.database.dao.WorkDataDao
 import com.example.workinghours.infrastructure.database.entity.WorkDataEntity
@@ -19,7 +20,8 @@ class WorkDataRepositoryImpl @Inject constructor(
     private val useDao: UserDao,
     private val mapper: WorkDataMapper,
     private val reportGenerator: ReportGenerator,
-    private val getDaysOfCurrentMonth: GetDaysOfCurrentMonthUseCase,
+    private val getDaysOfMonth: GetDaysOfMonthUseCase,
+    private val dayFactory: DayFactory,
 ) : WorkDataRepository {
     override suspend fun save(workData: WorkData) {
         workDataDao.saveWorkData(mapper.toEntityModel(workData))
@@ -40,17 +42,32 @@ class WorkDataRepositoryImpl @Inject constructor(
         return list.map { mapper.toDomainModel(it) }
     }
 
-    override suspend fun generateMonthReport(): File? {
-        val year = LocalDate().year
-        val month = LocalDate().monthOfYear
+    override suspend fun generateMonthReport(year: Int, month: Int): File? {
         val reportWorkData = workDataDao.getDateFromOneMonth(year, month)
             .groupBy { it.userId }
             .map { mapUserIdToName(it.key) to mapWorkDataToReportData(it.value) }
             .toMap()
 
         return reportGenerator.generateReportForMonth(
-            daysOfCurrentMonth = getDaysOfCurrentMonth(),
+            daysOfCurrentMonth = getDaysOfMonth(
+                month = month,
+                year = year,
+            ),
             data = reportWorkData,
+            sheetName = LocalDate(year, month, 1).monthOfYear().asText
+        )
+    }
+
+    override suspend fun generateDailyReport(date: LocalDate): File? {
+        val reportWorkData = workDataDao.getDateFromOneDay(date)
+            .groupBy { it.userId }
+            .map { mapUserIdToName(it.key) to mapWorkDataToReportData(it.value) }
+            .toMap()
+
+        return reportGenerator.generateReportForDay(
+            day = dayFactory.create(date),
+            data = reportWorkData,
+            sheetName = date.toString()
         )
     }
 
