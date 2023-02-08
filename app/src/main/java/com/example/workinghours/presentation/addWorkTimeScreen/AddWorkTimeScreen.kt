@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -30,15 +31,26 @@ fun AddWorkTimeScreen(
     val state = viewModel.state.collectAsState().value
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
             modifier = Modifier
-                .padding(20.dp),
+                .padding(20.dp)
+                .fillMaxWidth(),
         ) {
-            Text(state.run { currentDataAndTime!!.toString(pattern) })
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                text = state.run { currentDataAndTime!!.toString(pattern) },
+            )
+            Icon(
+                modifier = Modifier
+                    .clickable { }
+                    .align(Alignment.CenterEnd),
+                imageVector = Icons.Filled.MoreVert,
+                contentDescription = null,
+            )
         }
 
         Divider()
@@ -60,14 +72,9 @@ fun AddWorkTimeScreen(
         )
 
         Box(
-            modifier = Modifier
-                .padding(20.dp),
+            modifier = Modifier.padding(20.dp),
         ) {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = { viewModel.onButtonClicked() }
-            ) {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = { viewModel.onButtonClicked() }) {
                 Text(
                     text = stringResource(id = R.string.Save),
                     color = Color.White,
@@ -89,8 +96,7 @@ private fun ClockComponent(
 ) {
 
     Box(
-        modifier = Modifier
-            .padding(20.dp),
+        modifier = Modifier.padding(20.dp),
     ) {
         Column(
             modifier = Modifier,
@@ -108,12 +114,10 @@ private fun ClockComponent(
                     .padding(end = 40.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .clickable { updateClock(clock.showClockHour()) }
-                ) {
+                Box(modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .clickable { updateClock(clock.showClockHour()) }) {
                     Row {
 
                         Text(clock.setHour.toString())
@@ -131,17 +135,14 @@ private fun ClockComponent(
                 }
 
                 Text(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     text = stringResource(id = R.string.ClockColon),
                 )
 
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .clickable { updateClock(clock.showClockMinute()) }
-                ) {
+                Box(modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .clickable { updateClock(clock.showClockMinute()) }) {
                     Row {
                         Text(clock.setMinute.toString())
                         Icon(
@@ -167,12 +168,10 @@ private fun ClockDropDown(
     options: List<String>,
 ) {
     DropdownMenu(
-        expanded = true,
-        onDismissRequest = dismissClock
+        expanded = true, onDismissRequest = dismissClock
     ) {
         options.forEach {
-            DropdownMenuItem(onClick = { onItemSelected(it) }
-            ) {
+            DropdownMenuItem(onClick = { onItemSelected(it) }) {
                 Text(text = it)
             }
         }
@@ -214,44 +213,37 @@ private fun SaveTimeDialog(
 ) {
     val context = LocalContext.current
     val patternForCalculateTime = "HH:mm"
-    if (state.showSaveDialog)
-        Dialog(
-            onDismissRequest = { viewModel.onDismissSaveDialog() }
+    if (state.showSaveDialog) Dialog(onDismissRequest = { viewModel.onDismissSaveDialog() }) {
+        Surface(
+            modifier = Modifier.clip(RoundedCornerShape(16.dp))
         ) {
-            Surface(
+            Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    contentAlignment = Alignment.Center
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(text = stringResource(id = R.string.YourTimeJob))
-                        state.workTime?.amountWorkTime?.let {
-                            Text(it.toString(patternForCalculateTime))
-                        }
-                        Button(
-                            onClick = {
-                                viewModel.onSaveClicked()
-                                context.startActivity(
-                                    Intent(
-                                        context,
-                                        ListOfUsersActivity::class.java
-                                    )
-                                )
-                            }
-                        ) {
-                            Text(text = "OK")
-                        }
+                    Text(text = stringResource(id = R.string.YourTimeJob))
+                    state.workTime?.amountWorkTime?.let {
+                        Text(it.toString(patternForCalculateTime))
+                    }
+                    Button(onClick = {
+                        viewModel.onSaveClicked()
+                        context.startActivity(
+                            Intent(
+                                context, ListOfUsersActivity::class.java
+                            )
+                        )
+                    }) {
+                        Text(text = "OK")
                     }
                 }
             }
         }
+    }
 }
 
 

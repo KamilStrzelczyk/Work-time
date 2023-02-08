@@ -117,7 +117,7 @@ private fun AcceptingDialog(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = stringResource(id = R.string.DidRemoveUser))
+                        Text(text = stringResource(id = R.string.RemoveUser))
                         Text(text = userName)
                         Button(
                             onClick = {

@@ -32,7 +32,7 @@
     //
     DeleteUserScreen
     <string name="DeleteUsers">Usuwanie użytkowników</string>
-    <string name="DidRemoveUser">Czy usunąć urzytkownika</string>
+    <string name="RemoveUser">Czy usunąć urzytkownika</string>
 
     //SendDailReportScreen
     <string name="SendDailyReport">Wyślij raport dzienny</string>

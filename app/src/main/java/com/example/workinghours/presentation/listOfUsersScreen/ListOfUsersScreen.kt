@@ -132,7 +132,6 @@ private fun ListOfUsersScreen(
                     userName = it.userName,
                     userId = it.id,
                     showUserActionDialog = onUsersClicked,
-                    showAdminOption = adminOption,
                     onUserNameBoxClicked = onUserNameBoxClicked,
                 )
             }
@@ -160,7 +159,6 @@ private fun UserNameBox(
     userName: String,
     showUserActionDialog: () -> Unit,
     onUserNameBoxClicked: (Int, String) -> Unit,
-    showAdminOption: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -184,9 +182,6 @@ private fun UserNameBox(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = userName)
-                if (showAdminOption) {
-
-                }
             }
         }
     }
@@ -306,7 +301,7 @@ private fun MoreAction(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.account_icon),
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(text = stringResource(id = R.string.Admin))

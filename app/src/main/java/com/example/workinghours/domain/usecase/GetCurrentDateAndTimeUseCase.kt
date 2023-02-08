@@ -12,7 +12,7 @@ class GetCurrentDateAndTimeUseCase @Inject constructor() {
             while (true) {
                 val dataTime = DateTime.now()
                 emit(dataTime)
-                delay(60000)
+                delay(30000)
             }
         }
 }
