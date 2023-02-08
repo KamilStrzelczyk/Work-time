@@ -6,6 +6,7 @@ import com.example.workinghours.infrastructure.database.AppDatabase
 import com.example.workinghours.infrastructure.database.dao.AdminDao
 import com.example.workinghours.infrastructure.database.dao.UserDao
 import com.example.workinghours.infrastructure.database.dao.WorkDataDao
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -19,6 +20,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class DatabaseModule {
+
+    @Singleton
+    @Provides
+    fun provideRealtimeDBReference(): DatabaseReference = Firebase.database.reference
 
     @Provides
     fun provideUserDao(appDatabase: AppDatabase): UserDao =
@@ -40,4 +45,6 @@ class DatabaseModule {
             klass = AppDatabase::class.java,
             name = "Users",
         ).build()
+
+
 }

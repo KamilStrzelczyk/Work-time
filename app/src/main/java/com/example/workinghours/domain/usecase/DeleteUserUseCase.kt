@@ -5,7 +5,7 @@ import com.example.workinghours.domain.repository.UserRepository
 import javax.inject.Inject
 
 class DeleteUserUseCase @Inject constructor(private val repository: UserRepository) {
-    suspend operator fun invoke(id: Int) = repository.delete(
+    suspend operator fun invoke(id: String) = repository.delete(
         User(
             id = id,
             userName = "",

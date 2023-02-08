@@ -35,41 +35,41 @@ abstract class AppDatabase : RoomDatabase() {
             )
         )
         getUserDao().saveNewUser(
-            UserEntity(
-                id = 1,
-                userName = "Dominik",
-                userPassword = "1234",
-            ),
-            UserEntity(
-                id = 2,
-                userName = "Maciek",
-                userPassword = "1234",
-            ),
-            UserEntity(
-                id = 3,
-                userName = "Agnieszka",
-                userPassword = "1234",
-            ),
-            UserEntity(
-                id = 4,
-                userName = "Sylwia",
-                userPassword = "1234",
-            ),
-            UserEntity(
-                id = 5,
-                userName = "Agata",
-                userPassword = "1234",
-            ),
-            UserEntity(
-                id = 6,
-                userName = "Paulina",
-                userPassword = "1234",
-            ),
-            UserEntity(
-                id = 7,
-                userName = "Irena",
-                userPassword = "1234",
-            ),
+//            UserEntity(
+//                id = 1,
+//                userName = "Dominik",
+//                userPassword = "1234",
+//            ),
+//            UserEntity(
+//                id = 2,
+//                userName = "Maciek",
+//                userPassword = "1234",
+//            ),
+//            UserEntity(
+//                id = 3,
+//                userName = "Agnieszka",
+//                userPassword = "1234",
+//            ),
+//            UserEntity(
+//                id = 4,
+//                userName = "Sylwia",
+//                userPassword = "1234",
+//            ),
+//            UserEntity(
+//                id = 5,
+//                userName = "Agata",
+//                userPassword = "1234",
+//            ),
+//            UserEntity(
+//                id = 6,
+//                userName = "Paulina",
+//                userPassword = "1234",
+//            ),
+//            UserEntity(
+//                id = 7,
+//                userName = "Irena",
+//                userPassword = "1234",
+//            ),
         )
         getWorkDataDao().saveWorkData(
             WorkDataEntity(

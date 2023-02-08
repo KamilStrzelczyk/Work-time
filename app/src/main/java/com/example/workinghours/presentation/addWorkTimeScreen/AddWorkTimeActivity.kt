@@ -62,7 +62,7 @@ class AddWorkTimeActivity : ComponentActivity() {
     companion object {
         private const val USER_ID = "user_id"
         private const val USER_NAME = "user_Name"
-        fun createStartIntent(context: Context, userId: Int, userName: String): Intent {
+        fun createStartIntent(context: Context, userId: String, userName: String): Intent {
             return Intent(context, AddWorkTimeActivity::class.java).apply {
                 putExtra(USER_ID, userId)
                 putExtra(USER_NAME, userName)

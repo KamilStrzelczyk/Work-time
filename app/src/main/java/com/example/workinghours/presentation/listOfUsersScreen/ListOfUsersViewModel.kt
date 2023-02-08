@@ -24,14 +24,17 @@ class ListOfUsersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                userList = getAllUsers(),
-                adminPassword = getAdminPassword()
-            )
+            getAllUsers().collect {
+                _state.value = _state.value.copy(
+                    userList = it,
+                    // ToDo add flow
+                    adminPassword = getAdminPassword()
+                )
+            }
         }
     }
 
-    fun onUserNameBoxClicked(userId: Int, userName: String) {
+    fun onUserNameBoxClicked(userId: String, userName: String) {
         updateState(
             _state.value.copy(
                 userId = userId,
@@ -127,7 +130,7 @@ class ListOfUsersViewModel @Inject constructor(
         val showUserActionsDialog: Boolean = false,
         val correctPassword: Boolean = false,
         val userList: List<User> = emptyList(),
-        val userId: Int = Utils.EMPTY_INT,
+        val userId: String = Utils.EMPTY_STRING,
         val userName: String = Utils.EMPTY_STRING,
         val adminPassword: String = Utils.EMPTY_STRING,
         val password: String = Utils.EMPTY_STRING,

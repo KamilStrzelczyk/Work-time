@@ -1,6 +1,5 @@
 package com.example.workinghours.presentation.adminScreen.deleteUser
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.Utils
@@ -10,6 +9,7 @@ import com.example.workinghours.domain.usecase.GetAllUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,9 +24,11 @@ class DeleteUserViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                userList = getAllUsersUseCase()
-            )
+            getAllUsersUseCase().collect {
+                _state.value = _state.value.copy(
+                    userList = it
+                )
+            }
         }
     }
 
@@ -38,7 +40,7 @@ class DeleteUserViewModel @Inject constructor(
         )
     }
 
-    fun onDeleteUserClicked(id: Int, name: String) {
+    fun onDeleteUserClicked(id: String, name: String) {
         updateState(
             _state.value.copy(
                 showAcceptingDialog = true,
@@ -52,11 +54,13 @@ class DeleteUserViewModel @Inject constructor(
     fun onConfirmDeleteUser() {
         viewModelScope.launch {
             deleteUserUseCase(_state.value.userId)
-            updateState(
-                _state.value.copy(
-                    userList = getAllUsersUseCase(),
+            getAllUsersUseCase().collect {
+                updateState(
+                    _state.value.copy(
+                        userList = it
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -67,7 +71,7 @@ class DeleteUserViewModel @Inject constructor(
     data class ViewModelState(
         val userList: List<User> = emptyList(),
         val showAcceptingDialog: Boolean = false,
-        val userId: Int = Utils.EMPTY_INT,
+        val userId: String = Utils.EMPTY_STRING,
         val userName: String = Utils.EMPTY_STRING,
     )
 }

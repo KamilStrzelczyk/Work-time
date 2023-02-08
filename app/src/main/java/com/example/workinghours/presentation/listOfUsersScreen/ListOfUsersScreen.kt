@@ -92,7 +92,7 @@ private fun ListOfUsersScreen(
     onDismissAdminPasswordDialog: () -> Unit,
     navigateToAddWorkTimeScreen: () -> Unit,
     navigateToPreviousDayScreen: () -> Unit,
-    onUserNameBoxClicked: (Int, String) -> Unit,
+    onUserNameBoxClicked: (String, String) -> Unit,
     password: String,
     onOkClicked: (() -> Unit) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -156,10 +156,10 @@ private fun ListOfUsersScreen(
 
 @Composable
 private fun UserNameBox(
-    userId: Int,
+    userId: String,
     userName: String,
     showUserActionDialog: () -> Unit,
-    onUserNameBoxClicked: (Int, String) -> Unit,
+    onUserNameBoxClicked: (String, String) -> Unit,
     showAdminOption: Boolean,
 ) {
     Column(

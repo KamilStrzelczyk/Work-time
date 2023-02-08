@@ -58,7 +58,7 @@ class PreviousDayActivity : ComponentActivity(
 
     companion object {
         private const val USER_ID = "user_id"
-        fun createStartIntent(context: Context, userId: Int): Intent {
+        fun createStartIntent(context: Context, userId: String): Intent {
             return Intent(context, PreviousDayActivity::class.java).apply {
                 putExtra(USER_ID, userId)
             }
