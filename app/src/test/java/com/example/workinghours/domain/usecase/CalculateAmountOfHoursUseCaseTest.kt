@@ -3,8 +3,9 @@ package com.example.workinghours.domain.usecase
 import com.example.workinghours.domain.model.CalculateAmountOfHours
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
 
 internal class CalculateAmountOfHoursUseCaseTest {
 

@@ -35,15 +35,12 @@ import com.example.workinghours.presentation.previousDaysScreen.PreviousDayActiv
 @Composable
 fun ListOfUsersScreen(
     listOfUsersViewModel: ListOfUsersViewModel,
-    adminViewModel: AdminViewModel,
 ) {
     val listOfUsersState = listOfUsersViewModel.state.collectAsState().value
-    val adminState = adminViewModel.state.value
     val context = LocalContext.current
     ListOfUsersScreen(
         userList = listOfUsersState.userList,
         showTopAppBarMoreAction = listOfUsersState.showTopAppBarMoreAction,
-        adminOption = adminState.adminOption,
         showUserActionsDialog = listOfUsersState.showUserActionsDialog,
         isError = listOfUsersState.isError,
         onUsersClicked = { listOfUsersViewModel.onUsersClicked() },
@@ -80,7 +77,6 @@ fun ListOfUsersScreen(
 private fun ListOfUsersScreen(
     userList: List<User>,
     showTopAppBarMoreAction: Boolean,
-    adminOption: Boolean,
     showUserActionsDialog: Boolean,
     showAdminPasswordDialogBoolean: Boolean,
     isError: Boolean,
@@ -204,6 +200,7 @@ private fun UserActionsDialog(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
             ) {
+
                 Box(
                     modifier = Modifier
                         .padding(20.dp),

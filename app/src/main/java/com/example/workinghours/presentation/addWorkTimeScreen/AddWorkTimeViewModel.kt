@@ -115,11 +115,20 @@ class AddWorkTimeViewModel @AssistedInject constructor(
         )
     }
 
+    fun onTopAppBarMoreActionClicked() {
+        updateState(
+            _state.value.copy(
+                showUserActionsDialog = true,
+            )
+        )
+    }
+
     private fun updateState(state: ViewModelState) {
         this._state.value = state
     }
 
     data class ViewModelState(
+        val showUserActionsDialog: Boolean = false,
         val currentDataAndTime: DateTime? = null,
         val showSaveDialog: Boolean = false,
         val extraTime: Int = Utils.EMPTY_INT,

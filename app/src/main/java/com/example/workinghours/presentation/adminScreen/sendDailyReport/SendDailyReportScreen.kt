@@ -90,8 +90,3 @@ private fun AndroidCalendar(
     }
 }
 
-@Preview
-@Composable
-private fun SendDailyReportScreen() {
-
-}

@@ -4,6 +4,7 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
+    id("de.mannodermaus.android-junit5")
 }
 
 android {
@@ -44,6 +45,9 @@ android {
             excludes += ("/META-INF/{AL2.0,LGPL2.1}")
         }
     }
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }
 
 dependencies {
@@ -54,12 +58,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("com.google.firebase:firebase-database-ktx:20.1.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.3")
     debugImplementation("androidx.compose.ui:ui-tooling:1.3.3")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.navigation:navigation-compose:2.5.3")
@@ -83,5 +83,13 @@ dependencies {
     implementation("org.apache.poi:poi:5.2.3")
     implementation("org.apache.poi:poi-ooxml:5.2.3")
 
-    implementation("com.google.android.material:material:1.9.0-alpha01")
+    implementation("com.google.android.material:material:1.9.0-alpha02")
+
+    // mockk
+    testImplementation("io.mockk:mockk:1.13.4")
+
+    //Junit5
+    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }

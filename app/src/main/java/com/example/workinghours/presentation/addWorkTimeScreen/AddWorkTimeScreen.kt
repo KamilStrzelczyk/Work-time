@@ -1,6 +1,12 @@
 package com.example.workinghours.presentation.addWorkTimeScreen
 
+import android.app.DatePickerDialog
 import android.content.Intent
+import android.view.ContextThemeWrapper
+import android.widget.CalendarView
+import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,11 +22,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersActivity
 import com.example.workinghours.R
+import com.example.workinghours.presentation.adminScreen.sendDailyReport.SendDailyReportViewModel
+import com.example.workinghours.presentation.model.DataToExcelFile
+import com.google.android.material.datepicker.MaterialDatePicker
+import dagger.hilt.android.qualifiers.ApplicationContext
+import hilt_aggregated_deps._dagger_hilt_android_flags_HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule
+import org.joda.time.LocalDate
 
 @Composable
 
@@ -46,7 +63,7 @@ fun AddWorkTimeScreen(
             )
             Icon(
                 modifier = Modifier
-                    .clickable { }
+                    .clickable { viewModel.onTopAppBarMoreActionClicked() }
                     .align(Alignment.CenterEnd),
                 imageVector = Icons.Filled.MoreVert,
                 contentDescription = null,
@@ -86,6 +103,7 @@ fun AddWorkTimeScreen(
             }
         }
     }
+    moreDialog(showUserActionsDialog = state.showUserActionsDialog, onDismissUserActionsDialog = {})
 }
 
 @Composable
@@ -246,4 +264,108 @@ private fun SaveTimeDialog(
     }
 }
 
+@Composable
+fun moreDialog(
+    showUserActionsDialog: Boolean,
+    onDismissUserActionsDialog: () -> Unit,
+) {
+    val fragment = LocalContext.current as? AppCompatActivity
+    if (showUserActionsDialog)
+        Dialog(
+            onDismissRequest = { onDismissUserActionsDialog() }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .padding(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Surface(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(112.dp)
+                                    .clickable {
+//                                        navigateToPreviousDayScreen()
+//                                        onDismissUserActionsDialog()
+                                    },
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(5.dp),
+                                        text = stringResource(id = R.string.PreviousDays),
+                                    )
+                                    Image(
+                                        painter = painterResource(id = R.drawable.calendar_image),
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.weight(0.1f))
+
+                        Surface(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(112.dp)
+                                    .clickable {
+
+//                                        navigateToAddWorkTimeScreen()
+//                                        onDismissUserActionsDialog()
+                                    }
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxHeight(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(5.dp),
+                                        text = stringResource(id = R.string.AddNewDay),
+                                    )
+                                    Image(
+                                        painter = painterResource(id = R.drawable.calendar_add_image),
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        }
+                        if (fragment != null) {
+                            AndroidCalendar(fragment.supportFragmentManager)
+                        }
+                    }
+                }
+
+            }
+        }
+}
+
+@Composable
+private fun AndroidCalendar(
+    fragmentManager: FragmentManager
+) {
+    MaterialDatePicker.Builder.dateRangePicker().setTitleText("Wybierz okres").build().show(fragmentManager,"calendar")
+}
 

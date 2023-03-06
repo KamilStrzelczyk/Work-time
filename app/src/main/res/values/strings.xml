@@ -14,6 +14,8 @@
     <string name="ClockColon">:</string>
     <string name="Save">Zapisz</string>
     <string name="YourTimeJob">Twój czas pracy</string>
+    <string name="AddHoliday">Zaplanuj urlop</string>
+    <string name="ChooseHoliday">Wybierz typ</string>
 
     //AdminScreenGrids
     <string name="MonthReport">Raport miesięczny</string>
