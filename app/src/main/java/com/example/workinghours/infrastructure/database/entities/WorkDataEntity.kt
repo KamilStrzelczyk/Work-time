@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 
 @Entity(tableName = "work_data")
 data class WorkDataEntity(
@@ -19,13 +20,13 @@ data class WorkDataEntity(
     @ColumnInfo(name = "year")
     var year: Int,
     @ColumnInfo(name = "user_work_amount")
-    val amountWorkTime: DateTime,
+    val amountWorkTime: LocalTime,
     @ColumnInfo(name = "user_work_date")
     var userWorkData: LocalDate,
     @ColumnInfo(name = "start_work_time")
-    val startWorkTime: DateTime,
+    val startWorkTime: LocalTime,
     @ColumnInfo(name = "end_work_time")
-    val endWorkTime: DateTime,
+    val endWorkTime: LocalTime,
     @ColumnInfo(name = "hygiene_work_time")
-    val hygieneWorkTime: DateTime,
+    val hygieneWorkTime: LocalTime,
 )

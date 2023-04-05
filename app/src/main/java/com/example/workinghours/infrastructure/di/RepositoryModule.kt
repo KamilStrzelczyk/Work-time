@@ -1,5 +1,7 @@
 package com.example.workinghours.infrastructure.di
 
+import com.example.workinghours.domain.provider.DateProvider
+import com.example.workinghours.domain.provider.DateProviderImpl
 import com.example.workinghours.domain.repository.AdminRepository
 import com.example.workinghours.domain.repository.UserRepository
 import com.example.workinghours.domain.repository.WorkDataRepository
@@ -22,4 +24,7 @@ interface RepositoryModule {
 
     @Binds
     fun bindsAdminRepository(impl: AdminRepositoryImpl): AdminRepository
+
+    @Binds
+    fun bindsDateProvider(impl: DateProviderImpl): DateProvider
 }

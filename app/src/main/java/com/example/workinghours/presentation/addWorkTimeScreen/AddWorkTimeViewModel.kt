@@ -47,7 +47,7 @@ class AddWorkTimeViewModel @AssistedInject constructor(
         }
     }
 
-    fun onSaveClicked() {
+    fun onDialogSaveButtonClicked() {
         viewModelScope.launch {
             _state.value.workTime?.let {
                 WorkData(
@@ -74,7 +74,7 @@ class AddWorkTimeViewModel @AssistedInject constructor(
         )
     }
 
-    fun onButtonClicked() {
+    fun onFirstSaveButtonClicked() {
         val workTime = calculateAmountOfHours(
             startHour = _state.value.startWorkClock.setHour,
             startMinute = _state.value.startWorkClock.setMinute,
@@ -115,10 +115,66 @@ class AddWorkTimeViewModel @AssistedInject constructor(
         )
     }
 
+    fun showCalendar() {
+        updateState(
+            _state.value.copy(
+                showCalendar = true
+            )
+        )
+    }
+
+    fun onConfirmRangeOfDateClicked(startDate: Long, endDate: Long) {
+        updateState(
+            _state.value.copy(
+                showCalendar = false
+            )
+        )
+    }
+
     fun onTopAppBarMoreActionClicked() {
         updateState(
             _state.value.copy(
                 showUserActionsDialog = true,
+            )
+        )
+    }
+
+    fun onDismissTopAppBarMoreDialogClicked() {
+        updateState(
+            _state.value.copy(
+                showUserActionsDialog = false,
+            )
+        )
+    }
+
+    fun onShowDayOfDropDownMenu() {
+        updateState(
+            _state.value.copy(
+                showDayOfDropDownMenu = true,
+            )
+        )
+    }
+
+    fun onDismissDayOfDropDownMenu() {
+        updateState(
+            _state.value.copy(
+                showDayOfDropDownMenu = false,
+            )
+        )
+    }
+
+    fun onTypeDayOfClicked(typeDay: String) {
+        updateState(
+            _state.value.copy(
+                showTypeDateOfSelector = false,
+            )
+        )
+    }
+
+    fun showTypeDateOfSelector() {
+        updateState(
+            _state.value.copy(
+                showTypeDateOfSelector = true,
             )
         )
     }
@@ -128,11 +184,21 @@ class AddWorkTimeViewModel @AssistedInject constructor(
     }
 
     data class ViewModelState(
+        val showCalendar: Boolean = false,
         val showUserActionsDialog: Boolean = false,
         val currentDataAndTime: DateTime? = null,
         val showSaveDialog: Boolean = false,
         val extraTime: Int = Utils.EMPTY_INT,
         val workTime: CalculateAmountOfHours? = null,
+        val showDayOfDropDownMenu: Boolean = false,
+        val showTypeDateOfSelector: Boolean = false,
+        val typesOfDaysOff: List<String> = listOf(
+            "DND - Dnień na dziecko",
+            "CH - Zwolnie chorobowe",
+            "CHOP - Zwolnienie chorobowe na dziecko",
+            "UW - Urlop wypoczynkowy",
+            "UOKOL - Urlop okolicznościowy",
+        ),
         val clockHour: List<String> = listOf(
             "00",
             "01",

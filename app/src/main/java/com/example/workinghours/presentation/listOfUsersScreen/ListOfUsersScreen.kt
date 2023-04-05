@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -191,7 +192,6 @@ private fun UserActionsDialog(
     navigateToPreviousDayScreen: () -> Unit,
     navigateToAddWorkTimeScreen: () -> Unit,
 ) {
-
     if (showUserActionsDialog)
         Dialog(
             onDismissRequest = { onDismissUserActionsDialog() }
@@ -378,18 +378,25 @@ private fun AdminPasswordDialog(
         }
 }
 
-
-//@Preview(showBackground = true)
-//@Composable
-//private fun ListOfUsersScreenPreview(
-//) = ListOfUsersScreen(userList = listOf("Dominik"),
-//    showTopAppBarMoreAction = false,
-//    adminOption = true,
-//    showUserActionsDialog = false,
-//    onUsersClicked = { },
-//    onTopAppBarMoreActionClicked = { },
-//    onDismissTopAppBarMoreAction = { },
-//    onDismissUserActionsDialog = { },
-//    navigateToAddWorkTimeScreen = { }) {
-//
-//}
+@Preview(showBackground = true)
+@Composable
+private fun ListOfUsersScreen_Preview(
+) = ListOfUsersScreen(
+    userList = mutableListOf(User(1, "Karol", "123"), User(1, "Kasia", "123")),
+    showTopAppBarMoreAction = false,
+    showUserActionsDialog = false,
+    showAdminPasswordDialogBoolean = false,
+    isError = false,
+    onUsersClicked = { },
+    onTopAppBarMoreActionClicked = { },
+    onDismissTopAppBarMoreAction = { },
+    showAdminPasswordDialog = { },
+    onDismissUserActionsDialog = { },
+    onDismissAdminPasswordDialog = { },
+    navigateToAddWorkTimeScreen = { },
+    navigateToPreviousDayScreen = { },
+    onUserNameBoxClicked = { _, _ -> },
+    password = "",
+    onOkClicked = {},
+    onPasswordChange = {},
+)

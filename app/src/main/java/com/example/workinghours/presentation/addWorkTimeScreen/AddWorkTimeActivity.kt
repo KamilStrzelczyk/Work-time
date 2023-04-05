@@ -3,13 +3,15 @@ package com.example.workinghours.presentation.addWorkTimeScreen
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.workinghours.ui.theme.WorkingHoursTheme
@@ -17,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddWorkTimeActivity : ComponentActivity() {
+class AddWorkTimeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: AddWorkTimeViewModel.Factory
@@ -41,7 +43,10 @@ class AddWorkTimeActivity : ComponentActivity() {
                 color = MaterialTheme.colors.background
             ) {
                 WorkingHoursTheme {
-                    AddWorkTimeScreen(viewModel = addWorkTimeViewModel)
+                    AddWorkTimeScreen(
+                        viewModel = addWorkTimeViewModel,
+                        fragment = supportFragmentManager
+                    )
                 }
             }
         }

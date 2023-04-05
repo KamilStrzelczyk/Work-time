@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,7 +93,7 @@ class SendMonthReportViewModel @Inject constructor(
             )
         }
 
-        private fun DateTime?.toStringOrEmpty(): String {
+        private fun LocalTime?.toStringOrEmpty(): String {
             val patternForTime = "HH:mm"
             return this?.toString(patternForTime) ?: ""
         }

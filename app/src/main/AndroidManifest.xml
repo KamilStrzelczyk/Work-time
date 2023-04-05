@@ -29,24 +29,12 @@
                 android:value="" />
         </activity>
 
-        <activity
-            android:name=".presentation.adminScreen.admin.AdminActivity"
-            android:theme="@style/Theme.WorkingHours" />
-        <activity
-            android:name=".presentation.adminScreen.sendDailyReport.SendDailyReportActivity"
-            android:theme="@style/Theme.WorkingHours" />
-        <activity
-            android:name=".presentation.adminScreen.sendMonthReport.SendMonthReportActivity"
-            android:theme="@style/Theme.WorkingHours" />
-        <activity
-            android:name=".presentation.addWorkTimeScreen.AddWorkTimeActivity"
-            android:theme="@style/Theme.WorkingHours" />
-        <activity
-            android:name=".presentation.previousDaysScreen.PreviousDayActivity"
-            android:theme="@style/Theme.WorkingHours" />
-        <activity
-            android:name=".presentation.adminScreen.deleteUser.DeleteUserActivity"
-            android:theme="@style/Theme.WorkingHours" />
+        <activity android:name=".presentation.adminScreen.admin.AdminActivity" />
+        <activity android:name=".presentation.adminScreen.sendDailyReport.SendDailyReportActivity" />
+        <activity android:name=".presentation.adminScreen.sendMonthReport.SendMonthReportActivity" />
+        <activity android:name=".presentation.addWorkTimeScreen.AddWorkTimeActivity" />
+        <activity android:name=".presentation.previousDaysScreen.PreviousDayActivity" />
+        <activity android:name=".presentation.adminScreen.deleteUser.DeleteUserActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

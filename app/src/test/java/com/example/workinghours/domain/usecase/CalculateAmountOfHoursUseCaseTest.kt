@@ -1,15 +1,18 @@
 package com.example.workinghours.domain.usecase
 
 import com.example.workinghours.domain.model.CalculateAmountOfHours
-import org.joda.time.DateTime
+import com.example.workinghours.domain.provider.DateProvider
+import io.mockk.every
+import io.mockk.mockk
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-
 internal class CalculateAmountOfHoursUseCaseTest {
 
-    private val useCase = CalculateAmountOfHoursUseCase()
+    private val dateProvider: DateProvider = mockk()
+    private val useCase = CalculateAmountOfHoursUseCase(dateProvider)
 
     private val startHour = 8
     private val startMinute = 30
@@ -23,13 +26,15 @@ internal class CalculateAmountOfHoursUseCaseTest {
         // GIVEN
         val expectedResult = CalculateAmountOfHours(
             userWorkDate = LocalDate(1673996400000),
-            startWorkTime = DateTime(1495800000),
-            endWorkTime = DateTime(1529100000),
-            hygieneWorkTime = DateTime(1470000000),
-            amountWorkTime = DateTime(1493700000)
+            startWorkTime = LocalTime(1495800000),
+            endWorkTime = LocalTime(1529100000),
+            hygieneWorkTime = LocalTime(1470000000),
+            amountWorkTime = LocalTime(1493700000)
         )
+        every { dateProvider.getLocalDateNow() } returns LocalDate(1673996400000)
+
         // WHEN
-        val result = useCase(
+        val result = useCase.invoke(
             startHour = startHour,
             startMinute = startMinute,
             endHour = endHour,
@@ -37,6 +42,7 @@ internal class CalculateAmountOfHoursUseCaseTest {
             hygieneHour = hygieneHour,
             hygieneMinute = hygieneMinute
         )
+
         // THEN
         assertEquals(expectedResult, result)
     }
