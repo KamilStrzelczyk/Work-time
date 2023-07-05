@@ -52,7 +52,7 @@ fun PreviousDaysScreen(
                     FilterTopAppBar(
                         showFilterTopAppBar = state.showFilterTopAppBar,
                         onDismissFilterTopAppBar = { viewModel.onDismissFilterTopAppBar() },
-                        onWorkDaysClicked = { viewModel.onTopAppBarFilterWorkdaysClicked() },
+                        onWorkDaysClicked = { viewModel.onTopAppBarFilterWorkDaysClicked() },
                         onAllDaysClicked = { viewModel.onTopAppBarFilterAllDaysClicked() },
                         showCalendar = { viewModel.showCalendar() })
                     Calendar(

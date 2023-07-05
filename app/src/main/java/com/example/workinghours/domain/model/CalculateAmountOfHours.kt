@@ -1,12 +1,12 @@
 package com.example.workinghours.domain.model
 
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 
 data class CalculateAmountOfHours(
     val userWorkDate: LocalDate,
-    val startWorkTime: DateTime,
-    val endWorkTime: DateTime,
-    val hygieneWorkTime: DateTime,
-    val amountWorkTime: DateTime,
+    val startWorkTime: LocalTime,
+    val endWorkTime: LocalTime,
+    val hygieneWorkTime: LocalTime,
+    val amountWorkTime: LocalTime,
 )

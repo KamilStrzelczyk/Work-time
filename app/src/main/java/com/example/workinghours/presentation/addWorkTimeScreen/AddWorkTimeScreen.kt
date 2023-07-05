@@ -1,11 +1,6 @@
 package com.example.workinghours.presentation.addWorkTimeScreen
 
-import android.app.DatePickerDialog
 import android.content.Intent
-import android.view.ContextThemeWrapper
-import android.widget.CalendarView
-import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,25 +19,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersActivity
 import com.example.workinghours.R
-import com.example.workinghours.presentation.adminScreen.sendDailyReport.SendDailyReportViewModel
-import com.example.workinghours.presentation.model.DataToExcelFile
+import com.example.workinghours.presentation.listOfUsersScreen.ListOfUsersActivity
 import com.google.android.material.datepicker.MaterialDatePicker
-import dagger.hilt.android.qualifiers.ApplicationContext
-import hilt_aggregated_deps._dagger_hilt_android_flags_HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule
-import org.joda.time.LocalDate
 
 @Composable
-
 fun AddWorkTimeScreen(
     viewModel: AddWorkTimeViewModel,
+    fragment: FragmentManager,
 ) {
     val pattern = "MM/dd/yyyy HH:mm"
     val state = viewModel.state.collectAsState().value
@@ -57,8 +45,7 @@ fun AddWorkTimeScreen(
                 .fillMaxWidth(),
         ) {
             Text(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center),
                 text = state.run { currentDataAndTime!!.toString(pattern) },
             )
             Icon(
@@ -74,24 +61,26 @@ fun AddWorkTimeScreen(
 
         ClockComponent(
             text = stringResource(id = R.string.StartWorkingTime),
-            state.startWorkClock,
-            viewModel::updateStartWorkClock
+            clock = state.startWorkClock,
+            updateClock = viewModel::updateStartWorkClock
         )
         ClockComponent(
             text = stringResource(id = R.string.EndWorkTime),
-            state.endWorkClock,
-            viewModel::updateEndWorkClock
+            clock = state.endWorkClock,
+            updateClock = viewModel::updateEndWorkClock
         )
         ClockComponent(
             text = stringResource(id = R.string.Hygiene),
-            state.hygieneClock,
-            viewModel::updateHygieneWorkClock
+            clock = state.hygieneClock,
+            updateClock = viewModel::updateHygieneWorkClock
         )
 
         Box(
             modifier = Modifier.padding(20.dp),
         ) {
-            Button(modifier = Modifier.fillMaxWidth(), onClick = { viewModel.onButtonClicked() }) {
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { viewModel.onFirstSaveButtonClicked() }) {
                 Text(
                     text = stringResource(id = R.string.Save),
                     color = Color.White,
@@ -103,7 +92,19 @@ fun AddWorkTimeScreen(
             }
         }
     }
-    moreDialog(showUserActionsDialog = state.showUserActionsDialog, onDismissUserActionsDialog = {})
+    moreDialogAddDayOff(
+        showUserActionsDialog = state.showUserActionsDialog,
+        typeDateOfSelector = state.showTypeDateOfSelector,
+        onDismissTopAppBarMoreDialog = { viewModel.onDismissTopAppBarMoreDialogClicked() },
+        onConfirmRangeOfDateClicked = viewModel::onConfirmRangeOfDateClicked,
+        onShowCalendar = viewModel::showCalendar,
+        fragment = fragment,
+        onTypeDayOfClicked = viewModel::onTypeDayOfClicked,
+        showCalendar = state.showCalendar,
+        list = state.typesOfDaysOff,
+        onDismissDayOfDropDownMenu = viewModel::onDismissDayOfDropDownMenu,
+        showTypeDateOfSelector = viewModel::showTypeDateOfSelector,
+    )
 }
 
 @Composable
@@ -112,7 +113,6 @@ private fun ClockComponent(
     clock: AddWorkTimeViewModel.Clock,
     updateClock: (AddWorkTimeViewModel.Clock) -> Unit,
 ) {
-
     Box(
         modifier = Modifier.padding(20.dp),
     ) {
@@ -180,7 +180,7 @@ private fun ClockComponent(
 }
 
 @Composable
-private fun ClockDropDown(
+private fun dropDownMenu(
     dismissClock: () -> Unit,
     onItemSelected: (String) -> Unit,
     options: List<String>,
@@ -202,7 +202,7 @@ private fun HourClock(
     updateClock: (AddWorkTimeViewModel.Clock) -> Unit,
 ) {
     if (clockData.showClock) {
-        ClockDropDown(
+        dropDownMenu(
             dismissClock = { updateClock(clockData.hideClock()) },
             onItemSelected = { updateClock(clockData.onHourSelected(it.toInt())) },
             options = clockData.timeHourScope,
@@ -216,7 +216,7 @@ private fun MinuteClock(
     updateClock: (AddWorkTimeViewModel.Clock) -> Unit,
 ) {
     if (clockData.showMinuteClock) {
-        ClockDropDown(
+        dropDownMenu(
             dismissClock = { updateClock(clockData.hideClock()) },
             onItemSelected = { updateClock(clockData.onMinuteSelected(it.toInt())) },
             options = clockData.timeMinuteScope,
@@ -249,7 +249,7 @@ private fun SaveTimeDialog(
                         Text(it.toString(patternForCalculateTime))
                     }
                     Button(onClick = {
-                        viewModel.onSaveClicked()
+                        viewModel.onDialogSaveButtonClicked()
                         context.startActivity(
                             Intent(
                                 context, ListOfUsersActivity::class.java
@@ -265,29 +265,37 @@ private fun SaveTimeDialog(
 }
 
 @Composable
-fun moreDialog(
+fun moreDialogAddDayOff(
     showUserActionsDialog: Boolean,
-    onDismissUserActionsDialog: () -> Unit,
+    typeDateOfSelector: Boolean,
+    onDismissTopAppBarMoreDialog: () -> Unit,
+    onConfirmRangeOfDateClicked: (Long, Long) -> Unit,
+    onShowCalendar: () -> Unit,
+    fragment: FragmentManager,
+    showCalendar: Boolean,
+    showTypeDateOfSelector: () -> Unit,
+    onDismissDayOfDropDownMenu: () -> Unit,
+    onTypeDayOfClicked: (String) -> Unit,
+    list: List<String>,
 ) {
-    val fragment = LocalContext.current as? AppCompatActivity
     if (showUserActionsDialog)
+
         Dialog(
-            onDismissRequest = { onDismissUserActionsDialog() }
+            onDismissRequest = { onDismissTopAppBarMoreDialog() }
         ) {
             Surface(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
             ) {
-
                 Box(
                     modifier = Modifier
                         .padding(20.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Surface(
                             elevation = 4.dp,
@@ -295,32 +303,27 @@ fun moreDialog(
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .weight(1f)
-                                    .height(112.dp)
-                                    .clickable {
-//                                        navigateToPreviousDayScreen()
-//                                        onDismissUserActionsDialog()
-                                    },
+                                    .clickable { showTypeDateOfSelector() },
                             ) {
-                                Column(
+                                Row(
                                     modifier = Modifier
-                                        .fillMaxHeight(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
+                                        .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
                                         modifier = Modifier.padding(5.dp),
-                                        text = stringResource(id = R.string.PreviousDays),
+                                        text = "Wybierz wolne",
                                     )
-                                    Image(
-                                        painter = painterResource(id = R.drawable.calendar_image),
-                                        contentDescription = null
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowDropDown,
+                                        contentDescription = null,
                                     )
                                 }
                             }
                         }
 
-                        Spacer(modifier = Modifier.weight(0.1f))
+                        Spacer(modifier = Modifier.padding(15.dp))
 
                         Surface(
                             elevation = 4.dp,
@@ -328,13 +331,12 @@ fun moreDialog(
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .weight(1f)
                                     .height(112.dp)
+                                    .fillMaxWidth()
                                     .clickable {
-
-//                                        navigateToAddWorkTimeScreen()
-//                                        onDismissUserActionsDialog()
-                                    }
+                                        onShowCalendar()
+                                    },
+                                contentAlignment = Alignment.Center
                             ) {
                                 Column(
                                     modifier = Modifier.fillMaxHeight(),
@@ -343,7 +345,7 @@ fun moreDialog(
                                 ) {
                                     Text(
                                         modifier = Modifier.padding(5.dp),
-                                        text = stringResource(id = R.string.AddNewDay),
+                                        text = "Wybierz datę",
                                     )
                                     Image(
                                         painter = painterResource(id = R.drawable.calendar_add_image),
@@ -352,20 +354,114 @@ fun moreDialog(
                                 }
                             }
                         }
-                        if (fragment != null) {
-                            AndroidCalendar(fragment.supportFragmentManager)
-                        }
+                        TypeDateOfSelector(
+                            typeDateOfSelector = typeDateOfSelector,
+                            onDismissDayOfDropDownMenu = onDismissDayOfDropDownMenu,
+                            onTypeDayOfClicked = onTypeDayOfClicked,
+                            list = list,
+                        )
+                        AndroidCalendar(
+                            fragmentManager = fragment,
+                            onConfirmRangeOfDateClicked = onConfirmRangeOfDateClicked,
+                            showCalendar = showCalendar,
+                        )
                     }
                 }
-
             }
         }
 }
 
 @Composable
-private fun AndroidCalendar(
-    fragmentManager: FragmentManager
+private fun TypeDateOfSelector(
+    typeDateOfSelector: Boolean,
+    onDismissDayOfDropDownMenu: () -> Unit,
+    onTypeDayOfClicked: (String) -> Unit,
+    list: List<String>,
 ) {
-    MaterialDatePicker.Builder.dateRangePicker().setTitleText("Wybierz okres").build().show(fragmentManager,"calendar")
+    if (typeDateOfSelector) {
+        dropDownMenu(
+            dismissClock = onDismissDayOfDropDownMenu,
+            onItemSelected = onTypeDayOfClicked,
+            options = list,
+        )
+    }
 }
 
+@Composable
+private fun AndroidCalendar(
+    fragmentManager: FragmentManager,
+    onConfirmRangeOfDateClicked: (Long, Long) -> Unit,
+    showCalendar: Boolean,
+) {
+    if (showCalendar) {
+        val datePicker = MaterialDatePicker.Builder.dateRangePicker().setTitleText("Wybierz okres")
+            .build()
+        datePicker.show(fragmentManager, "calendar")
+        datePicker.addOnPositiveButtonClickListener {
+            val startDate = it.first
+            val endDate = it.second
+            onConfirmRangeOfDateClicked(startDate, endDate)
+        }
+    }
+}
+
+//@Preview
+//@Composable
+//fun moreDialog_Preview() {
+//    val fragmentManager = (LocalContext.current as AppCompatActivity).supportFragmentManager
+//    moreDialog(
+//        showUserActionsDialog = true,
+//        onDismissTopAppBarMoreDialog = {},
+//        onConfirmRangeOfDateClicked = { _, _ -> },
+//        onShowCalendar = {},
+//        fragment = {},
+//        showCalendar = false,
+//    )
+//}
+
+@Preview(showBackground = true)
+@Composable
+fun TypeDateOfSelector_Preview() {
+    TypeDateOfSelector(
+        onDismissDayOfDropDownMenu = {},
+        typeDateOfSelector = false,
+        onTypeDayOfClicked = {},
+        list = mutableListOf("Dupa", "Dupa", "Dupa", "Dupa")
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ClockComponent_Preview() {
+    ClockComponent(
+        text = "Zegarek",
+        clock = AddWorkTimeViewModel.Clock(
+            showMinuteClock = false,
+            showClock = false,
+            timeHourScope = listOf(
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+            ),
+            timeMinuteScope = listOf(
+                "00",
+                "10",
+                "20",
+                "30",
+                "40",
+                "50",
+                "60",
+            ),
+            setHour = 0,
+            setMinute = 0,
+        ),
+        updateClock = {})
+}

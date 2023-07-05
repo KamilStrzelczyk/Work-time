@@ -11,6 +11,7 @@ import com.example.workinghours.infrastructure.database.entities.UserEntity
 import com.example.workinghours.infrastructure.database.entities.WorkDataEntity
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 
 @Database(
     entities = [
@@ -75,11 +76,11 @@ abstract class AppDatabase : RoomDatabase() {
             WorkDataEntity(
                 id = 1,
                 userId = 1,
-                amountWorkTime = DateTime(1674032400000),
+                amountWorkTime = LocalTime(1674032400000),
                 userWorkData = LocalDate(1674514800000),
-                startWorkTime = DateTime(1674018000000),
-                endWorkTime = DateTime(1674054000000),
-                hygieneWorkTime = DateTime(1674000000000),
+                startWorkTime = LocalTime(1674018000000),
+                endWorkTime = LocalTime(1674054000000),
+                hygieneWorkTime = LocalTime(1674000000000),
                 userName = "Dominik",
                 year = 2023,
                 monthNumber = 12,
@@ -87,11 +88,11 @@ abstract class AppDatabase : RoomDatabase() {
             WorkDataEntity(
                 id = 2,
                 userId = 2,
-                amountWorkTime = DateTime(1674032400000),
+                amountWorkTime = LocalTime(1674032400000),
                 userWorkData = LocalDate(1674514800000),
-                startWorkTime = DateTime(1674018000000),
-                endWorkTime = DateTime(1674054000000),
-                hygieneWorkTime = DateTime(1674000000000),
+                startWorkTime = LocalTime(1674018000000),
+                endWorkTime = LocalTime(1674054000000),
+                hygieneWorkTime = LocalTime(1674000000000),
                 userName = "Agnieszka",
                 year = 2023,
                 monthNumber = 12,
@@ -99,11 +100,11 @@ abstract class AppDatabase : RoomDatabase() {
             WorkDataEntity(
                 id = 3,
                 userId = 3,
-                amountWorkTime = DateTime(1674032400000),
+                amountWorkTime = LocalTime(1674032400000),
                 userWorkData = LocalDate(1674514800000),
-                startWorkTime = DateTime(1674018000000),
-                endWorkTime = DateTime(1674054000000),
-                hygieneWorkTime = DateTime(1674000000000),
+                startWorkTime = LocalTime(1674018000000),
+                endWorkTime = LocalTime(1674054000000),
+                hygieneWorkTime = LocalTime(1674000000000),
                 userName = "Paweł",
                 year = 2023,
                 monthNumber = 12,
@@ -111,11 +112,11 @@ abstract class AppDatabase : RoomDatabase() {
             WorkDataEntity(
                 id = 4,
                 userId = 4,
-                amountWorkTime = DateTime(1674032400000),
+                amountWorkTime = LocalTime(1674032400000),
                 userWorkData = LocalDate(1674514800000),
-                startWorkTime = DateTime(1674018000000),
-                endWorkTime = DateTime(1674054000000),
-                hygieneWorkTime = DateTime(1674000000000),
+                startWorkTime = LocalTime(1674018000000),
+                endWorkTime = LocalTime(1674054000000),
+                hygieneWorkTime = LocalTime(1674000000000),
                 userName = "Kasia",
                 year = 2023,
                 monthNumber = 12,

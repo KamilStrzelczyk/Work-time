@@ -1,14 +1,13 @@
 package com.example.workinghours.presentation.previousDaysScreen
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.Utils
 import com.example.workinghours.domain.model.DaysOfMonth
 import com.example.workinghours.domain.model.WorkData
+import com.example.workinghours.domain.provider.DateProvider
 import com.example.workinghours.domain.usecase.GetDayOfMonthUseCase
 import com.example.workinghours.domain.usecase.GetUserDateUseCase
-import com.example.workinghours.presentation.adminScreen.sendDailyReport.SendDailyReportViewModel
 import com.example.workinghours.presentation.model.DayInCalendar
 import com.example.workinghours.ui.MonthPickerGridOption
 import dagger.assisted.Assisted
@@ -17,12 +16,13 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 
 class PreviousDaysViewModel @AssistedInject constructor(
     private val getUserDate: GetUserDateUseCase,
     private val getDayOfMonth: GetDayOfMonthUseCase,
+    private val dateProvider: DateProvider,
     @Assisted
     private val userId: Int,
 ) : ViewModel() {
@@ -38,7 +38,10 @@ class PreviousDaysViewModel @AssistedInject constructor(
             updateState(
                 _state.value.copy(
                     userDate = userDate,
-                    daysOfMonth = daysOfMonth
+                    daysOfMonth = daysOfMonth,
+                    currentDate = dateProvider.getLocalDateNow(),
+                    year = dateProvider.getLocalDateNow(),
+                    calendarDate = dateProvider.getLocalDateNow(),
                 )
             )
         }
@@ -57,7 +60,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
         )
     }
 
-    fun onTopAppBarFilterWorkdaysClicked() {
+    fun onTopAppBarFilterWorkDaysClicked() {
         updateState(
             _state.value.copy(
                 showOnlyWorkDays = true
@@ -84,7 +87,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
     fun showCalendar() {
         updateState(
             _state.value.copy(
-                showCalendar = true
+                showCalendar = true,
             )
         )
     }
@@ -116,7 +119,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
     }
 
     fun onOtherMonthClicked(year: Int, month: Int) {
-        val newMonth: LocalDate = LocalDate().withYearOfEra(year).withMonthOfYear(month)
+        val newMonth: LocalDate = _state.value.calendarDate.withYearOfEra(year).withMonthOfYear(month)
         updateState(
             _state.value.copy(
                 calendarDate = newMonth,
@@ -140,7 +143,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
     }
 
     data class ViewModelState(
-        val currentDate: LocalDate = LocalDate.now(),
+        val currentDate: LocalDate = LocalDate(),
         val year: LocalDate = LocalDate(),
         val calendarDate: LocalDate = LocalDate(),
         val showCalendar: Boolean = false,
@@ -182,7 +185,7 @@ class PreviousDaysViewModel @AssistedInject constructor(
         private fun getWorkDate(dayOfMonth: DaysOfMonth) =
             userDate.firstOrNull { it.userWorkDate.dayOfMonth == dayOfMonth.numberOfDay && it.userWorkDate.year == dayOfMonth.numberOfYear }
 
-        private fun DateTime?.toStringOrEmpty(): String {
+        private fun LocalTime?.toStringOrEmpty(): String {
             val patternForTime = "HH:mm"
             return this?.toString(patternForTime) ?: ""
         }
